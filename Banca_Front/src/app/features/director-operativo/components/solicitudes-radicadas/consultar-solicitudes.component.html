@@ -1,0 +1,109 @@
+<div class="max-w-4xl p-6 bg-white rounded-lg">
+  <h1 class="text-2xl font-bold text-blue-900 mb-2">Consultar solicitudes radicadas</h1>
+  <p class="text-sm text-gray-600 mb-6">
+    Ingrese el ID del asesor y presione buscar
+  </p>
+
+  <!-- Formulario de búsqueda -->
+  <div class="mb-6">
+    <label class="block text-sm font-semibold text-gray-800 mb-2">
+      ID del asesor <span class="text-red-600">*</span>
+    </label>
+    <div class="flex gap-3">
+      <input
+        type="text"
+        [(ngModel)]="asesorId"
+        placeholder="Ej: 1"
+        [disabled]="cargando"
+        (keyup.enter)="buscarSolicitudes()"
+        class="w-100 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-400 disabled:bg-gray-100"
+      />
+      <button
+        (click)="buscarSolicitudes()"
+        [disabled]="cargando || !asesorId.trim()"
+        class="px-6 py-2 bg-blue-900 text-white rounded-md hover:bg-blue-800 transition-colors font-medium cursor-pointer disabled:bg-gray-400 disabled:cursor-not-allowed"
+      >
+        {{ cargando ? 'Buscando...' : 'Buscar' }}
+      </button>
+      <button
+        *ngIf="busquedaRealizada"
+        (click)="limpiarBusqueda()"
+        class="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors font-medium cursor-pointer"
+      >
+        Limpiar
+      </button>
+    </div>
+    <p class="text-xs text-gray-500 mt-1">Ingrese el ID del asesor</p>
+
+    <!-- Mensaje de error -->
+    <div *ngIf="error" class="mt-2 p-3 bg-red-50 border border-red-200 rounded-md flex items-center gap-2">
+      <svg class="w-5 h-5 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+      </svg>
+      <span class="text-sm text-red-800 font-medium">{{ error }}</span>
+    </div>
+  </div>
+
+  <!-- Tabla de solicitudes -->
+  <div>
+    <h2 class="text-xl font-bold text-blue-900 mb-6">Solicitudes radicadas</h2>
+    
+    <!-- Mensaje cuando no hay solicitudes -->
+    <div *ngIf="solicitudes.length === 0 && !cargando && busquedaRealizada && !error" class="text-center py-8">
+      <p class="text-gray-500">No se encontraron solicitudes para este asesor</p>
+    </div>
+
+    <!-- Mensaje inicial -->
+    <div *ngIf="solicitudes.length === 0 && !busquedaRealizada" class="text-center py-8">
+      <p class="text-gray-400">Ingrese un ID de asesor para buscar solicitudes</p>
+    </div>
+
+    <!-- Indicador de carga -->
+    <div *ngIf="cargando" class="text-center py-8">
+      <div class="inline-block animate-spin rounded-full h-10 w-10 border-b-2 border-blue-900"></div>
+      <p class="text-sm text-gray-600 mt-3">Buscando solicitudes...</p>
+    </div>
+
+    <!-- Tabla -->
+    <div *ngIf="solicitudes.length > 0" class="overflow-x-auto">
+      <table class="w-full">
+        <thead>
+          <tr class="border-b-2 border-gray-200">
+            <th class="text-left py-3 px-3 font-semibold text-sm text-blue-900">ID Asesor</th>
+            <th class="text-left py-3 px-3 font-semibold text-sm text-blue-900">ID solicitud</th>
+            <th class="text-left py-3 px-3 font-semibold text-sm text-blue-900">Cédula</th>
+            <th class="text-left py-3 px-3 font-semibold text-sm text-blue-900">Fecha</th>
+            <th class="text-left py-3 px-3 font-semibold text-sm text-blue-900">Estado</th>
+            <th class="text-left py-3 px-3 font-semibold text-sm text-blue-900">Producto</th>
+            <th class="text-left py-3 px-3 font-semibold text-sm text-blue-900">Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let solicitud of solicitudes" class="border-b border-gray-200 hover:bg-gray-50">
+            <td class="py-4 px-3 text-sm text-gray-800">{{ solicitud.id_asesor }}</td>
+            <td class="py-4 px-3 text-sm text-gray-800 font-medium">{{ solicitud.id_solicitud }}</td>
+            <td class="py-4 px-3 text-sm text-gray-800">{{ solicitud.cedula }}</td>
+            <td class="py-4 px-3 text-sm text-gray-800">{{ solicitud.fecha }}</td>
+            <td class="py-4 px-3">
+              <span 
+                class="px-3 py-1 rounded-full text-xs font-medium"
+                [ngClass]="obtenerClaseEstado(solicitud.estado)"
+              >
+                {{ solicitud.estado }}
+              </span>
+            </td>
+            <td class="py-4 px-3 text-sm text-gray-800">{{ solicitud.producto }}</td>
+            <td class="py-4 px-3">
+              <button 
+                (click)="verDetalle(solicitud)"
+                class="px-4 py-1.5 border-2 border-blue-900 text-blue-900 rounded-md text-sm font-medium hover:bg-blue-50 transition-colors cursor-pointer"
+              >
+                Ver
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

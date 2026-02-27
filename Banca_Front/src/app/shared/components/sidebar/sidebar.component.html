@@ -1,0 +1,95 @@
+<!-- Botón hamburguesa SOLO en pantallas pequeñas -->
+<button
+  *ngIf="isSmallScreen"
+  (click)="toggleSidebar()"
+  class="fixed top-3 z-50 bg-blue-900 text-white p-2 rounded-lg shadow-xl hover:bg-blue-800 active:scale-95"
+  [ngClass]="sidebarVisible ? 'left-[232px]' : 'left-3'"
+  style="transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
+  <svg
+    *ngIf="!sidebarVisible"
+    class="w-5 h-5"
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16"/>
+  </svg>
+  <svg
+    *ngIf="sidebarVisible"
+    class="w-5 h-5"
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
+  </svg>
+</button>
+
+
+<!-- Overlay SOLO en pantallas pequeñas cuando está abierto -->
+<div
+  *ngIf="sidebarVisible && isSmallScreen"
+  (click)="toggleSidebar()"
+  class="fixed inset-0 bg-transparent z-30"></div>
+
+
+<!-- Sidebar CON ALTURA COMPLETA -->
+<aside
+  [ngClass]="{
+    'translate-x-0': sidebarVisible || !isSmallScreen,
+    '-translate-x-full': !sidebarVisible && isSmallScreen
+  }"
+  class="fixed md:static top-0 left-0 z-40 w-56 h-screen bg-white border-r border-gray-200 flex flex-col overflow-y-auto transition-transform duration-300 ease-out shadow-2xl md:shadow-none will-change-transform">
+
+
+  <div class="py-6 flex-1 flex flex-col min-h-0">
+    <!-- Logo -->
+    <div class="flex items-center justify-center gap-2 mb-8 px-4 flex-shrink-0">
+      <img src="isotipo_simulabank.png" alt="BankDash Logo" class="h-10 w-auto">
+      <span class="text-2xl font-black text-blue-900">BankDash.</span>
+    </div>
+
+
+   <!-- Menús dinámicos CON SCROLL -->
+<div class="flex-1 overflow-y-auto">
+  <div class="mb-0" *ngFor="let menu of menuItems">
+    <button
+      (click)="toggleMenu(menu.titulo)"
+      class="w-full flex items-center justify-between px-4 py-2.5 text-sm font-semibold text-blue-900 hover:bg-gray-50 transition-colors duration-200">
+      <span>{{ menu.titulo }}</span>
+      <svg
+        class="w-4 h-4 transition-transform duration-300 ease-out"
+        [class.rotate-180]="isMenuAbierto(menu.titulo)"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+      </svg>
+    </button>
+
+
+    <!-- Menú desplegable con transición suave -->
+    <nav
+      class="overflow-hidden transition-all duration-300 ease-out"
+      [style.max-height]="isMenuAbierto(menu.titulo) ? '600px' : '0px'"
+      [style.opacity]="isMenuAbierto(menu.titulo) ? '1' : '0'">
+      <div class="space-y-0 mt-2">
+        <a
+          *ngFor="let item of menu.items"
+          [routerLink]="item.ruta"
+          (click)="closeSidebar()"
+          routerLinkActive="active-menu-item"
+          [routerLinkActiveOptions]="{exact: false}"
+          class="menu-item block pl-4 pr-4 text-sm text-gray-600">
+          {{ item.label }}
+        </a>
+      </div>
+    </nav>
+  </div>
+</div>
+
+  </div>
+
+  <!-- Footer del sidebar STICKY AL FONDO -->
+  <div class="p-4 border-t border-gray-200 text-center text-xs text-gray-500 flex-shrink-0">
+    <p>© 2025 BankDash</p>
+  </div>
+</aside>

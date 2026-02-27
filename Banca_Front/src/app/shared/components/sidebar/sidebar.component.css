@@ -1,0 +1,60 @@
+/* Asegurar que el sidebar funcione correctamente */
+aside {
+  will-change: transform;
+}
+
+/* En pantallas pequeñas, controlar con transform */
+@media (max-width: 767px) {
+  aside.-translate-x-full {
+    transform: translateX(-100%);
+  }
+
+  aside.translate-x-0 {
+    transform: translateX(0);
+  }
+}
+
+/* En pantallas medianas y grandes, siempre visible */
+@media (min-width: 768px) {
+  aside {
+    transform: translateX(0) !important;
+    position: static !important;
+  }
+}
+
+/* Scroll personalizado */
+aside::-webkit-scrollbar {
+  width: 6px;
+}
+
+aside::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+aside::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+aside::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+
+/* Quitar márgenes entre enlaces y botones en el menú */
+div.mb-6 > button,
+div.mb-6 > nav,
+div.mb-6 > nav > div > a {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+
+/* Si usas space-y, reducción */
+div.mb-6 > nav > div.space-y-1 {
+  --tw-space-y-reverse: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}

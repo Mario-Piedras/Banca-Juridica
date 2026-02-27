@@ -1,0 +1,120 @@
+<div class="max-w-4xl p-6 bg-white rounded-lg">
+  <h1 class="text-2xl font-bold text-blue-900 mb-2">Consultar Cliente</h1>
+  <p class="text-sm text-gray-600 mb-6">Ingresa la cédula y presiona buscar</p>
+
+  <!-- Formulario de búsqueda -->
+  <div class="mb-6">
+    <label class="block text-sm font-semibold text-gray-800 mb-2">Cédula del cliente <span
+        class="text-red-600">*</span></label>
+
+    <div class="flex gap-3">
+      <input type="text" [(ngModel)]="numeroDocumento" placeholder="Ej: 12345678" [disabled]="buscando" maxlength="11"
+        (keypress)="soloNumeros($event)" (keyup.enter)="buscarCliente()"
+        class="w-100 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-400 disabled:bg-gray-100" />
+
+      <button (click)="buscarCliente()" [disabled]="buscando || !numeroDocumento.trim()"
+        class="px-6 py-2 bg-blue-900 text-white rounded-md hover:bg-blue-800 transition-colors font-medium cursor-pointer disabled:bg-gray-400 disabled:cursor-not-allowed">
+        {{ buscando ? 'Buscando...' : 'Buscar' }}
+      </button>
+
+      <button *ngIf="cliente" (click)="limpiar()"
+        class="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors font-medium cursor-pointer">
+        Limpiar
+      </button>
+    </div>
+
+    <p class="text-xs text-gray-500 mt-1">Ingrese el número de cédula sin puntos ni espacios</p>
+
+    <!-- Mensaje de error -->
+    <div *ngIf="mensaje && !cliente"
+      class="mt-2 p-3 bg-red-50 border border-red-200 rounded-md flex items-center gap-2">
+      <svg class="w-5 h-5 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd"
+          d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+          clip-rule="evenodd" />
+      </svg>
+      <span class="text-sm text-red-800 font-medium">{{ mensaje }}</span>
+    </div>
+  </div>
+
+  <!-- Indicador de carga -->
+  <div *ngIf="buscando" class="text-center py-8">
+    <div class="inline-block animate-spin rounded-full h-10 w-10 border-b-2 border-blue-900"></div>
+    <p class="text-sm text-gray-600 mt-3">Buscando cliente...</p>
+  </div>
+
+  <!-- Resultado del cliente -->
+  <div>
+    <h2 class="text-xl font-bold text-blue-900 mb-6">Información del Cliente</h2>
+
+    <!-- Mensaje cuando no hay cliente -->
+    <div *ngIf="!cliente && !buscando" class="text-center py-8">
+      <p class="text-gray-500">No hay información para mostrar. Realiza una búsqueda.</p>
+    </div>
+
+    <!-- Tarjeta de información del cliente -->
+    <div *ngIf="cliente" class="bg-white border border-gray-200 rounded-xl p-6">
+      <!-- Header con avatar -->
+      <div class="flex items-center gap-4 mb-6 pb-6 border-b border-gray-200">
+        <div
+          class="w-14 h-14 bg-blue-900 rounded-full flex items-center justify-center text-white text-xl font-semibold">
+          {{ cliente.nombre_completo.charAt(0) }}
+        </div>
+        <div>
+          <h3 class="text-lg font-semibold text-gray-800">{{ cliente.nombre_completo }}</h3>
+          <div class="flex items-center gap-2">
+            <span class="text-gray-500 text-sm">{{ cliente.tipo_documento }}: {{ cliente.numero_documento }} •</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Información del cliente en grid -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-x-6 gap-y-5 mb-6">
+        <div>
+          <span class="block text-xs text-gray-400 mb-1">Correo electrónico</span>
+          <p class="text-sm text-gray-800">{{ cliente.correo || 'No registrado' }}</p>
+        </div>
+
+        <div>
+          <span class="block text-xs text-gray-400 mb-1">Teléfono</span>
+          <p class="text-sm text-gray-800">{{ cliente.telefono || 'No registrado' }}</p>
+        </div>
+
+        <div>
+          <span class="block text-xs text-gray-400 mb-1">Dirección</span>
+          <p class="text-sm text-gray-800">{{ cliente.direccion || 'No registrada' }}</p>
+        </div>
+
+        <div>
+          <span class="block text-xs text-gray-400 mb-1">Ciudad</span>
+          <p class="text-sm text-gray-800">{{ cliente.ciudad || 'No registrada' }}</p>
+        </div>
+
+        <div>
+          <span class="block text-xs text-gray-400 mb-1">Fecha de Nacimiento</span>
+          <p class="text-sm text-gray-800">{{ cliente.fecha_nacimiento | date: 'longDate' }}</p>
+        </div>
+
+        <div>
+          <span class="block text-xs text-gray-400 mb-1">Ocupación</span>
+          <p class="text-sm text-gray-800">{{ cliente.ocupacion || 'No registrada' }}</p>
+        </div>
+
+        <div>
+          <span class="block text-xs text-gray-400 mb-1">Estado Civil</span>
+          <p class="text-sm text-gray-800">{{ cliente.estado_civil }}</p>
+        </div>
+
+        <div>
+          <span class="block text-xs text-gray-400 mb-1">Género</span>
+          <p class="text-sm text-gray-800">{{ cliente.genero }}</p>
+        </div>
+      </div>
+      <div class="mt-6 pt-6 border-t border-gray-200 flex justify-end space-x-4">
+        <button [routerLink]="['/asesor/editar-cliente', cliente.id_cliente]"
+          class="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">
+          ✏️ Editar Cliente
+        </button>
+      </div>
+    </div>
+  </div>

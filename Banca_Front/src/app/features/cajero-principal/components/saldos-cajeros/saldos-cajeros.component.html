@@ -1,0 +1,186 @@
+<div>
+  <!-- Contenedor principal -->
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+
+    <!-- Encabezado -->
+    <div class="mb-8">
+      <h2 class="text-3xl font-bold text-blue-900">Saldos de Cajeros</h2>
+      <p class="text-sm text-gray-500 mt-2">Consulta los saldos y movimientos de cada CAJA del día</p>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="cargando" class="flex flex-col items-center justify-center py-16">
+      <div class="animate-spin rounded-full h-16 w-16 border-4 border-blue-900 border-t-transparent"></div>
+      <span class="mt-4 text-gray-600 font-medium">Cargando saldos...</span>
+    </div>
+
+    <!-- Tabla -->
+    <div *ngIf="!cargando">
+
+      <!-- Header con botón refrescar -->
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <h3 class="text-xl font-bold text-blue-900">Lista de Cajas</h3>
+          <p class="text-xs text-gray-500 mt-1">
+            Total cajas: {{ cajeros.length }} |
+            <span class="text-green-600 font-medium">{{ cajerosActivos }} activas</span>
+          </p>
+        </div>
+        <button
+          (click)="cargarSaldos()"
+          class="flex items-center gap-2 px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-all">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+          <span class="text-sm font-medium">Actualizar</span>
+        </button>
+      </div>
+
+      <!-- Tabla responsive -->
+      <div class="overflow-x-auto rounded-xl border border-gray-200">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-blue-900">
+            <tr>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                Caja
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                Cajero Asignado
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                Saldo Efectivo
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                Transacciones Hoy
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                Dinero Depositado
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                Dinero Retirado
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                Cuentas Aperturadas
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                Estado
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr *ngFor="let cajero of cajeros; let i = index"
+                class="hover:bg-blue-50 transition-colors"
+                [class.bg-gray-50]="i % 2 === 1">
+
+              <!-- CAJA -->
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 h-10 w-10 bg-blue-100 rounded-full flex items-center justify-center">
+                    <span class="text-blue-900 font-bold text-sm">{{ cajero.nombre_caja.split(' ')[1] }}</span>
+                  </div>
+                  <div class="ml-3">
+                    <p class="text-sm font-semibold text-gray-900">{{ cajero.nombre_caja }}</p>
+                    <p class="text-xs text-gray-500">ID: {{ cajero.id_caja }}</p>
+                  </div>
+                </div>
+              </td>
+
+              <!-- CAJERO ASIGNADO -->
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div *ngIf="cajero.nombreCajero" class="flex-shrink-0 h-8 w-8 bg-green-100 rounded-full flex items-center justify-center">
+                    <span class="text-green-800 font-bold text-xs">
+                      {{ cajero.nombreCajero.split(' ')[0].charAt(0) }}{{ cajero.nombreCajero.split(' ')[1]?.charAt(0) || '' }}
+                    </span>
+                  </div>
+                  <div class="ml-3">
+                    <p class="text-sm font-medium text-gray-900" *ngIf="cajero.nombreCajero; else sinAsignar">
+                      {{ cajero.nombreCajero }}
+                    </p>
+                    <ng-template #sinAsignar>
+                      <p class="text-sm text-gray-400 italic">Sin asignar</p>
+                    </ng-template>
+                  </div>
+                </div>
+              </td>
+
+              <!-- Saldo Efectivo -->
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm font-bold text-blue-900">
+                  ${{ cajero.saldoEfectivo | number:'1.0-0' }}
+                </div>
+              </td>
+
+              <!-- Transacciones Hoy -->
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center gap-2">
+                  <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                  </svg>
+                  <span class="text-sm text-gray-700 font-medium">{{ cajero.transaccionesHoy }}</span>
+                </div>
+              </td>
+
+              <!-- Dinero Depositado -->
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-green-600 font-medium">
+                  +${{ cajero.dineroDepositado | number:'1.0-0' }}
+                </div>
+              </td>
+
+              <!-- Dinero Retirado -->
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-red-600 font-medium">
+                  -${{ cajero.dineroRetirado | number:'1.0-0' }}
+                </div>
+              </td>
+
+              <!-- Cuentas Aperturadas -->
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center gap-2">
+                  <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                  </svg>
+                  <span class="text-sm text-gray-700">{{ cajero.cuentasAperturadas }}</span>
+                </div>
+              </td>
+
+              <!-- Estado -->
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full"
+                      [ngClass]="{
+                        'bg-green-100 text-green-800': cajero.estado === 'Activo',
+                        'bg-yellow-100 text-yellow-800': cajero.estado === 'Inactivo'
+                      }">
+                  {{ cajero.estado }}
+                </span>
+              </td>
+            </tr>
+
+            <!-- Fila vacía -->
+            <tr *ngIf="cajeros.length === 0">
+              <td colspan="8" class="px-6 py-8 text-center text-sm text-gray-500">
+                No hay cajas registradas en el sistema
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Total al final -->
+      <div class="mt-6 flex justify-end">
+        <div class="bg-blue-50 border border-blue-200 rounded-lg px-6 py-3 flex items-center gap-4">
+          <svg class="w-6 h-6 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <div>
+            <p class="text-xs text-blue-700 font-medium">Total Saldo Ventanillas</p>
+            <p class="text-2xl font-bold text-blue-900">${{ totalSaldoVentanillas | number:'1.0-0' }}</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,82 @@
+<div class="p-4 max-w-7xl mx-auto">
+  <!--  Navegación -->
+  <div class="flex justify-center mb-8 border-b border-gray-200">
+    <button class="px-6 py-3 font-medium text-sm transition-colors relative"
+      [class.text-blue-600]="pestanaActiva === 'datos-personales'"
+      [class.border-b-2]="pestanaActiva === 'datos-personales'"
+      [class.border-blue-600]="pestanaActiva === 'datos-personales'"
+      [class.text-gray-500]="pestanaActiva !== 'datos-personales'" (click)="cambiarPestana('datos-personales')">
+      Información Personal
+    </button>
+
+    <button class="px-6 py-3 font-medium text-sm transition-colors relative"
+      [class.text-blue-600]="pestanaActiva === 'contacto-personal'"
+      [class.border-b-2]="pestanaActiva === 'contacto-personal'"
+      [class.border-blue-600]="pestanaActiva === 'contacto-personal'"
+      [class.text-gray-500]="pestanaActiva !== 'contacto-personal'" (click)="cambiarPestana('contacto-personal')">
+      Contacto y Actividad
+    </button>
+
+    <button class="px-6 py-3 font-medium text-sm transition-colors relative"
+      [class.text-blue-600]="pestanaActiva === 'info-laboral'" [class.border-b-2]="pestanaActiva === 'info-laboral'"
+      [class.border-blue-600]="pestanaActiva === 'info-laboral'"
+      [class.text-gray-500]="pestanaActiva !== 'info-laboral'" (click)="cambiarPestana('info-laboral')">
+      Laboral y Financiera
+    </button>
+
+    <button class="px-6 py-3 font-medium text-sm transition-colors relative"
+      [class.text-blue-600]="pestanaActiva === 'facta'" [class.border-b-2]="pestanaActiva === 'facta'"
+      [class.border-blue-600]="pestanaActiva === 'facta'" [class.text-gray-500]="pestanaActiva !== 'facta'"
+      (click)="cambiarPestana('facta')">
+      FACTCA y CRS
+    </button>
+  </div>
+
+  <!--  Contenido de pestañas -->
+  <div class="space-y-6">
+    <!-- Pestaña 1: Información Personal -->
+    <div *ngIf="pestanaActiva === 'datos-personales'">
+      <app-informacion-personal [datosIniciales]="clienteData.datosPersonales"
+        (formChange)="actualizarDatos('datosPersonales', $event)"
+        (nextTab)="manejarNextTab()"></app-informacion-personal>
+    </div>
+
+    <!-- Pestaña 2: Contacto y Actividad -->
+    <div *ngIf="pestanaActiva === 'contacto-personal'" class="space-y-6">
+      <app-contacto-personal [datosIniciales]="clienteData.contacto" (formChange)="actualizarDatos('contacto', $event)"></app-contacto-personal>
+
+      <app-actividad-economica [datosIniciales]="clienteData.actividad"
+        (formChange)="actualizarDatos('actividad', $event)" (nextTab)="manejarNextTab()"></app-actividad-economica>
+    </div>
+
+    <!-- Pestaña 3: Laboral y Financiera -->
+    <div *ngIf="pestanaActiva === 'info-laboral'" class="space-y-6">
+      <app-informacion-laboral [datosIniciales]="clienteData.laboral" (formChange)="actualizarDatos('laboral', $event)"></app-informacion-laboral>
+
+      <app-informacion-financiera [datosIniciales]="clienteData.financiera"
+        (formChange)="actualizarDatos('financiera', $event)" (nextTab)="manejarNextTab()"></app-informacion-financiera>
+    </div>
+
+    <!-- Pestaña 4: FACTA y CRS -->
+    <div *ngIf="pestanaActiva === 'facta'" class="space-y-6">
+      <app-facta [datosIniciales]="clienteData.facta" (formChange)="actualizarDatos('facta', $event)"
+        (nextTab)="manejarNextTab()"></app-facta>
+
+      <!-- Botón de Registrar/Actualizar -->
+      <div class="text-center mt-8">
+        <button (click)="registrarCliente()" [disabled]="!datosCompletos()"
+          class="px-8 py-3 font-semibold rounded-lg shadow-md transition-all" [class]="modo === 'nuevo' 
+            ? 'bg-green-600 hover:bg-green-700 text-white disabled:bg-gray-300'
+            : 'bg-blue-600 hover:bg-blue-700 text-white disabled:bg-gray-300'">
+          {{ modo === 'nuevo' ? 'Registrar Cliente' : 'Actualizar Cliente' }}
+        </button>
+
+        <!-- Botón para cancelar edición -->
+        <button *ngIf="modo === 'editar'" (click)="cancelarEdicion()"
+          class="ml-4 px-6 py-3 bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium rounded-lg transition-colors">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

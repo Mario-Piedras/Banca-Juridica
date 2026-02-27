@@ -1,0 +1,77 @@
+<div>
+  <!-- Contenedor principal blanco -->
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+
+    <!-- Encabezado -->
+    <div class="mb-8">
+      <h2 class="text-3xl font-bold text-blue-900">Saldo en Canje</h2>
+      <p class="text-sm text-gray-500 mt-2">Consulta el total de cheques recibidos pendientes de canje</p>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="cargando" class="flex flex-col items-center justify-center py-16">
+      <div class="animate-spin rounded-full h-16 w-16 border-4 border-emerald-600 border-t-transparent"></div>
+      <span class="mt-4 text-gray-600 font-medium">Cargando saldo...</span>
+    </div>
+
+    <!-- Card de saldo con gradiente verde -->
+    <div *ngIf="!cargando">
+      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-700 via-emerald-600 to-teal-600 p-8 shadow-2xl">
+        <!-- Decoraciones de fondo -->
+        <div class="absolute top-0 right-0 -mt-8 -mr-8 h-48 w-48 rounded-full bg-white opacity-5"></div>
+        <div class="absolute bottom-0 left-0 -mb-12 -ml-12 h-40 w-40 rounded-full bg-white opacity-5"></div>
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-64 w-64 rounded-full bg-white opacity-5"></div>
+
+        <!-- Contenido -->
+        <div class="relative z-10">
+          <!-- Header -->
+          <div class="flex items-center justify-between mb-8">
+            <div class="flex items-center gap-4">
+              <div class="p-3 bg-white bg-opacity-20 backdrop-blur-sm rounded-xl">
+                <svg class="w-7 h-7 text-emerald-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+              </div>
+              <h3 class="text-white text-lg font-semibold">Cheques Recibidos</h3>
+            </div>
+            <button
+              (click)="cargarSaldo()"
+              class="p-3 bg-white bg-opacity-20 hover:bg-opacity-30 backdrop-blur-sm rounded-xl transition-all">
+              <svg class="w-5 h-5 text-emerald-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+            </button>
+          </div>
+
+          <!-- Monto -->
+          <div class="mb-6">
+            <p class="text-6xl font-bold text-white tracking-tight">
+              ${{ saldoCheques | number:'1.0-0' }}
+            </p>
+          </div>
+
+          <!-- Fecha -->
+          <div class="flex items-center gap-2 text-white text-opacity-70 text-sm">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>Última actualización: {{ fechaActualizacion | date:'dd/MM/yyyy HH:mm:ss' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Información -->
+      <div class="mt-6 p-4 bg-emerald-50 border border-emerald-100 rounded-lg">
+        <div class="flex gap-2">
+          <svg class="w-5 h-5 text-emerald-900 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <p class="text-sm text-emerald-900">
+            Este monto representa el valor total de los cheques recibidos pendientes de canje.
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

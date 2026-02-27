@@ -1,0 +1,186 @@
+<div>
+  <!-- Comprobante de Retiro RESPONSIVE -->
+  <div *ngIf="retiroRealizado"
+    class="bg-white rounded-xl shadow-lg border border-blue-900 w-full max-w-xl mb-4 md:mb-6 print-section">
+    <div class="bg-blue-900 text-white p-3 md:p-4 text-center rounded-t-lg">
+      <h2 class="text-lg sm:text-xl md:text-2xl font-bold">COMPROBANTE DE RETIRO</h2>
+    </div>
+
+    <div class="p-4 md:p-6">
+      <!-- Grid responsive: 1 columna en móvil, 2 en tablet+ -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 mb-3 md:mb-4">
+        <div>
+          <p class="text-xs md:text-sm text-gray-600">Número de Transacción:</p>
+          <p class="text-base md:text-lg font-bold text-blue-900">{{ datosComprobante.idTransaccion }}</p>
+        </div>
+        <div>
+          <p class="text-xs md:text-sm text-gray-600">Fecha y Hora:</p>
+          <p class="text-sm md:text-lg font-semibold">{{ datosComprobante.fecha | date:'dd/MM/yyyy HH:mm' }}</p>
+        </div>
+      </div>
+
+      <div class="border-t border-gray-200 pt-3 md:pt-4 mb-3 md:mb-4">
+        <h3 class="text-sm md:text-base font-bold text-gray-700 mb-2">Datos de la Cuenta:</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <p class="text-xs md:text-sm text-gray-600">Número de Cuenta:</p>
+            <p class="text-sm md:text-base font-semibold">{{ datosComprobante.numeroCuenta }}</p>
+          </div>
+          <div>
+            <p class="text-xs md:text-sm text-gray-600">Titular:</p>
+            <p class="text-sm md:text-base font-semibold">{{ datosComprobante.titular }}</p>
+          </div>
+          <div>
+            <p class="text-xs md:text-sm text-gray-600">Documento:</p>
+            <p class="text-sm md:text-base font-semibold">{{ datosComprobante.numeroDocumento }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="border-t border-gray-200 pt-3 md:pt-4 mb-3 md:mb-4">
+        <h3 class="text-sm md:text-base font-bold text-gray-700 mb-2">Detalle del Retiro:</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <p class="text-xs md:text-sm text-gray-600">Monto Retirado:</p>
+            <p class="text-base md:text-lg font-semibold text-red-600">- ${{ datosComprobante.montoRetirado |
+              number:'1.0-0' }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="border-t border-gray-200 pt-3 md:pt-4 mb-3 md:mb-4">
+        <h3 class="text-sm md:text-base font-bold text-gray-700 mb-2">Saldos:</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <p class="text-xs md:text-sm text-gray-600">Saldo Anterior:</p>
+            <p class="text-sm md:text-base font-semibold">${{ datosComprobante.saldoAnterior | number:'1.0-0' }}</p>
+          </div>
+          <div>
+            <p class="text-xs md:text-sm text-gray-600">Saldo Nuevo:</p>
+            <p class="text-sm md:text-base font-semibold text-blue-900">${{ datosComprobante.saldoNuevo | number:'1.0-0'
+              }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Botones responsive: vertical en móvil, horizontal en tablet+ -->
+      <div class="flex flex-col sm:flex-row gap-2 md:gap-3 mt-4 md:mt-6">
+        <button (click)="imprimirComprobante()"
+          class="flex-1 px-4 md:px-6 py-2 md:py-3 bg-blue-900 text-white rounded-lg hover:bg-blue-700 font-medium transition-colors text-sm md:text-base flex items-center justify-center">
+          <span class="material-icons">print</span>
+          <span class="ml-2">Imprimir Comprobante</span>
+        </button>
+        <button (click)="limpiarFormulario()"
+          class="flex-1 px-4 md:px-6 py-2 md:py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-500 font-medium transition-colors text-sm md:text-base">
+          Nuevo Retiro
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Formulario principal RESPONSIVE -->
+  <div *ngIf="!retiroRealizado" class="bg-white rounded-lg shadow-sm border border-gray-200 w-full max-w-lg">
+    <div class="p-4 md:p-6">
+      <h2 class="text-lg md:text-xl font-bold text-blue-900 mb-2">Retiro por Ventanilla</h2>
+      <p class="text-xs md:text-sm text-gray-600 mb-4 md:mb-6">Complete la información del cliente para retirar por
+        ventanilla.</p>
+
+      <form [formGroup]="retiroForm" (ngSubmit)="onRetirar()">
+        <!-- Número de Cuenta con botón Buscar -->
+        <div class="mb-3 md:mb-4">
+          <label class="block text-xs md:text-sm font-medium text-gray-700 mb-1">
+            Número de Cuenta <span class="text-red-500">*</span>
+          </label>
+          <div class="flex gap-2">
+            <input type="text" formControlName="numeroCuenta" placeholder="Ingrese el número de cuenta" maxlength="20"
+              class="flex-1 px-2 md:px-3 py-1.5 md:py-2 text-xs md:text-sm border rounded-lg focus:outline-none focus:border-blue-500"
+              [ngClass]="{
+                'border-gray-300': !(retiroForm.get('numeroCuenta')?.invalid && retiroForm.get('numeroCuenta')?.touched),
+                'border-red-500': retiroForm.get('numeroCuenta')?.invalid && retiroForm.get('numeroCuenta')?.touched,
+                'bg-gray-50 text-gray-700 font-semibold': cuentaEncontrada
+              }" [readonly]="cuentaEncontrada" />
+
+            <button type="button" (click)="buscarCuenta()" [disabled]="cuentaEncontrada"
+              class="px-4 md:px-6 py-1.5 md:py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-700 font-medium transition-colors text-xs md:text-sm disabled:bg-gray-300 disabled:cursor-not-allowed whitespace-nowrap">
+              Buscar
+            </button>
+          </div>
+          <!-- Mensaje de error -->
+          <p class="text-xs text-red-500 mt-1"
+            *ngIf="retiroForm.get('numeroCuenta')?.invalid && retiroForm.get('numeroCuenta')?.touched">
+            El número de cuenta es requerido
+          </p>
+        </div>
+
+        <!-- Grid responsive: Titular y Documento lado a lado -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 mb-3 md:mb-4">
+          <!-- Titular (readonly) -->
+          <div>
+            <label class="block text-xs md:text-sm font-medium text-gray-700 mb-1">
+              Titular
+            </label>
+            <input type="text" formControlName="titular" placeholder="Nombres y apellidos completos"
+              class="w-full px-2 md:px-3 py-1.5 md:py-2 text-xs md:text-sm border border-gray-200 rounded-lg bg-gray-50 text-gray-700 font-semibold"
+              readonly />
+          </div>
+
+          <!-- Documento (readonly) -->
+          <div>
+            <label class="block text-xs md:text-sm font-medium text-gray-700 mb-1">
+              Documento
+            </label>
+            <input type="text" formControlName="numeroDocumento" placeholder="Número de documento"
+              class="w-full px-2 md:px-3 py-1.5 md:py-2 text-xs md:text-sm border border-gray-200 rounded-lg bg-gray-50 text-gray-700 font-semibold"
+              readonly />
+          </div>
+        </div>
+
+        <!-- Grid responsive: Saldo Disponible y Monto a Retirar lado a lado -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 mb-3 md:mb-4">
+          <!-- Saldo Disponible (readonly) -->
+          <div>
+            <label class="block text-xs md:text-sm font-medium text-gray-700 mb-1">
+              Saldo Disponible
+            </label>
+            <input type="text" formControlName="saldoDisponible" placeholder="Saldo de la cuenta"
+              class="w-full px-2 md:px-3 py-1.5 md:py-2 text-xs md:text-sm border border-gray-200 rounded-lg bg-gray-50 text-gray-700 font-semibold"
+              readonly />
+          </div>
+
+          <!-- Monto a Retirar -->
+          <div>
+            <label class="block text-xs md:text-sm font-medium text-gray-700 mb-1">
+              Monto a Retirar <span class="text-red-500">*</span>
+            </label>
+            <input type="text" formControlName="montoRetirar" placeholder="Ingrese el monto"
+              (input)="onInputMonto($event)" maxlength="17"
+              class="w-full px-2 md:px-3 py-1.5 md:py-2 text-xs md:text-sm border rounded-lg focus:outline-none focus:border-blue-500"
+              [ngClass]="{
+      'border-gray-300': !retiroForm.get('montoRetirar')?.invalid || !retiroForm.get('montoRetirar')?.touched,
+      'border-red-500': retiroForm.get('montoRetirar')?.invalid && retiroForm.get('montoRetirar')?.touched
+    }">
+            <p class="text-xs text-red-500 mt-1"
+              *ngIf="retiroForm.get('montoRetirar')?.invalid && retiroForm.get('montoRetirar')?.touched">
+              El monto es requerido y debe ser mayor a $1
+            </p>
+            <p class="text-xs text-gray-500 mt-1" *ngIf="!retiroForm.get('montoRetirar')?.invalid">
+              Máximo 9,999,999,999,999
+            </p>
+          </div>
+        </div>
+
+        <!-- Botones -->
+        <div class="flex flex-col sm:flex-row gap-2 md:gap-3 mt-4 md:mt-6">
+          <button type="submit" [disabled]="retiroForm.invalid || !cuentaEncontrada"
+            class="flex-1 px-4 md:px-6 py-2 md:py-2.5 bg-blue-900 text-white rounded-lg hover:bg-blue-700 font-medium transition-colors text-xs md:text-sm disabled:bg-gray-300 disabled:cursor-not-allowed">
+            Realizar Retiro
+          </button>
+          <button type="button" (click)="onCancelar()"
+            class="px-4 md:px-6 py-2 md:py-2.5 bg-gray-600 text-white rounded-lg hover:bg-gray-500 font-medium transition-colors text-xs md:text-sm">
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

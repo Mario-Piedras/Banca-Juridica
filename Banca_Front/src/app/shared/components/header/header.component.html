@@ -1,0 +1,69 @@
+<header class="bg-white shadow-sm border-b border-gray-200">
+  <div class="flex items-center justify-between px-6 py-4">
+    <!-- Título y subtítulo -->
+     <div class="flex-1 min-w-0 ml-11 md:ml-0">
+      <h1 class="text-base sm:text-lg md:text-xl font-bold text-blue-900 truncate">{{ titulo }}</h1>
+      <p class="text-xs md:text-sm text-gray-500 hidden md:block truncate">{{ subtitulo }}</p>
+    </div>
+
+    <!-- Dropdown de usuario -->
+    <div *ngIf="currentUser" class="relative">
+      <button 
+        (click)="toggleDropdown()" 
+        class="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors">
+        <!-- Avatar con blue-900 -->
+        <div class="flex items-center justify-center w-10 h-10 rounded-full bg-blue-900 text-white font-semibold text-sm">
+          {{ iniciales }}
+        </div>
+        
+        <!-- Rol y nombre (invertidos) -->
+        <div class="text-right">
+          <div class="text-sm font-bold text-gray-800">{{ currentUser.rol }}</div>
+          <div class="text-xs text-gray-500">{{ currentUser.nombre }}</div>
+        </div>
+
+        <!-- Icono flecha con rotación animada -->
+        <svg 
+          class="w-4 h-4 text-gray-500 transition-transform duration-300"
+          [class.rotate-180]="dropdownOpen"
+          fill="none" 
+          stroke="currentColor" 
+          viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+        </svg>
+      </button>
+
+      <!-- Dropdown menu mejorado -->
+      <div 
+        *ngIf="dropdownOpen" 
+        class="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 z-50 overflow-hidden">
+        
+        <!-- Info del usuario -->
+        <div class="px-4 py-3 bg-gray-50">
+          <p class="text-sm font-bold text-gray-800">{{ currentUser.rol }}</p>
+          <p class="text-xs text-gray-600 mt-0.5">{{ currentUser.nombre }}</p>
+          <p class="text-xs text-gray-400 mt-1">ID Rol: {{ currentUser.id_usuario_rol }}</p>
+          <!-- ✅ AGREGAR INFORMACIÓN DE CAJA -->
+          <!-- ✅ INFORMACIÓN DE CAJA ASIGNADA -->
+  <div *ngIf="currentUser.id_caja" class="mt-2">
+    <p class="text-xs font-medium text-blue-700">Caja Asignada:</p>
+    <p class="text-xs text-blue-600">#{{ currentUser.id_caja }} - {{ currentUser.nombre_caja }}</p>
+  </div>
+  <div *ngIf="!currentUser.id_caja && currentUser.rol === 'cajero'" class="mt-2">
+    <p class="text-xs text-yellow-600">Sin caja asignada</p>
+  </div>
+        </div>
+
+        <!-- Botón cerrar sesión sin márgenes blancos -->
+        <button 
+          (click)="cerrarSesion()" 
+          class="w-full text-left px-4 py-3 text-sm text-red-700 hover:bg-red-100 hover:text-red-800 transition-colors duration-200 flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg>
+          Cerrar sesión
+        </button>
+      </div>
+    </div>
+  </div>
+</header>

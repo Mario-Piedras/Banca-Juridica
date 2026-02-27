@@ -1,0 +1,19 @@
+/* Animación para loading */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Transiciones suaves en filas */
+tr {
+  transition: background-color 0.2s ease;
+}
+
+/* Hover en botón */
+button:hover svg {
+  transform: rotate(180deg);
+  transition: transform 0.3s ease;
+}

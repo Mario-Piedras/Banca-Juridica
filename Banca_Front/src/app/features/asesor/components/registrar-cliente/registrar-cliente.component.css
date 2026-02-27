@@ -1,0 +1,103 @@
+/* 🎨 Paleta de colores base */
+:root {
+  --color-primary: #2e5bff;
+  --color-success: #0dbf00;
+  --color-gray: #e7e7e7;
+  --color-border: #d1d5db;
+  --color-text: #374151;
+  --color-bg: #ffffff;
+}
+
+/* 🧱 Contenedor principal del formulario */
+.form-container {
+  max-width: 850px;
+  margin: auto;
+  background: var(--color-bg);
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 🗂️ Pestañas */
+.tabs {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 1rem;
+}
+
+.tabs button {
+  background: var(--color-gray);
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.tabs button.active {
+  background: var(--color-primary);
+  color: white;
+}
+
+.tabs button:focus {
+  outline: none;
+}
+
+/* 🧩 Distribución en cuadrícula */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+}
+
+/* 🏷️ Etiquetas */
+form label {
+  color: var(--color-text);
+  font-weight: 500;
+  margin-top: 0.5rem;
+}
+
+/* ✏️ Entradas y selects */
+input,
+select {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--color-border);
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+input:focus,
+select:focus {
+  border-color: var(--color-primary);
+  outline: none;
+  box-shadow: 0 0 4px rgba(46, 91, 255, 0.3);
+}
+
+/* 🔘 Botones principales */
+.btn-next,
+.btn-save {
+  margin-top: 1rem;
+  padding: 0.7rem 1.5rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  color: white;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-next {
+  background-color: var(--color-primary);
+}
+
+.btn-save {
+  background-color: var(--color-success);
+}
+
+.btn-next:hover {
+  background-color: #234bcc;
+}
+
+.btn-save:hover {
+  background-color: #0aa300;
+}

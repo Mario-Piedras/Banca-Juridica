@@ -1,0 +1,83 @@
+<div class="p-6 max-w-7xl mx-auto bg-white shadow-sm rounded-lg border border-gray-200">
+  <form [formGroup]="form" class="space-y-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+      <!-- Ingresos Mensuales -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+          Ingresos Mensuales <span class="text-red-500">*</span>
+        </label>
+        <input id="ingresosMensuales" type="number" formControlName="ingresosMensuales"
+          (keydown)="onEnterKey($event, 'egresosMensuales')" min="0" max="999999999999"
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Ej: 3000000">
+        <div class="text-red-500 text-xs mt-1"
+          *ngIf="form.get('ingresosMensuales')?.invalid && form.get('ingresosMensuales')?.touched">
+          <span *ngIf="form.get('ingresosMensuales')?.errors?.['required']">Campo obligatorio</span>
+          <span *ngIf="form.get('ingresosMensuales')?.errors?.['min']">Debe ser mayor o igual a 0</span>
+          <span *ngIf="form.get('ingresosMensuales')?.errors?.['pattern']">Solo números</span>
+        </div>
+      </div>
+
+      <!-- Egresos Mensuales -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+          Egresos Mensuales <span class="text-red-500">*</span>
+        </label>
+        <input id="egresosMensuales" type="number" formControlName="egresosMensuales"
+          (keydown)="onEnterKey($event, 'totalActivos')" min="0" max="999999999999"
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Ej: 1500000">
+        <div class="text-red-500 text-xs mt-1"
+          *ngIf="form.get('egresosMensuales')?.invalid && form.get('egresosMensuales')?.touched">
+          <span *ngIf="form.get('egresosMensuales')?.errors?.['required']">Campo obligatorio</span>
+          <span *ngIf="form.get('egresosMensuales')?.errors?.['min']">Debe ser mayor o igual a 0</span>
+          <span *ngIf="form.get('egresosMensuales')?.errors?.['pattern']">Solo números</span>
+        </div>
+      </div>
+
+      <!-- Total Activos -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+          Total Activos <span class="text-red-500">*</span>
+        </label>
+        <input id="totalActivos" type="number" formControlName="totalActivos"
+          (keydown)="onEnterKey($event, 'totalPasivos')" min="0" max="999999999999"
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Ej: 50000000">
+        <div class="text-red-500 text-xs mt-1"
+          *ngIf="form.get('totalActivos')?.invalid && form.get('totalActivos')?.touched">
+          <span *ngIf="form.get('totalActivos')?.errors?.['required']">Campo obligatorio</span>
+          <span *ngIf="form.get('totalActivos')?.errors?.['min']">Debe ser mayor o igual a 0</span>
+          <span *ngIf="form.get('totalActivos')?.errors?.['pattern']">Solo números</span>
+        </div>
+      </div>
+
+      <!-- Total Pasivos -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+          Total Pasivos <span class="text-red-500">*</span>
+        </label>
+        <input id="totalPasivos" type="number" formControlName="totalPasivos" min="0" max="999999999999"
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Ej: 10000000">
+        <div class="text-red-500 text-xs mt-1"
+          *ngIf="form.get('totalPasivos')?.invalid && form.get('totalPasivos')?.touched">
+          <span *ngIf="form.get('totalPasivos')?.errors?.['required']">Campo obligatorio</span>
+          <span *ngIf="form.get('totalPasivos')?.errors?.['min']">Debe ser mayor o igual a 0</span>
+          <span *ngIf="form.get('totalPasivos')?.errors?.['pattern']">Solo números</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Botón Guardar -->
+    <div class="flex justify-end mt-6">
+      <button type="button" (click)="guardarSeccion()" [disabled]="!form.valid" [class]="form.valid 
+          ? 'px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors cursor-pointer' 
+          : 'px-6 py-2 bg-gray-300 text-gray-500 font-medium rounded-lg cursor-not-allowed'">
+        Guardar y Continuar
+      </button>
+    </div>
+  </form>
+</div>

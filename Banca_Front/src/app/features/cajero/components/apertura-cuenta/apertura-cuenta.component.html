@@ -1,0 +1,267 @@
+<!-- Comprobante de apertura RESPONSIVE -->
+<div *ngIf="cuentaAperturada"
+  class="bg-white rounded-xl shadow-lg border border-blue-900 w-full max-w-xl mb-4 md:mb-6 print-section">
+  <div class="bg-blue-900 text-white p-3 md:p-4 text-center rounded-t-lg">
+    <h2 class="text-lg sm:text-xl md:text-2xl font-bold">COMPROBANTE DE APERTURA DE CUENTA</h2>
+  </div>
+
+  <div class="p-4 md:p-6">
+    <!-- Grid responsive: 1 columna en móvil, 2 en tablet+ -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 mb-3 md:mb-4">
+      <div>
+        <p class="text-xs md:text-sm text-gray-600">Número de Cuenta:</p>
+        <p class="text-base md:text-lg font-bold text-blue-900 break-all">{{ datosComprobante.numeroCuenta }}</p>
+      </div>
+      <div>
+        <p class="text-xs md:text-sm text-gray-600">Fecha de Apertura:</p>
+        <p class="text-sm md:text-lg font-semibold">{{ datosComprobante.fecha | date:'dd/MM/yyyy HH:mm' }}</p>
+      </div>
+    </div>
+
+    <div class="border-t border-gray-200 pt-3 md:pt-4 mb-3 md:mb-4">
+      <h3 class="text-sm md:text-base font-bold text-gray-700 mb-2">Datos del Titular:</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+          <p class="text-xs md:text-sm text-gray-600">Nombre Completo:</p>
+          <p class="text-sm md:text-base font-semibold">{{ datosComprobante.nombreCliente }}</p>
+        </div>
+        <div>
+          <p class="text-xs md:text-sm text-gray-600">Documento:</p>
+          <p class="text-sm md:text-base font-semibold">{{ datosComprobante.tipoDocumento }} {{
+            datosComprobante.numeroDocumento }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="border-t border-gray-200 pt-3 md:pt-4 mb-3 md:mb-4">
+      <h3 class="text-sm md:text-base font-bold text-gray-700 mb-2">Depósito Inicial:</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+          <p class="text-xs md:text-sm text-gray-600">Tipo:</p>
+          <p class="text-sm md:text-base font-semibold">{{ datosComprobante.tipoDeposito }}</p>
+        </div>
+        <div>
+          <p class="text-xs md:text-sm text-gray-600">Valor:</p>
+          <p class="text-base md:text-lg font-semibold text-green-600">$ {{ datosComprobante.valorDeposito |
+            number:'1.0-0' }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botones responsive: vertical en móvil, horizontal en tablet+ -->
+    <div class="flex flex-col sm:flex-row gap-2 md:gap-3 mt-4 md:mt-6">
+      <button (click)="imprimirComprobante()"
+        class="flex-1 px-4 md:px-6 py-2 md:py-3 bg-blue-900 text-white rounded-lg hover:bg-blue-700 font-medium transition-colors text-sm md:text-base flex items-center justify-center">
+        <span class="material-icons">print</span>
+        <span class="ml-2">Imprimir Comprobante</span>
+      </button>
+      <button (click)="limpiarFormulario()"
+        class="flex-1 px-4 md:px-6 py-2 md:py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-500 font-medium transition-colors text-sm md:text-base">
+        Nueva Apertura
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Formulario principal RESPONSIVE -->
+<div *ngIf="!cuentaAperturada" class="bg-white rounded-lg shadow-sm border border-gray-200 w-full max-w-lg">
+  <div class="p-4 md:p-6">
+    <h2 class="text-lg md:text-xl font-bold text-blue-900 mb-2">Apertura de Cuenta de Ahorros</h2>
+    <p class="text-xs md:text-sm text-gray-600 mb-4 md:mb-6">Complete la información del cliente para crear una nueva
+      cuenta de ahorros.</p>
+
+    <form (ngSubmit)="abrirCuenta()">
+      <!-- Grid responsive: 1 columna en móvil, 2 en tablet+ -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+        <!-- Tipo de Documento -->
+        <div>
+          <label class="block text-xs md:text-sm font-medium text-gray-700 mb-1">
+            Tipo de Documento <span class="text-red-500">*</span>
+          </label>
+          <select #tipoDocRef="ngModel" [(ngModel)]="tipoDocumento" name="tipoDocumento"
+            (change)="onTipoDocumentoChange()"
+            class="w-full px-2 md:px-3 py-1.5 md:py-2 text-xs md:text-sm border rounded-lg focus:outline-none focus:border-blue-500"
+            [ngClass]="{
+              'border-gray-300': !(tipoDocRef.invalid && tipoDocRef.touched),
+              'border-red-500': tipoDocRef.invalid && tipoDocRef.touched,
+              'bg-gray-50 text-gray-700': clienteVerificado
+            }" required [disabled]="clienteVerificado">
+            <option value="">Seleccione...</option>
+            <option value="CC">Cédula de Ciudadanía (CC)</option>
+            <option value="CE">Cédula de Extranjería (CE)</option>
+            <option value="TI">Tarjeta de Identidad (TI)</option>
+            <option value="PA">Pasaporte (PA)</option>
+          </select>
+          <!-- Mensaje de error -->
+          <p class="text-xs text-red-500 mt-1" *ngIf="tipoDocRef.invalid && tipoDocRef.touched">
+            El tipo de documento es requerido
+          </p>
+        </div>
+
+        <!-- Número de Documento -->
+        <div>
+          <label class="block text-xs md:text-sm font-medium text-gray-700 mb-1">
+            Número de Documento <span class="text-red-500">*</span>
+          </label>
+          <input #numDocRef="ngModel" type="text" [(ngModel)]="numeroDocumento" name="numeroDocumento"
+            placeholder="Ingrese el número" (input)="onInputDocumento($event)"
+            [maxlength]="MAX_LENGTH_DOCUMENTO[tipoDocumento] || 20"
+            class="w-full px-2 md:px-3 py-1.5 md:py-2 text-xs md:text-sm border rounded-lg focus:outline-none focus:border-blue-500"
+            [ngClass]="{
+              'border-gray-300': !(numDocRef.invalid && numDocRef.touched),
+              'border-red-500': numDocRef.invalid && numDocRef.touched,
+              'bg-gray-50 text-gray-700 font-semibold': clienteVerificado
+            }" required [disabled]="clienteVerificado" />
+          <!-- Mensaje de error -->
+          <p class="text-xs text-red-500 mt-1" *ngIf="numDocRef.invalid && numDocRef.touched">
+            El número de documento es requerido
+          </p>
+          <!-- Mensaje informativo (solo si es válido) -->
+          <p class="text-xs text-gray-500 mt-1"
+            *ngIf="tipoDocumento && !(numDocRef.invalid && numDocRef.touched) && !clienteVerificado">
+            <span *ngIf="tipoDocumento === 'CC'">CC: 6-10 dígitos numéricos</span>
+            <span *ngIf="tipoDocumento === 'CE'">CE: 6-7 dígitos numéricos</span>
+            <span *ngIf="tipoDocumento === 'TI'">TI: 10-11 dígitos numéricos</span>
+            <span *ngIf="tipoDocumento === 'PA'">PA: 6-9 caracteres alfanuméricos</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Botón Buscar -->
+      <div class="mt-3 md:mt-4">
+        <button type="button" (click)="buscarCliente()" [disabled]="clienteVerificado"
+          class="w-full px-4 md:px-6 py-2 md:py-2.5 bg-blue-900 text-white rounded-lg hover:bg-blue-700 font-medium transition-colors text-xs md:text-sm disabled:bg-gray-300 disabled:cursor-not-allowed">
+          Buscar Cliente
+        </button>
+      </div>
+
+      <!-- Nombre Completo (readonly) - SIEMPRE VISIBLE -->
+      <div class="mt-3 md:mt-4">
+        <label class="block text-xs md:text-sm font-medium text-gray-700 mb-1">
+          Nombre Completo
+        </label>
+        <input type="text" [(ngModel)]="nombreCompleto" name="nombreCompleto"
+          placeholder="Nombres y apellidos completos"
+          class="w-full px-2 md:px-3 py-1.5 md:py-2 text-xs md:text-sm border border-gray-200 rounded-lg bg-gray-50 text-gray-700 font-semibold"
+          readonly />
+      </div>
+
+      <!-- Mensaje de estado responsive CON ÍCONO -->
+      <div *ngIf="clienteVerificado" class="mt-3 md:mt-4 p-3 md:p-4 rounded-lg flex items-start gap-3" [ngClass]="{
+        'bg-green-50 border border-green-200': estadoSolicitud === 'Aprobada',
+        'bg-red-50 border border-red-200': estadoSolicitud === 'Rechazada',
+        'bg-yellow-50 border border-yellow-200': estadoSolicitud === 'Devuelta' || estadoSolicitud === 'Pendiente',
+        'bg-gray-50 border border-gray-200': estadoSolicitud === 'SinSolicitud' || estadoSolicitud === 'YaTieneCuenta'
+      }">
+
+        <!-- Ícono de Material Icons -->
+        <span class="material-icons text-2xl flex-shrink-0" [ngClass]="{
+          'text-green-600': estadoSolicitud === 'Aprobada',
+          'text-red-600': estadoSolicitud === 'Rechazada',
+          'text-yellow-600': estadoSolicitud === 'Devuelta' || estadoSolicitud === 'Pendiente',
+          'text-gray-600': estadoSolicitud === 'SinSolicitud' || estadoSolicitud === 'YaTieneCuenta'
+        }">
+          {{ iconoEstado }}
+        </span>
+
+        <!-- Mensaje -->
+        <div class="flex-1">
+          <p class="text-xs md:text-sm font-semibold mb-1" [ngClass]="{
+            'text-green-800': estadoSolicitud === 'Aprobada',
+            'text-red-800': estadoSolicitud === 'Rechazada',
+            'text-yellow-800': estadoSolicitud === 'Devuelta' || estadoSolicitud === 'Pendiente',
+            'text-gray-800': estadoSolicitud === 'SinSolicitud' || estadoSolicitud === 'YaTieneCuenta'
+          }">
+            Estado de la Solicitud:
+          </p>
+          <p class="text-xs md:text-sm">{{ mensajeEstado }}</p>
+        </div>
+      </div>
+
+      <!-- Formulario de depósito -->
+      <div class="mt-3 md:mt-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+
+          <!-- Tipo Depósito -->
+          <div>
+            <label class="block text-xs md:text-sm font-medium text-gray-700 mb-1">
+              Tipo de Depósito <span class="text-red-500">*</span>
+            </label>
+            <select #tipoDepRef="ngModel" [(ngModel)]="depositoInicial" name="depositoInicial"
+              [disabled]="!mostrarFormularioDeposito"
+              class="w-full px-2 md:px-3 py-1.5 md:py-2 text-xs md:text-sm border rounded-lg focus:outline-none focus:border-blue-500"
+              [ngClass]="{
+                'border-gray-300': !(tipoDepRef.invalid && tipoDepRef.touched),
+                'border-red-500': tipoDepRef.invalid && tipoDepRef.touched
+              }" required>
+              <option value="">Seleccione...</option>
+              <option value="Efectivo">Efectivo</option>
+              <option value="Cheque">Cheque</option>
+            </select>
+            <p class="text-xs text-red-500 mt-1" *ngIf="tipoDepRef.invalid && tipoDepRef.touched">
+              El tipo de depósito es requerido
+            </p>
+          </div>
+
+          <!-- Valor -->
+          <div>
+            <label class="block text-xs md:text-sm font-medium text-gray-700 mb-1">
+              Valor de Depósito
+            </label>
+            <input type="text" name="valorDeposito" placeholder="0" [disabled]="!mostrarFormularioDeposito"
+              (input)="onInputMonto($event)" (blur)="validarMonto()"
+              class="w-full px-2 md:px-3 py-1.5 md:py-2 text-xs md:text-sm border rounded-lg focus:outline-none focus:border-blue-500 border-gray-300" />
+            <p class="text-xs text-gray-500 mt-1">Opcional | Máximo: $9,999,999,999,999</p>
+          </div>
+
+          <!-- Código de Cheque -->
+          <div *ngIf="depositoInicial === 'Cheque'">
+            <label class="block text-xs md:text-sm font-medium text-gray-700 mb-1">
+              Código de Cheque <span class="text-red-500">*</span>
+            </label>
+            <input #codChequeRef="ngModel" type="text" [(ngModel)]="codigoCheque" name="codigoCheque"
+              placeholder="Ingrese código"
+              class="w-full px-2 md:px-3 py-1.5 md:py-2 text-xs md:text-sm border rounded-lg focus:outline-none focus:border-blue-500"
+              [ngClass]="{
+                'border-gray-300': !(codChequeRef.invalid && codChequeRef.touched),
+                'border-red-500': codChequeRef.invalid && codChequeRef.touched
+              }" [required]="depositoInicial === 'Cheque'" />
+            <p class="text-xs text-red-500 mt-1" *ngIf="codChequeRef.invalid && codChequeRef.touched">
+              El código de cheque es requerido
+            </p>
+          </div>
+
+          <!-- Número de Cheque -->
+          <div *ngIf="depositoInicial === 'Cheque'">
+            <label class="block text-xs md:text-sm font-medium text-gray-700 mb-1">
+              Número de Cheque <span class="text-red-500">*</span>
+            </label>
+            <input #numChequeRef="ngModel" type="text" [(ngModel)]="numeroCheque" name="numeroCheque"
+              placeholder="Ingrese número"
+              class="w-full px-2 md:px-3 py-1.5 md:py-2 text-xs md:text-sm border rounded-lg focus:outline-none focus:border-blue-500"
+              [ngClass]="{
+                'border-gray-300': !(numChequeRef.invalid && numChequeRef.touched),
+                'border-red-500': numChequeRef.invalid && numChequeRef.touched
+              }" [required]="depositoInicial === 'Cheque'" />
+            <p class="text-xs text-red-500 mt-1" *ngIf="numChequeRef.invalid && numChequeRef.touched">
+              El número de cheque es requerido
+            </p>
+          </div>
+        </div>
+
+        <!-- Botones -->
+        <div class="mt-4 md:mt-6 flex flex-col sm:flex-row gap-2 md:gap-3">
+          <button type="submit"
+            [disabled]="estadoSolicitud !== 'Aprobada' || !depositoInicial || (depositoInicial === 'Cheque' && (!codigoCheque || !numeroCheque))"
+            class="flex-1 px-4 md:px-6 py-2 md:py-2.5 bg-blue-900 text-white rounded-lg hover:bg-blue-700 font-medium transition-colors text-xs md:text-sm disabled:bg-gray-300 disabled:cursor-not-allowed">
+            Aperturar Cuenta
+          </button>
+          <button type="button" (click)="limpiarFormulario()"
+            class="px-4 md:px-6 py-2 md:py-2.5 bg-gray-600 text-white rounded-lg hover:bg-gray-500 font-medium transition-colors text-xs md:text-sm">
+            Cancelar
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

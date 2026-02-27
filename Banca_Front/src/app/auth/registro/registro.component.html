@@ -1,0 +1,133 @@
+<div class="flex items-center justify-center min-h-screen bg-white p-5">
+
+  <div class="flex flex-col md:flex-row bg-white rounded-2xl shadow-2xl overflow-hidden w-full max-w-5xl min-h-[600px]">
+
+    <!-- Panel Izquierdo -->
+    <div class="flex-1 bg-gradient-to-b from-[#0a4d68] via-[#088395] to-[#37b34a] flex flex-col justify-center items-center text-center text-white p-10">
+      <div class="w-28 h-28 mb-10">
+        <div class="w-full h-full bg-white/20 rounded-full flex items-center justify-center shadow-lg p-6 backdrop-blur-sm">
+          <img src="isotipo_simulabank.png" alt="Logo Banca Uno" class="w-full h-full object-contain drop-shadow-md">
+        </div>
+      </div>
+
+      <h1 class="text-4xl font-bold mb-3">¡Únete!</h1>
+      <p class="text-lg opacity-90 mb-10">Crea tu cuenta y comienza a aprender sobre el mundo bancario</p>
+
+      <div class="w-full max-w-xs text-left space-y-4">
+        <div class="flex items-center">
+          <div class="w-7 h-7 rounded-full bg-white/30 flex items-center justify-center font-bold text-sm mr-4">1</div>
+          <span>Experiencia educativa completa</span>
+        </div>
+        <div class="flex items-center">
+          <div class="w-7 h-7 rounded-full bg-white/30 flex items-center justify-center font-bold text-sm mr-4">2</div>
+          <span>Practica operaciones reales</span>
+        </div>
+        <div class="flex items-center">
+          <div class="w-7 h-7 rounded-full bg-white/30 flex items-center justify-center font-bold text-sm mr-4">3</div>
+          <span>Seguimiento de progreso</span>
+        </div>
+        <div class="flex items-center">
+          <div class="w-7 h-7 rounded-full bg-white/30 flex items-center justify-center font-bold text-sm mr-4">4</div>
+          <span>Certificación de aprendizaje</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel Derecho -->
+    <div class="flex-1 flex flex-col justify-center p-10">
+
+      <div class="mb-10">
+        <h2 class="text-3xl font-semibold text-[#0a4d68] mb-2">Crear Cuenta</h2>
+        <p class="text-sm text-gray-500">Completa tus datos para registrarte en el sistema</p>
+      </div>
+
+      <!-- Mensajes de éxito/error -->
+      <div *ngIf="successMessage" class="mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded-lg">
+        {{ successMessage }}
+      </div>
+
+      <div *ngIf="errorMessage" class="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+        {{ errorMessage }}
+      </div>
+
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-5">
+        <!-- Nombre -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">
+            Nombre Completo <span class="text-red-600">*</span>
+          </label>
+          <input
+            type="text"
+            formControlName="nombre"
+            placeholder="Juan Carlos Pérez González"
+            [class.border-red-500]="isFieldInvalid('nombre')"
+            class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400 focus:border-sky-400 placeholder:text-gray-400">
+          <span *ngIf="isFieldInvalid('nombre')" class="text-xs text-red-500 mt-1 block">
+            {{ getErrorMessage('nombre') }}
+          </span>
+        </div>
+
+        <!-- Correo -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">
+            Correo <span class="text-red-600">*</span>
+          </label>
+          <input
+            type="email"
+            formControlName="correo"
+            placeholder="correo@ejemplo.com"
+            [class.border-red-500]="isFieldInvalid('correo')"
+            class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400 focus:border-sky-400 placeholder:text-gray-400">
+          <span *ngIf="isFieldInvalid('correo')" class="text-xs text-red-500 mt-1 block">
+            {{ getErrorMessage('correo') }}
+          </span>
+        </div>
+
+        <!-- Contraseña -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">
+            Contraseña <span class="text-red-600">*</span>
+          </label>
+          <input
+            type="password"
+            formControlName="contrasena"
+            placeholder="Ingrese su Contraseña"
+            [class.border-red-500]="isFieldInvalid('contrasena')"
+            class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400 focus:border-sky-400 placeholder:text-gray-400">
+          <span *ngIf="isFieldInvalid('contrasena')" class="text-xs text-red-500 mt-1 block">
+            {{ getErrorMessage('contrasena') }}
+          </span>
+        </div>
+
+        <!-- Botones -->
+        <button
+          type="submit"
+          [disabled]="isLoading"
+          [class.opacity-50]="isLoading"
+          [class.cursor-not-allowed]="isLoading"
+          class="w-full py-3 rounded-xl bg-[#0c4a6e] text-white font-semibold text-base hover:bg-[#0a3a56] transition-all shadow-md hover:-translate-y-0.5">
+          {{ isLoading ? 'Registrando...' : 'Registrar' }}
+        </button>
+
+        <button
+          type="button"
+          routerLink="/auth/login"
+          [disabled]="isLoading"
+          class="block w-full py-3 border-2 border-[#0c4a6e] rounded-xl text-center font-semibold text-[#0c4a6e] hover:bg-slate-50 transition">
+          Volver al inicio
+        </button>
+
+        <p class="text-center text-xs text-gray-500 mt-5">
+          Al registrarte, aceptas los términos y condiciones del sistema de simulación.
+        </p>
+      </form>
+
+      <div class="text-center text-xs text-gray-400 mt-10 border-t pt-5">
+        Banca Uno - Sistema de Simulación v1.0.0<br>
+        © 2025 Todos los derechos reservados
+      </div>
+    </div>
+
+  </div>
+
+</div>

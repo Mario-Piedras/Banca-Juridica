@@ -1,0 +1,118 @@
+<div class="max-w-4xl p-6 bg-white rounded-lg">
+  <h1 class="text-2xl font-bold text-blue-900 mb-2">Consultar solicitudes radicadas</h1>
+  <p class="text-sm text-gray-600 mb-6">Ingresa la cédula y presiona buscar</p>
+
+  <!-- Formulario de búsqueda -->
+  <div class="mb-6">
+    <label class="block text-sm font-semibold text-gray-800 mb-2">Cédula del cliente <span class="text-red-600">*</span></label>
+
+    <div class="flex gap-3">
+      <input
+        type="text"
+        [(ngModel)]="cedula"
+        placeholder="Ej: 0000001"
+        [disabled]="cargando"
+        maxlength="11"
+        (keypress)="soloNumeros($event)"
+        (keyup.enter)="buscarSolicitudes()"
+        class="w-100 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-400 disabled:bg-gray-100"
+      />
+
+      <button
+        (click)="buscarSolicitudes()"
+        [disabled]="cargando || !cedula.trim()"
+        class="px-6 py-2 bg-blue-900 text-white rounded-md hover:bg-blue-800 transition-colors font-medium cursor-pointer disabled:bg-gray-400 disabled:cursor-not-allowed"
+      >
+        {{ cargando ? 'Buscando...' : 'Buscar' }}
+      </button>
+
+      <button
+        *ngIf="solicitudes && solicitudes.length > 0"
+        (click)="cedula = ''; solicitudes = []; mensajeError = '';"
+        class="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors font-medium cursor-pointer"
+      >
+        Limpiar
+      </button>
+    </div>
+
+    <p class="text-xs text-gray-500 mt-1">Ingrese la cédula del cliente</p>
+
+    <!-- Mensaje de error -->
+    <div *ngIf="mensajeError" class="mt-2 p-3 bg-red-50 border border-red-200 rounded-md flex items-center gap-2">
+      <svg class="w-5 h-5 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+      </svg>
+      <span class="text-sm text-red-800 font-medium">{{ mensajeError }}</span>
+    </div>
+  </div>
+
+  <!-- Tabla de solicitudes -->
+  <div>
+    <h2 class="text-xl font-bold text-blue-900 mb-6">Solicitudes radicadas</h2>
+
+    <!-- Mensaje cuando no hay solicitudes -->
+    <div *ngIf="solicitudes.length === 0 && !cargando" class="text-center py-8">
+      <p class="text-gray-500">No hay solicitudes para mostrar. Realiza una búsqueda.</p>
+    </div>
+
+    <!-- Indicador de carga -->
+    <div *ngIf="cargando" class="text-center py-8">
+      <div class="inline-block animate-spin rounded-full h-10 w-10 border-b-2 border-blue-900"></div>
+      <p class="text-sm text-gray-600 mt-3">Buscando solicitudes...</p>
+    </div>
+
+    <!-- Tabla -->
+    <div *ngIf="solicitudes.length > 0" class="overflow-x-auto">
+      <table class="w-full">
+        <thead>
+          <tr class="border-b-2 border-gray-200">
+            <th class="text-left py-3 px-3 font-semibold text-sm text-blue-900">ID Solicitud</th>
+            <th class="text-left py-3 px-3 font-semibold text-sm text-blue-900">Cédula</th>
+            <th class="text-left py-3 px-3 font-semibold text-sm text-blue-900">Fecha</th>
+            <th class="text-left py-3 px-3 font-semibold text-sm text-blue-900">Estado</th>
+            <th class="text-left py-3 px-3 font-semibold text-sm text-blue-900">Producto</th>
+            <th class="text-left py-3 px-3 font-semibold text-sm text-blue-900">Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let s of solicitudes" class="border-b border-gray-200 hover:bg-gray-50">
+            <td class="py-4 px-3 text-sm text-gray-800 font-medium">{{ s.id }}</td>
+            <td class="py-4 px-3 text-sm text-gray-800">{{ s.cedula }}</td>
+            <td class="py-4 px-3 text-sm text-gray-800">{{ s.fecha }}</td>
+            <td class="py-4 px-3">
+              <span class="px-3 py-1 rounded-full text-xs font-semibold" [ngClass]="{
+                'bg-yellow-200 text-yellow-800': s.estado === 'PENDIENTE',
+                'bg-green-200 text-green-800': s.estado === 'APROBADO',
+                'bg-red-200 text-red-800': s.estado === 'RECHAZADO'
+              }">
+                {{ s.estado }}
+              </span>
+            </td>
+            <td class="py-4 px-3 text-sm text-gray-800">{{ s.producto }}</td>
+            <td class="py-4 px-3">
+              <button (click)="verComentario(s)" class="px-4 py-1.5 border-2 border-blue-900 text-blue-900 rounded-md text-sm font-medium hover:bg-blue-50 transition-colors cursor-pointer">Ver</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Modal de comentarios -->
+  <div *ngIf="mostrarModal" class="modal-overlay fixed inset-0 bg-blue bg-opacity-60 flex items-center justify-center z-50 p-4 backdrop-blur-sm" (click)="cerrarModalFondo($event)">
+    <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto transform transition-all duration-200 scale-100">
+      <div class="bg-[#0b2a66] text-white px-6 py-4 rounded-t-xl flex justify-between items-center">
+        <h3 class="text-xl font-semibold">Comentario del Asesor</h3>
+        <button (click)="cerrarModal()" class="text-white hover:text-gray-300 transition-colors text-2xl leading-none">&times;</button>
+      </div>
+
+      <div class="p-6">
+        <div class="bg-gray-50 rounded-lg p-4 min-h-[150px]"><p class="text-gray-700 whitespace-pre-wrap">{{ comentarioActual }}</p></div>
+      </div>
+
+      <div class="px-6 py-4 bg-gray-50 rounded-b-xl flex justify-end">
+        <button (click)="cerrarModal()" class="px-6 py-2 bg-blue-700 hover:bg-blue-800 text-white rounded-lg transition-colors">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>

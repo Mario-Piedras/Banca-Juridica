@@ -1,0 +1,158 @@
+<div class="flex items-center justify-center min-h-screen bg-white p-6 font-['Roboto']">
+
+  <div class="flex flex-col md:flex-row bg-white rounded-2xl shadow-2xl overflow-hidden w-full max-w-5xl min-h-[600px]">
+
+    <!-- Panel Izquierdo -->
+    <div
+      class="flex-1 bg-gradient-to-b from-[#0a4d68] via-[#088395] to-[#37b34a] text-white flex flex-col items-center justify-center text-center p-10">
+      <div class="w-28 h-28 mb-10">
+        <div class="w-full h-full bg-white/20 rounded-full flex items-center justify-center shadow-lg p-6">
+          <img src="isotipo_simulabank.png" alt="Logo Banca Uno" class="w-full h-full object-contain drop-shadow-md">
+        </div>
+      </div>
+
+      <h1 class="text-4xl font-bold mb-3">Banca Uno</h1>
+      <p class="text-lg opacity-90 mb-10">Aprende el sistema bancario de manera práctica e interactiva</p>
+
+      <div class="w-full max-w-xs text-left space-y-4">
+        <div class="flex items-center">
+          <div class="w-7 h-7 bg-white/30 rounded-full flex items-center justify-center mr-4 font-semibold">✓</div>
+          <span>Simulación bancaria realista</span>
+        </div>
+
+        <div class="flex items-center">
+          <div class="w-7 h-7 bg-white/30 rounded-full flex items-center justify-center mr-4 font-semibold">✓</div>
+          <span>Múltiples roles de usuario</span>
+        </div>
+
+        <div class="flex items-center">
+          <div class="w-7 h-7 bg-white/30 rounded-full flex items-center justify-center mr-4 font-semibold">✓</div>
+          <span>Transacciones seguras</span>
+        </div>
+
+        <div class="flex items-center">
+          <div class="w-7 h-7 bg-white/30 rounded-full flex items-center justify-center mr-4 font-semibold">✓</div>
+          <span>Entorno de aprendizaje</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel Derecho -->
+    <div class="flex-1 flex flex-col justify-center p-10">
+
+      <h2 class="text-3xl font-semibold text-[#0a4d68] mb-2">Iniciar Sesión</h2>
+      <p class="text-sm text-gray-500 mb-6">Accede a tu cuenta del sistema de simulación</p>
+
+      <!-- Mensaje de éxito -->
+      <div *ngIf="successMessage" class="bg-green-500 text-white p-3 rounded-lg mb-5 text-center">
+        {{ successMessage }}
+      </div>
+
+      <!-- Mensaje de error -->
+      <div *ngIf="errorMessage" class="bg-red-500 text-white p-3 rounded-lg mb-5 text-center">
+        {{ errorMessage }}
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-5">
+
+        <!-- Email -->
+        <div>
+          <label for="correo" class="block text-sm font-medium text-gray-700 mb-1">
+            Email <span class="text-red-600">*</span>
+          </label>
+          <input
+            type="email"
+            id="correo"
+            formControlName="correo"
+            placeholder="Ingrese su correo electrónico"
+            [class.border-red-500]="correo?.invalid && correo?.touched"
+            class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400 focus:border-sky-400 placeholder:text-gray-400">
+          <p *ngIf="correo?.invalid && correo?.touched" class="text-xs text-red-500 mt-1">
+            {{ correo?.hasError('required') ? 'El email es requerido' : 'Ingrese un correo electrónico válido' }}
+          </p>
+        </div>
+
+        <!-- Contraseña -->
+        <div>
+          <label for="contrasena" class="block text-sm font-medium text-gray-700 mb-1">
+            Contraseña <span class="text-red-600">*</span>
+          </label>
+          <input
+            type="password"
+            id="contrasena"
+            formControlName="contrasena"
+            placeholder="Ingrese su contraseña"
+            [class.border-red-500]="contrasena?.invalid && contrasena?.touched"
+            class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400 focus:border-sky-400 placeholder:text-gray-400">
+          <p class="text-xs text-gray-400 mt-1">Mínimo 8 caracteres</p>
+          <p *ngIf="contrasena?.invalid && contrasena?.touched" class="text-xs text-red-500 mt-1">
+            {{ contrasena?.hasError('required') ? 'La contraseña es requerida' : 'Mínimo 8 caracteres' }}
+          </p>
+        </div>
+
+        <!-- Rol -->
+        <div>
+          <label for="rol" class="block text-sm font-medium text-gray-700 mb-1">
+            Selecciona tu rol <span class="text-red-600">*</span>
+          </label>
+          <select
+            id="rol"
+            formControlName="rol"
+            [class.border-red-500]="rol?.invalid && rol?.touched"
+            class="w-full border-2 border-gray-200 rounded-xl px-3 py-3 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-sky-400 focus:border-sky-400">
+            <option value="" disabled>Seleccione el rol con el que desea acceder</option>
+            <option *ngFor="let rolItem of rolesDisponibles" [value]="rolItem.nombre">
+              {{ rolItem.nombre }}
+              <span *ngIf="rolItem.descripcion"> - {{ rolItem.descripcion }}</span>
+            </option>
+          </select>
+          <p class="text-xs text-gray-400 mt-1">
+            Elige el rol según la función que desees realizar
+          </p>
+          <p *ngIf="rol?.invalid && rol?.touched" class="text-xs text-red-500 mt-1">
+            Seleccione un rol para continuar
+          </p>
+        </div>
+
+        <!-- Información sobre roles -->
+        <div class="bg-blue-50 border-l-4 border-blue-400 p-3 rounded">
+          <p class="text-xs text-blue-700">
+            <strong>💡 Nota:</strong> Si es tu primera vez con este rol, se asignará automáticamente al iniciar sesión.
+          </p>
+        </div>
+
+        <!-- Botón -->
+        <button
+          type="submit"
+          [disabled]="isLoading"
+          class="w-full py-3 rounded-xl bg-[#0c4a6e] text-white font-semibold text-base hover:bg-[#0a3a56] transition-all shadow-md hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed">
+          <span *ngIf="!isLoading">Iniciar Sesión</span>
+          <span *ngIf="isLoading" class="flex items-center justify-center">
+            <svg class="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Iniciando sesión...
+          </span>
+        </button>
+
+        <!-- Enlaces inferiores -->
+        <div class="text-center text-sm mt-[30px]">
+          <div class="text-gray-400 mb-2">¿No tienes una cuenta?</div>
+          <a routerLink="/auth/registro" class="text-[#088395] font-semibold hover:underline">
+            Crear cuenta nueva
+          </a>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center text-xs text-gray-400 mt-8 border-t pt-5">
+          Banca Uno - Sistema de Simulación v1.0.0<br>
+          © 2025 Todos los derechos reservados
+        </div>
+      </form>
+
+    </div>
+
+  </div>
+
+</div>
