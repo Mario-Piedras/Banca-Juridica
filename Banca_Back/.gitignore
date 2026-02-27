@@ -2,8 +2,6 @@
 
  
 # variables de entorno .env (todas).. ss
-.env.local
-.env.production
 *.log
 
 
