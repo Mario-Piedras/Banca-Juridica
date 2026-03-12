@@ -21,7 +21,7 @@ export class SolicitarProductoComponent implements OnInit {
   clienteNoEncontrado: boolean = false;
   nombreCliente: string = '';
   isLoading: boolean = false;
-  
+
   // Datos del usuario autenticado
   currentUser: any = null;
 
@@ -58,7 +58,7 @@ export class SolicitarProductoComponent implements OnInit {
     this.isLoading = true;
     this.clienteEncontrado = false;
     this.clienteNoEncontrado = false;
-    
+
     this.solicitudService.buscarCliente(this.cedula).subscribe({
       next: (response) => {
         this.isLoading = false;
@@ -83,7 +83,7 @@ export class SolicitarProductoComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
-      
+
       // Validar tamaño del archivo (máximo 5MB)
       const maxSize = 5 * 1024 * 1024; // 5MB
       if (file.size > maxSize) {
@@ -101,7 +101,7 @@ export class SolicitarProductoComponent implements OnInit {
         'application/msword',
         'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
       ];
-      
+
       if (!allowedTypes.includes(file.type)) {
         alert('Tipo de archivo no permitido. Use PDF, JPG, PNG o Word.');
         input.value = '';
@@ -140,9 +140,9 @@ export class SolicitarProductoComponent implements OnInit {
 
     console.log('Enviando solicitud:', solicitud);
     console.log('Usuario que crea la solicitud:', this.currentUser);
-    
+
     this.isLoading = true;
-    
+
     this.solicitudService.enviarSolicitud(solicitud).subscribe({
       next: (response) => {
         this.isLoading = false;
@@ -174,7 +174,7 @@ export class SolicitarProductoComponent implements OnInit {
     this.clienteEncontrado = false;
     this.clienteNoEncontrado = false;
     this.nombreCliente = '';
-    
+
     // Limpiar input de archivo
     const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
     if (fileInput) {

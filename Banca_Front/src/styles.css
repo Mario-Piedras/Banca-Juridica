@@ -2,6 +2,16 @@
 /* Estilos de ng-select */
 @import "@ng-select/ng-select/themes/default.theme.css";
 
+.ng-select.custom-ng-select .ng-select-container {
+  border: 1px solid;
+  border-color: var(--color-gray-300);
+  min-height: 40px;
+  border-radius: var(--radius-lg);
+}
+
+/* .ng-select.custom-ng-select.ng-select-focused .ng-select-container {
+  box-shadow: 0 0 0 0.1rem #2B7FFF;
+} */
 
 /* ============================================
    BASE LAYER - Estilos globales

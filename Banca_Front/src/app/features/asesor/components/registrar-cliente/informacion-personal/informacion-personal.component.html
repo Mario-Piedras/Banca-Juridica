@@ -275,6 +275,32 @@
 
     </div>
 
+    <!-- Adjuntar documento
+    <div class="mb-6">
+      <label class="block text-sm font-medium text-gray-700 mb-2">
+        Adjuntar dohcumento
+      </label>
+      <div class="flex items-center gap-2">
+        <input
+          type="file"
+          (change)="onFileSelected($event)"
+          #fileInput
+          class="hidden"
+          accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+        />
+        <button
+          type="button"
+          (click)="fileInput.click()"
+          class="px-4 py-1.5 border border-gray-400 rounded text-sm bg-gray-50 hover:bg-gray-100 transition-colors">
+          Seleccionar archivo
+        </button>
+        <span class="text-sm text-gray-600">
+          {{ archivoSeleccionado ? archivoSeleccionado : 'Sin archivos seleccionados' }}
+        </span>
+      </div>
+      <p class="text-xs text-gray-500 mt-1">Archivos soportados: (PDF, Imágenes, Docx)</p>
+    </div> -->
+
     <!-- Botón Guardar -->
     <div class="flex justify-end mt-6">
       <button type="button" (click)="guardarSeccion()" [disabled]="!form.valid" [class]="form.valid
