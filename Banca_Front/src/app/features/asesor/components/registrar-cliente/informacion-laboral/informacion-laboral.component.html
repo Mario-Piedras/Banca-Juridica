@@ -9,7 +9,7 @@
         </label>
         <input id="nombreEmpresa" type="text" formControlName="nombreEmpresa"
           (keydown)="onEnterKey($event, 'direccionEmpresa')" maxlength="200"
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Ej: Tech Solutions S.A.S">
         <div class="text-red-500 text-xs mt-1"
           *ngIf="form.get('nombreEmpresa')?.invalid && form.get('nombreEmpresa')?.touched">
@@ -26,7 +26,7 @@
         </label>
         <input id="direccionEmpresa" type="text" formControlName="direccionEmpresa"
           (keydown)="onEnterKey($event, 'paisEmpresa')" maxlength="200"
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Ej: Calle 100 #20-30">
         <div class="text-red-500 text-xs mt-1"
           *ngIf="form.get('direccionEmpresa')?.invalid && form.get('direccionEmpresa')?.touched">
@@ -55,7 +55,7 @@
           País de la Empresa <span class="text-red-500">*</span>
         </label>
         <input type="text" formControlName="paisEmpresa" (keypress)="soloLetras($event)" maxlength="100"
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Escribe el país">
         <div class="text-red-500 text-xs mt-1"
           *ngIf="form.get('paisEmpresa')?.invalid && form.get('paisEmpresa')?.touched">
@@ -77,7 +77,7 @@
         <!-- INPUT para otros países -->
         <input *ngIf="!esColombiaEmpresa()" type="text" formControlName="departamentoEmpresa"
           (keypress)="soloLetras($event)" maxlength="100"
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Escribe el departamento/estado">
 
         <div class="text-red-500 text-xs mt-1"
@@ -101,7 +101,7 @@
         <!-- INPUT para otros países -->
         <input *ngIf="!esColombiaEmpresa()" type="text" formControlName="ciudadEmpresa" (keypress)="soloLetras($event)"
           maxlength="100"
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Escribe la ciudad">
 
         <div class="text-red-500 text-xs mt-1"
@@ -118,7 +118,7 @@
         </label>
         <input id="telefonoEmpresa" type="text" formControlName="telefonoEmpresa" (keypress)="soloNumeros($event)"
           (keydown)="onEnterKey($event, 'ext')" maxlength="15"
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Ej: 6041234567">
         <div class="text-red-500 text-xs mt-1"
           *ngIf="form.get('telefonoEmpresa')?.invalid && form.get('telefonoEmpresa')?.touched">
@@ -135,7 +135,7 @@
         </label>
         <input id="ext" type="text" formControlName="ext" (keypress)="soloNumeros($event)"
           (keydown)="onEnterKey($event, 'celularEmpresa')" maxlength="10"
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Opcional">
         <div class="text-red-500 text-xs mt-1" *ngIf="form.get('ext')?.invalid && form.get('ext')?.touched">
           <span *ngIf="form.get('ext')?.errors?.['minlength']">Mínimo 1 dígito</span>
@@ -150,7 +150,7 @@
         </label>
         <input id="celularEmpresa" type="text" formControlName="celularEmpresa" (keypress)="soloNumeros($event)"
           (keydown)="onEnterKey($event, 'correoLaboral')" maxlength="15"
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Ej: 3001234567">
         <div class="text-red-500 text-xs mt-1"
           *ngIf="form.get('celularEmpresa')?.invalid && form.get('celularEmpresa')?.touched">
@@ -166,7 +166,7 @@
           Correo Laboral <span class="text-red-500">*</span>
         </label>
         <input id="correoLaboral" type="email" formControlName="correoLaboral" maxlength="100"
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Ej: usuario@empresa.com">
         <div class="text-red-500 text-xs mt-1"
           *ngIf="form.get('correoLaboral')?.invalid && form.get('correoLaboral')?.touched">
@@ -181,8 +181,8 @@
 
     <!-- Botón Guardar -->
     <div class="flex justify-end mt-6">
-      <button type="button" (click)="guardarSeccion()" [disabled]="!form.valid" [class]="form.valid 
-          ? 'px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors cursor-pointer' 
+      <button type="button" (click)="guardarSeccion()" [disabled]="!form.valid" [class]="form.valid
+          ? 'px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors cursor-pointer'
           : 'px-6 py-2 bg-gray-300 text-gray-500 font-medium rounded-lg cursor-not-allowed'">
         Guardar y Continuar
       </button>

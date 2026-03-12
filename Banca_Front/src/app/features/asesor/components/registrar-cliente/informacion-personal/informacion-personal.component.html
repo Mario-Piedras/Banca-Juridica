@@ -28,7 +28,7 @@
         </label>
         <input id="numeroDocumento" type="text" formControlName="numeroDocumento" (keypress)="soloNumeros($event)"
           (keydown)="onEnterKey($event, 'lugarExpedicion')" maxlength="11"
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Ej: 1234567890">
         <div class="text-red-500 text-xs mt-1"
           *ngIf="form.get('numeroDocumento')?.invalid && form.get('numeroDocumento')?.touched">
@@ -47,7 +47,7 @@
         </label>
         <input id="lugarExpedicion" type="text" formControlName="lugarExpedicion" (keypress)="soloLetras($event)"
           (keydown)="onEnterKey($event, 'ciudadNacimiento')" maxlength="100"
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Ej: Bogotá">
         <div class="text-red-500 text-xs mt-1"
           *ngIf="form.get('lugarExpedicion')?.invalid && form.get('lugarExpedicion')?.touched">
@@ -64,7 +64,7 @@
         </label>
         <input id="ciudadNacimiento" type="text" formControlName="ciudadNacimiento" (keypress)="soloLetras($event)"
           (keydown)="onEnterKey($event, 'fechaNacimiento')" maxlength="100"
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Ej: Medellín">
         <div class="text-red-500 text-xs mt-1"
           *ngIf="form.get('ciudadNacimiento')?.invalid && form.get('ciudadNacimiento')?.touched">
@@ -117,7 +117,7 @@
         </label>
         <input id="primerNombre" type="text" formControlName="primerNombre" (keypress)="soloLetras($event)"
           (keydown)="onEnterKey($event, 'segundoNombre')" maxlength="50"
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Ej: Juan">
         <div class="text-red-500 text-xs mt-1"
           *ngIf="form.get('primerNombre')?.invalid && form.get('primerNombre')?.touched">
@@ -135,7 +135,7 @@
         </label>
         <input id="segundoNombre" type="text" formControlName="segundoNombre" (keypress)="soloLetras($event)"
           (keydown)="onEnterKey($event, 'primerApellido')" maxlength="50"
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Opcional">
         <div class="text-red-500 text-xs mt-1"
           *ngIf="form.get('segundoNombre')?.invalid && form.get('segundoNombre')?.touched">
@@ -152,7 +152,7 @@
         </label>
         <input id="primerApellido" type="text" formControlName="primerApellido" (keypress)="soloLetras($event)"
           (keydown)="onEnterKey($event, 'segundoApellido')" maxlength="50"
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Ej: Pérez">
         <div class="text-red-500 text-xs mt-1"
           *ngIf="form.get('primerApellido')?.invalid && form.get('primerApellido')?.touched">
@@ -170,7 +170,7 @@
         </label>
         <input id="segundoApellido" type="text" formControlName="segundoApellido" (keypress)="soloLetras($event)"
           (keydown)="onEnterKey($event, 'genero')" maxlength="50"
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Opcional">
         <div class="text-red-500 text-xs mt-1"
           *ngIf="form.get('segundoApellido')?.invalid && form.get('segundoApellido')?.touched">
@@ -222,7 +222,7 @@
         </label>
         <input id="otraNacionalidad" type="text" formControlName="otraNacionalidad" (keypress)="soloLetras($event)"
           (keydown)="onEnterKey($event, 'estadoCivil')" maxlength="50"
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Ej: Venezolana">
         <div class="text-red-500 text-xs mt-1"
           *ngIf="form.get('otraNacionalidad')?.invalid && form.get('otraNacionalidad')?.touched">
@@ -277,8 +277,8 @@
 
     <!-- Botón Guardar -->
     <div class="flex justify-end mt-6">
-      <button type="button" (click)="guardarSeccion()" [disabled]="!form.valid" [class]="form.valid 
-      ? 'px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors cursor-pointer' 
+      <button type="button" (click)="guardarSeccion()" [disabled]="!form.valid" [class]="form.valid
+      ? 'px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors cursor-pointer'
       : 'px-6 py-2 bg-gray-300 text-gray-500 font-medium rounded-lg cursor-not-allowed'">
         Guardar y Continuar
       </button>

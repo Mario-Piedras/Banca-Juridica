@@ -9,7 +9,7 @@
         </label>
         <input id="direccion" type="text" formControlName="direccion" (keydown)="onEnterKey($event, 'barrio')"
           maxlength="200"
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Ej: Calle 123 #45-67">
         <div class="text-red-500 text-xs mt-1" *ngIf="form.get('direccion')?.invalid && form.get('direccion')?.touched">
           <span *ngIf="form.get('direccion')?.errors?.['required']">Campo obligatorio (mínimo 5 caracteres)</span>
@@ -25,7 +25,7 @@
         </label>
         <input id="barrio" type="text" formControlName="barrio" (keypress)="alfanumerico($event)"
           (keydown)="onEnterKey($event, 'bloqueTorre')" maxlength="100"
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Ej: Centro">
         <div class="text-red-500 text-xs mt-1" *ngIf="form.get('barrio')?.invalid && form.get('barrio')?.touched">
           <span *ngIf="form.get('barrio')?.errors?.['required']">Campo obligatorio (mínimo 2 caracteres)</span>
@@ -41,7 +41,7 @@
         </label>
         <input id="bloqueTorre" type="text" formControlName="bloqueTorre" (keypress)="alfanumerico($event)"
           (keydown)="onEnterKey($event, 'aptoCasa')" maxlength="50"
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Opcional">
         <div class="text-red-500 text-xs mt-1"
           *ngIf="form.get('bloqueTorre')?.invalid && form.get('bloqueTorre')?.touched">
@@ -57,7 +57,7 @@
         </label>
         <input id="aptoCasa" type="text" formControlName="aptoCasa" (keypress)="alfanumerico($event)"
           (keydown)="onEnterKey($event, 'departamento')" maxlength="50"
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Opcional">
         <div class="text-red-500 text-xs mt-1" *ngIf="form.get('aptoCasa')?.invalid && form.get('aptoCasa')?.touched">
           <span *ngIf="form.get('aptoCasa')?.errors?.['maxlength']">Máximo 50 caracteres</span>
@@ -83,7 +83,7 @@
           País <span class="text-red-500">*</span>
         </label>
         <input type="text" formControlName="pais" (keypress)="soloLetras($event)" maxlength="100"
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Escribe tu país">
         <div class="text-red-500 text-xs mt-1" *ngIf="form.get('pais')?.invalid && form.get('pais')?.touched">
           Campo obligatorio
@@ -104,7 +104,7 @@
         <!-- INPUT para otros países -->
         <input *ngIf="!esColombia()" type="text" formControlName="departamento" (keypress)="soloLetras($event)"
           maxlength="100"
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Escribe el departamento/estado">
 
         <div class="text-red-500 text-xs mt-1"
@@ -128,7 +128,7 @@
         <!-- INPUT para otros países -->
         <input *ngIf="!esColombia()" type="text" formControlName="ciudad" (keypress)="soloLetras($event)"
           maxlength="100"
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Escribe la ciudad">
 
         <div class="text-red-500 text-xs mt-1" *ngIf="form.get('ciudad')?.invalid && form.get('ciudad')?.touched">
@@ -145,7 +145,7 @@
         </label>
         <input id="telefono" type="text" formControlName="telefono" (keypress)="soloNumeros($event)"
           (keydown)="onEnterKey($event, 'correo')" maxlength="15"
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Ej: 3001234567">
         <div class="text-red-500 text-xs mt-1" *ngIf="form.get('telefono')?.invalid && form.get('telefono')?.touched">
           <span *ngIf="form.get('telefono')?.errors?.['required']">Campo obligatorio (mínimo 7 dígitos)</span>
@@ -161,7 +161,7 @@
           Correo Electrónico <span class="text-red-500">*</span>
         </label>
         <input id="correo" type="email" formControlName="correo" maxlength="100"
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Ej: usuario@ejemplo.com">
         <div class="text-red-500 text-xs mt-1" *ngIf="form.get('correo')?.invalid && form.get('correo')?.touched">
           <span *ngIf="form.get('correo')?.errors?.['required']">Campo obligatorio</span>
@@ -174,8 +174,8 @@
 
     <!-- Botón Guardar -->
     <div class="flex justify-end mt-6">
-      <button type="button" (click)="guardarSeccion()" [disabled]="!form.valid" [class]="form.valid 
-      ? 'px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors cursor-pointer' 
+      <button type="button" (click)="guardarSeccion()" [disabled]="!form.valid" [class]="form.valid
+      ? 'px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors cursor-pointer'
       : 'px-6 py-2 bg-gray-300 text-gray-500 font-medium rounded-lg cursor-not-allowed'">
         Guardar y Continuar
       </button>
