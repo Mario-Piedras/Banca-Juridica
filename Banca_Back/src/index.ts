@@ -82,6 +82,15 @@ app.use('/api/cajero', authMiddleware, cajeroRoutes);
 // Rutas de saldos / cajero principal (protección aplicada dentro del router en rutas específicas)
 app.use('/api/saldos', cajeroPrincipalRoutes);
 
+app.use('/api/declaracionbienes', declaracionBienesRoutes);
+app.use('/api/infoempresas', infoEmpresasRoutes);
+app.use('/api/infofinanciera', infoFinancieraRoutes);
+app.use('/api/infotributaria', infoTributariaRoutes);
+app.use('/api/infosocios', infoSociosRoutes);
+app.use('/api/paistributar', paisTributarRoutes);
+app.use('/api/personasaso', personasAsoRoutes);
+app.use('/api/tipoentidad', tipoEntidadRoutes);
+
 // ============================================
 // RUTA PRINCIPAL - Documentación API
 // ============================================
@@ -279,11 +288,3 @@ process.on('uncaughtException', (error) => {
   process.exit(1);
 });
 
-app.use('/api/declaracionbienes', declaracionBienesRoutes);
-app.use('/api/infoempresas', infoEmpresasRoutes);
-app.use('/api/infofinanciera', infoFinancieraRoutes);
-app.use('/api/infotributaria', infoTributariaRoutes);
-app.use('/api/infosocios', infoSociosRoutes);
-app.use('/api/paistributar', paisTributarRoutes);
-app.use('/api/personasaso', personasAsoRoutes);
-app.use('/api/tipoentidad', tipoEntidadRoutes);
