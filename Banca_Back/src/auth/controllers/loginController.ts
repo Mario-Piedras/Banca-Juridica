@@ -25,7 +25,7 @@ export class LoginController {
         });
         return;
       }
-
+      console.log(loginData)
       // Intentar login
       const result = await this.loginService.login(loginData);
 
