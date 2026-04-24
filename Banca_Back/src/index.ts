@@ -10,6 +10,14 @@ import cajeroRoutes from './modules/cajero/cajero.routes';
 import directorRoutes from './modules/director-operativo/director.routes';
 import cajeroPrincipalRoutes from './modules/cajero_principal/cajero_principal.routes';
 import authRoutes from './auth/auth.routes';
+import declaracionBienesRoutes from './modules/cajero/routes/declaracionbienes.routes';
+import infoEmpresasRoutes from './modules/cajero/routes/infoempresas.routes';
+import infoFinancieraRoutes from './modules/cajero/routes/infofinanciera.routes';
+import infoTributariaRoutes from './modules/cajero/routes/infotributaria.routes';
+import infoSociosRoutes from './modules/cajero/routes/infosocios.routes';
+import paisTributarRoutes from './modules/cajero/routes/paistributar.routes';
+import personasAsoRoutes from './modules/cajero/routes/personasaso.routes';
+import tipoEntidadRoutes from './modules/cajero/routes/tipoentidad.routes';
 
 
 const app = express();
@@ -73,6 +81,15 @@ app.use('/api/director', authMiddleware, directorRoutes);
 app.use('/api/cajero', authMiddleware, cajeroRoutes);
 // Rutas de saldos / cajero principal (protección aplicada dentro del router en rutas específicas)
 app.use('/api/saldos', cajeroPrincipalRoutes);
+
+app.use('/api/declaracionbienes', declaracionBienesRoutes);
+app.use('/api/infoempresas', infoEmpresasRoutes);
+app.use('/api/infofinanciera', infoFinancieraRoutes);
+app.use('/api/infotributaria', infoTributariaRoutes);
+app.use('/api/infosocios', infoSociosRoutes);
+app.use('/api/paistributar', paisTributarRoutes);
+app.use('/api/personasaso', personasAsoRoutes);
+app.use('/api/tipoentidad', tipoEntidadRoutes);
 
 // ============================================
 // RUTA PRINCIPAL - Documentación API
@@ -270,3 +287,4 @@ process.on('uncaughtException', (error) => {
   console.error('  Excepción no capturada:', error);
   process.exit(1);
 });
+

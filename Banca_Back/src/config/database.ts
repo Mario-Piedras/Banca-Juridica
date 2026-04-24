@@ -7,7 +7,7 @@ const pool = mysql.createPool({
   host: process.env.DB_HOST || 'banca-uno-santiago2006ortizp-5f86.b.aivencloud.com',
   user: process.env.DB_USER || 'avnadmin',          
   password: process.env.DB_PASSWORD || '',           
-  database: process.env.DB_NAME || 'defaultdb',
+  database: process.env.DB_NAME || 'pruebadb',
   port: parseInt(process.env.DB_PORT || '13730'),
   waitForConnections: true,
   connectionLimit: 10,
