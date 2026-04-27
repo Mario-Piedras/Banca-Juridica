@@ -1,0 +1,22 @@
+<div class="p-4 max-w-7xl mx-auto">
+  <!--  Navegación -->
+  <div class="flex justify-center mb-8 border-b border-gray-200">
+    <button class="px-6 py-3 font-medium text-sm transition-colors relative"
+      [class.text-blue-600]="pestanaActiva === 'datos-generales'"
+      [class.border-b-2]="pestanaActiva === 'datos-generales'"
+      [class.border-blue-600]="pestanaActiva === 'datos-generales'"
+      [class.text-gray-500]="pestanaActiva !== 'datos-generales'" (click)="cambiarPestana('datos-generales')">
+      Información General
+    </button>
+  </div>
+
+  <!--  Contenido de pestañas -->
+  <div class="space-y-6">
+    <!-- Pestaña 1: Información General -->
+    <div *ngIf="pestanaActiva === 'datos-generales'">
+      <app-info-general [datosIniciales]="clienteData.datosGenerales"
+        (formChange)="actualizarDatos('datosGenerales', $event)"
+        (nextTab)="manejarNextTab()"></app-info-general>
+    </div>
+  </div>
+</div>

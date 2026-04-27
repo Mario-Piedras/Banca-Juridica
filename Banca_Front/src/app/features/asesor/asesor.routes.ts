@@ -18,13 +18,21 @@ export const ASESOR_ROUTES: Routes = [
             (m) => m.ConsultarClienteComponent
           ),
       },
-       {
+      {
         path: 'registrar-cliente',
         loadComponent: () =>
           import('./components/registrar-cliente/registrar-cliente.component').then(
             (m) => m.RegistrarClienteComponent
           ),
       },
+      {
+        path: 'registrar-cliente-juridico',
+        loadComponent: () =>
+          import('./components/registrar-cliente-juridico/registrar-cliente-juridico.component').then(
+            (m) => m.RegistrarClienteJuridicoComponent
+          ),
+      },
+
       {
         path: 'editar-cliente/:id', // ← NUEVA RUTA PARA EDICIÓN
         loadComponent: () =>
