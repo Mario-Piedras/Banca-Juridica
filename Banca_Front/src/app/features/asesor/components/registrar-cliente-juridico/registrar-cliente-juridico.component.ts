@@ -21,14 +21,14 @@ import { InfoGeneralComponent } from './info-general/info-general.component';
 })
 export class RegistrarClienteJuridicoComponent implements OnInit {
   // 🌐 Control de pestañas
-  pestanaActiva: string = 'datos-personales';
+  pestanaActiva: string = 'datos-generales';
   modo: 'nuevo' | 'editar' = 'nuevo';
   idCliente: number | null = null;
   cargando: boolean = false;
 
   // 🧠 Datos temporales de todos los subformularios
   clienteData: any = {
-    datosPersonales: null,
+    datosGenerales: null,
     contacto: null,
     actividad: null,
     laboral: null,
@@ -38,7 +38,7 @@ export class RegistrarClienteJuridicoComponent implements OnInit {
 
   // 🧭 Datos cargados para cada subcomponente
   datosIniciales: any = {
-    datosPersonales: null,
+    datosGenerales: null,
     contacto: null,
     actividad: null,
     laboral: null,
@@ -48,7 +48,7 @@ export class RegistrarClienteJuridicoComponent implements OnInit {
 
   // Orden de las pestañas para moverse automáticamente
   ordenPestanas = [ // ← AÑADIR ESTA VARIABLE
-    'datos-personales',
+    'datos-generales',
     'contacto-personal',
     'info-laboral',
     'facta',
@@ -81,7 +81,7 @@ export class RegistrarClienteJuridicoComponent implements OnInit {
 
           // Organizar datos en la estructura esperada por los subcomponentes
           this.datosIniciales = {
-            datosPersonales: {
+            datosGenerales: {
               tipoDocumento: cliente.tipoDocumento,
               numeroDocumento: cliente.numeroDocumento,
               lugarExpedicion: cliente.lugarExpedicion,
@@ -164,7 +164,7 @@ export class RegistrarClienteJuridicoComponent implements OnInit {
     }
 
     const payload = {
-      ...this.clienteData.datosPersonales,
+      ...this.clienteData.datosGenerales,
       contacto: this.clienteData.contacto,
       actividad: this.clienteData.actividad,
       laboral: this.clienteData.laboral,

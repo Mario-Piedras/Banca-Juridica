@@ -1,7 +1,8 @@
-# TODO: Fix registrar-cliente-juridico routing
+# TODO: Cleanup info-general.component.ts
 
-- [x] Fix `registrar-cliente-juridico.component.ts` class name, selector, and templateUrl
-- [x] Add `registrar-cliente-juridico` route to `asesor.routes.ts`
-- [x] Update `registrar-cliente-juridico.component.spec.ts` import references
+**Completed Steps:**
+- [x] 1. User approved cleanup plan.
+- [x] 2. Edited TS file to remove all unused personal-client code, simplified logic.
+- [x] 3. Verified changes: no new errors (existing tsconfig warning unrelated), form bindings intact.
 
-
+Task complete.

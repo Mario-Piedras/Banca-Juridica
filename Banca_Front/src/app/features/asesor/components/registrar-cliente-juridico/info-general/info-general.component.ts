@@ -14,120 +14,94 @@ export class InfoGeneralComponent implements OnInit {
   @Output() nextTab = new EventEmitter();
 
   form: FormGroup;
-  fechaHoy: string;
-
   constructor(private fb: FormBuilder) {
-    const today = new Date();
-    this.fechaHoy = today.toISOString().split('T')[0];
-
     this.form = this.fb.group({
-      tipoDocumento: ['', Validators.required],
-      numeroDocumento: ['', [
+      numeroNIT: ['', [
         Validators.required,
-        Validators.minLength(6),
-        Validators.maxLength(11),
+        Validators.minLength(9),
+        Validators.maxLength(10),
         Validators.pattern(/^[0-9]+$/)
       ]],
-      lugarExpedicion: ['', [
+      nombreRazon: ['', [
         Validators.required,
-        Validators.minLength(3),
+        Validators.minLength(5),
         Validators.maxLength(100),
         Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
       ]],
-      ciudadNacimiento: ['', [
+      nombreSigla: ['', [
+        Validators.required,
+        Validators.minLength(5),
+        Validators.maxLength(10),
+        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
+      ]],
+      fechaConstitucion: ['', [
+        Validators.required,
+        this.validarFechaNoFutura()
+      ]],
+      paisConstitucion: ['', [
+        Validators.required,
+        Validators.minLength(5),
+        Validators.maxLength(20),
+        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
+      ]],
+      ciudadConstitucion: ['', [
+        Validators.required,
+        Validators.minLength(5),
+        Validators.maxLength(20),
+        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
+      ]],
+      direccionEmpresa: ['', [
+        Validators.required,
+        Validators.maxLength(50)
+      ]],
+      paisEmpresa: ['', [
+        Validators.required,
+        Validators.minLength(5),
+        Validators.maxLength(50),
+        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
+      ]],
+      telefonoEmpresa: ['', [
+        Validators.required,
+        Validators.minLength(10),
+        Validators.maxLength(20),
+        Validators.pattern(/^[0-9]+$/)
+      ]],
+      extensionEmpresa: ['', [
         Validators.required,
         Validators.minLength(3),
-        Validators.maxLength(100),
-        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
+        Validators.maxLength(5),
+        Validators.pattern(/^[0-9]+$/)
       ]],
-      fechaNacimiento: ['', [
+      barrioEmpresa: ['', [
         Validators.required,
-        this.validarEdadMinima(18) // NUEVO: Validar edad mínima
-      ]],
-      fechaExpedicion: ['', [
-        Validators.required,
-        this.validarFechaNoFutura(),
-        this.validarFechaExpedicionPosteriorANacimiento()
-      ]],
-      primerNombre: ['', [
-        Validators.required,
-        Validators.minLength(2),
         Validators.maxLength(50),
         Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
       ]],
-      segundoNombre: ['', [
-        Validators.minLength(2),
-        Validators.maxLength(50),
-        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$/)
-      ]],
-      primerApellido: ['', [
+      ciudadEmpresa: ['', [
         Validators.required,
-        Validators.minLength(2),
         Validators.maxLength(50),
         Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
       ]],
-      segundoApellido: ['', [
-        Validators.minLength(2), // NUEVO: Agregado minLength
+      departamentoEmpresa: ['', [
+        Validators.required,
         Validators.maxLength(50),
-        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$/)
+        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
       ]],
-      genero: ['', Validators.required],
-      nacionalidad: ['', Validators.required],
-      otraNacionalidad: [''],
-      estadoCivil: ['', Validators.required],
-      grupoEtnico: ['', Validators.required],
-    });
-
-    // Revalidar fechaExpedicion cuando cambia fechaNacimiento
-    this.form.get('fechaNacimiento')?.valueChanges.subscribe(() => {
-      this.form.get('fechaExpedicion')?.updateValueAndValidity();
-    });
-
-    // NUEVO: Validar otraNacionalidad cuando nacionalidad es "Otra"
-    this.form.get('nacionalidad')?.valueChanges.subscribe(valor => {
-      const otraNacionalidadControl = this.form.get('otraNacionalidad');
-      if (valor === 'Otra') {
-        otraNacionalidadControl?.setValidators([
-          Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(50),
-          Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
-        ]);
-      } else {
-        otraNacionalidadControl?.clearValidators();
-      }
-      otraNacionalidadControl?.updateValueAndValidity();
+      correoSede: ['', [
+        Validators.required,
+        Validators.email
+      ]]
     });
   }
 
   ngOnInit() {
     if (this.datosIniciales) {
-      console.log('Cargando datos iniciales en Información Personal:', this.datosIniciales);
       this.form.patchValue(this.datosIniciales);
     }
 
- // AUTO-GUARDADO: Emitir datos al padre cada vez que cambie el formulario
-  this.form.valueChanges.subscribe(valores => {
-    const datosTransformados = this.transformarDatos(valores);
-    this.formChange.emit(datosTransformados);
-    console.log('Auto-guardando datos personales...');
-  });
-}
-
-
-  // NUEVO: Validar edad mínima
-  validarEdadMinima(edadMinima: number) {
-    return (control: any) => {
-      if (!control.value) return null;
-      const fechaNac = new Date(control.value);
-      const hoy = new Date();
-      let edad = hoy.getFullYear() - fechaNac.getFullYear();
-      const mes = hoy.getMonth() - fechaNac.getMonth();
-      if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNac.getDate())) {
-        edad--;
-      }
-      return edad >= edadMinima ? null : { edadMinima: { requerida: edadMinima, actual: edad } };
-    };
+    this.form.valueChanges.subscribe(valores => {
+      this.formChange.emit(valores);
+    });
   }
 
   validarFechaNoFutura() {
@@ -141,30 +115,12 @@ export class InfoGeneralComponent implements OnInit {
     };
   }
 
-  validarFechaExpedicionPosteriorANacimiento() {
-    return (control: any) => {
-      if (!control.value) return null;
-      const fechaExpedicion = new Date(control.value);
-      const fechaNacimiento = this.form?.get('fechaNacimiento')?.value;
-      if (!fechaNacimiento) return null;
-      const fechaNac = new Date(fechaNacimiento);
-
-      // MEJORA: La expedición debe ser al menos 16 años después del nacimiento
-      const fechaMinimaExpedicion = new Date(fechaNac);
-      fechaMinimaExpedicion.setFullYear(fechaNac.getFullYear() + 16);
-
-      return fechaExpedicion >= fechaMinimaExpedicion ? null : { expedicionMuyTemprana: true };
-    };
-  }
-
 guardarSeccion() {
   if (this.form.valid) {
     // TRANSFORMAR GÉNERO ANTES DE EMITIR
-    const datosTransformados = this.transformarDatos(this.form.value);
-    this.formChange.emit(datosTransformados);
+    this.formChange.emit(this.form.value);
     this.nextTab.emit();
-    console.log('Datos personales guardados correctamente');
-    alert('Sección de Información Personal guardada correctamente');
+    alert('Sección de Información General guardada correctamente');
   } else {
     this.form.markAllAsTouched();
     const errores = this.obtenerErroresFormulario();
@@ -175,24 +131,6 @@ guardarSeccion() {
     }
   }
 }
-
-// Método para transformar datos antes de enviar
-private transformarDatos(valores: any): any {
-  return {
-    ...valores,
-    // Convertir "Femenino" → "F" y "Masculino" → "M"
-    genero: valores.genero === 'Femenino' ? 'F' : 
-            valores.genero === 'Masculino' ? 'M' : valores.genero,
-    
-    // Convertir "Colombiana" → "Colombiano"
-    nacionalidad: valores.nacionalidad === 'Colombiana' ? 'Colombiano' : valores.nacionalidad,
-    
-    // Convertir "Ninguno" → "Ninguna"
-    grupoEtnico: valores.grupoEtnico === 'Ninguno' ? 'Ninguna' : valores.grupoEtnico
-  };
-}
-
-
 
   // NUEVO: Obtener lista de errores del formulario
   obtenerErroresFormulario(): string[] {
@@ -210,12 +148,6 @@ private transformarDatos(valores: any): any {
         if (control.errors?.['pattern']) {
           errores.push(`- ${nombreCampo} tiene un formato inválido`);
         }
-        if (control.errors?.['edadMinima']) {
-          errores.push(`- Debe ser mayor de ${control.errors['edadMinima'].requerida} años`);
-        }
-        if (control.errors?.['expedicionMuyTemprana']) {
-          errores.push(`- La fecha de expedición debe ser al menos 16 años después de la fecha de nacimiento`);
-        }
       }
     });
     return errores;
@@ -224,21 +156,20 @@ private transformarDatos(valores: any): any {
   // NUEVO: Obtener nombre legible del campo
   obtenerNombreCampo(key: string): string {
     const nombres: { [key: string]: string } = {
-      'tipoDocumento': 'Tipo de documento',
-      'numeroDocumento': 'Número de documento',
-      'lugarExpedicion': 'Lugar de expedición',
-      'ciudadNacimiento': 'Ciudad de nacimiento',
-      'fechaNacimiento': 'Fecha de nacimiento',
-      'fechaExpedicion': 'Fecha de expedición',
-      'primerNombre': 'Primer nombre',
-      'segundoNombre': 'Segundo nombre',
-      'primerApellido': 'Primer apellido',
-      'segundoApellido': 'Segundo apellido',
-      'genero': 'Género',
-      'nacionalidad': 'Nacionalidad',
-      'otraNacionalidad': 'Otra nacionalidad',
-      'estadoCivil': 'Estado civil',
-      'grupoEtnico': 'Grupo étnico'
+      'numeroNIT': 'Número de NIT',
+      'nombreRazon': 'Nombre o razón social',
+      'nombreSigla': 'Nombre corto o sigla',
+      'fechaConstitucion': 'Fecha de constitución',
+      'paisConstitucion': 'País de constitución',
+      'ciudadConstitucion': 'Ciudad de constitución',
+      'direccionEmpresa': 'Dirección sede principal',
+      'paisEmpresa': 'País',
+      'telefonoEmpresa': 'Teléfono',
+      'extensionEmpresa': 'Extensión',
+      'barrioEmpresa': 'Barrio',
+      'ciudadEmpresa': 'Ciudad/Municipio',
+      'departamentoEmpresa': 'Departamento',
+      'correoSede': 'Correo electrónico sede principal'
     };
     return nombres[key] || key;
   }
@@ -266,17 +197,6 @@ private transformarDatos(valores: any): any {
     }
     if (!pattern.test(inputChar)) {
       event.preventDefault();
-    }
-  }
-
-  // NUEVO: Manejar Enter para avanzar al siguiente campo
-  onEnterKey(event: KeyboardEvent, siguienteCampoId: string) {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      const siguienteCampo = document.getElementById(siguienteCampoId);
-      if (siguienteCampo) {
-        siguienteCampo.focus();
-      }
     }
   }
 }
