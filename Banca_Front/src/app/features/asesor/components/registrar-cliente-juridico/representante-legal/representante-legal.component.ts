@@ -3,12 +3,12 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-info-general',
+  selector: 'app-representante-legal',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './info-general.component.html',
+  templateUrl: './representante-legal.component.html',
 })
-export class InformacionGeneralComponent implements OnInit {
+export class RepresentanteLegalComponent implements OnInit {
   @Input() datosIniciales: any;
   @Output() formChange = new EventEmitter();
   @Output() nextTab = new EventEmitter();
@@ -16,78 +16,86 @@ export class InformacionGeneralComponent implements OnInit {
   form: FormGroup;
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
-      numeroNIT: ['', [
+      numeroDoc: ['', [
         Validators.required,
         Validators.minLength(9),
         Validators.maxLength(10),
         Validators.pattern(/^[0-9]+$/)
       ]],
-      nombreRazon: ['', [
+      primerNombre: ['', [
         Validators.required,
         Validators.minLength(5),
-        Validators.maxLength(100),
+        Validators.maxLength(50),
         Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
       ]],
-      nombreSigla: ['', [
+      segundoNombre: ['', [
+        Validators.required,
+        Validators.minLength(5),
+        Validators.maxLength(50),
+        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
+      ]],
+      primerApellido: ['', [
+        Validators.required,
+        Validators.minLength(5),
+        Validators.maxLength(50),
+        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
+      ]],
+      segundoApellido: ['', [
+        Validators.required,
+        Validators.minLength(5),
+        Validators.maxLength(50),
+        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
+      ]],
+      cargo: ['', [
         Validators.required,
         Validators.minLength(5),
         Validators.maxLength(10),
         Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
       ]],
-      fechaConstitucion: ['', [
-        Validators.required,
-        this.validarFechaNoFutura()
-      ]],
-      paisConstitucion: ['', [
-        Validators.required,
-        Validators.minLength(5),
-        Validators.maxLength(20),
-        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
-      ]],
-      ciudadConstitucion: ['', [
-        Validators.required,
-        Validators.minLength(5),
-        Validators.maxLength(20),
-        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
-      ]],
-      direccionEmpresa: ['', [
+      direccionLaboral: ['', [
         Validators.required,
         Validators.maxLength(50)
       ]],
-      paisEmpresa: ['', [
+      barrio: ['', [
+        Validators.required,
+        Validators.maxLength(50),
+        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
+      ]],
+      ciudadMunicipio: ['', [
+        Validators.required,
+        Validators.maxLength(50),
+        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
+      ]],
+      departamento: ['', [
+        Validators.required,
+        Validators.maxLength(50),
+        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
+      ]],
+      pais: ['', [
         Validators.required,
         Validators.minLength(5),
         Validators.maxLength(50),
         Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
       ]],
-      telefonoEmpresa: ['', [
+      telefono: ['', [
         Validators.required,
         Validators.minLength(10),
         Validators.maxLength(20),
         Validators.pattern(/^[0-9]+$/)
       ]],
-      extensionEmpresa: ['', [
+      extension: ['', [
         Validators.required,
         Validators.minLength(3),
         Validators.maxLength(5),
         Validators.pattern(/^[0-9]+$/)
       ]],
-      barrioEmpresa: ['', [
+      celular: ['', [
         Validators.required,
-        Validators.maxLength(50),
-        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
+        Validators.minLength(10),
+        Validators.maxLength(20),
+        Validators.pattern(/^[0-9]+$/)
       ]],
-      ciudadEmpresa: ['', [
-        Validators.required,
-        Validators.maxLength(50),
-        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
-      ]],
-      departamentoEmpresa: ['', [
-        Validators.required,
-        Validators.maxLength(50),
-        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
-      ]],
-      correoSede: ['', [
+      correoLaboral: ['', [
         Validators.required,
         Validators.email
       ]]
@@ -102,17 +110,6 @@ export class InformacionGeneralComponent implements OnInit {
     this.form.valueChanges.subscribe(valores => {
       this.formChange.emit(valores);
     });
-  }
-
-  validarFechaNoFutura() {
-    return (control: any) => {
-      if (!control.value) return null;
-      const fecha = new Date(control.value);
-      const hoy = new Date();
-      hoy.setHours(0, 0, 0, 0); // MEJORA: Ignorar hora
-      fecha.setHours(0, 0, 0, 0);
-      return fecha <= hoy ? null : { fechaFutura: true };
-    };
   }
 
 guardarSeccion() {
@@ -156,20 +153,21 @@ guardarSeccion() {
   // NUEVO: Obtener nombre legible del campo
   obtenerNombreCampo(key: string): string {
     const nombres: { [key: string]: string } = {
-      'numeroNIT': 'Número de NIT',
-      'nombreRazon': 'Nombre o razón social',
-      'nombreSigla': 'Nombre corto o sigla',
-      'fechaConstitucion': 'Fecha de constitución',
-      'paisConstitucion': 'País de constitución',
-      'ciudadConstitucion': 'Ciudad de constitución',
-      'direccionEmpresa': 'Dirección sede principal',
-      'paisEmpresa': 'País',
-      'telefonoEmpresa': 'Teléfono',
-      'extensionEmpresa': 'Extensión',
-      'barrioEmpresa': 'Barrio',
-      'ciudadEmpresa': 'Ciudad/Municipio',
-      'departamentoEmpresa': 'Departamento',
-      'correoSede': 'Correo electrónico sede principal'
+      'numeroDoc': 'Número de documento',
+      'primerNombre': 'Primer nombre',
+      'segundoNombre': 'Segundo nombre',
+      'primerApellido': 'Primer apellido',
+      'segundoApellido': 'Segundo apellido',
+      'cargo': 'Cargo',
+      'direccionLaboral': 'Dirección laboral',
+      'barrio': 'Barrio',
+      'ciudadMunicipio': 'Ciudad/Municipio',
+      'departamento': 'Departamento',
+      'pais': 'País',
+      'telefonoLaboral': 'Teléfono laboral',
+      'extension': 'Extensión',
+      'celular': 'Departamento',
+      'correoLaboral': 'Correo electrónico laboral'
     };
     return nombres[key] || key;
   }

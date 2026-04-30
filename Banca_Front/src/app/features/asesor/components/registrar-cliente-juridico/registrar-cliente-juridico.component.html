@@ -2,10 +2,10 @@
   <!--  Navegación -->
   <div class="flex justify-center mb-8 border-b border-gray-200">
     <button class="px-6 py-3 font-medium text-sm transition-colors relative"
-      [class.text-blue-600]="pestanaActiva === 'datos-generales'"
-      [class.border-b-2]="pestanaActiva === 'datos-generales'"
-      [class.border-blue-600]="pestanaActiva === 'datos-generales'"
-      [class.text-gray-500]="pestanaActiva !== 'datos-generales'" (click)="cambiarPestana('datos-generales')">
+      [class.text-blue-600]="pestanaActiva === 'informacion-general'"
+      [class.border-b-2]="pestanaActiva === 'informacion-general'"
+      [class.border-blue-600]="pestanaActiva === 'informacion-general'"
+      [class.text-gray-500]="pestanaActiva !== 'informacion-general'" (click)="cambiarPestana('informacion-general')">
       Información general
     </button>
 
@@ -45,10 +45,18 @@
 
   <!--  Contenido de pestañas -->
   <div class="space-y-6">
+
     <!-- Pestaña 1: Información General -->
-    <div *ngIf="pestanaActiva === 'datos-generales'">
-      <app-info-general [datosIniciales]="clienteData.datosGenerales"
-        (formChange)="actualizarDatos('datosGenerales', $event)" (nextTab)="manejarNextTab()"></app-info-general>
+    <div *ngIf="pestanaActiva === 'informacion-general'">
+      <app-info-general [datosIniciales]="clienteData.infoGeneral"
+        (formChange)="actualizarDatos('infoGeneral', $event)" (nextTab)="manejarNextTab()"></app-info-general>
     </div>
+
+    <!-- Pestaña 2: Representante-legal -->
+    <div *ngIf="pestanaActiva === 'representante-legal'">
+      <app-representante-legal [datosIniciales]="clienteData.representanteLegal"
+        (formChange)="actualizarDatos('representanteLegal', $event)" (nextTab)="manejarNextTab()"></app-representante-legal>
+    </div>
+
   </div>
 </div>

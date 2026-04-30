@@ -1,0 +1,205 @@
+<div class="p-6 max-w-7xl mx-auto bg-white shadow-sm rounded-lg border border-gray-200">
+  <form [formGroup]="form" class="space-y-4">
+
+    <div>
+      <!-- Primera fila -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Tipo de documento -->
+        <div>
+          <label for="tipo-doc" class="block text-sm font-medium text-gray-700 mb-2">Tipo de documento:</label>
+          <select name="tipo-doc" id="tipo-doc"
+            class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="" selected>Seleccione el tipo de documento</option>
+            <option value="cc">Cédula de ciudadania</option>
+            <option value="ce">Cédula de extranjería</option>
+            <option value="pa">Pasaporte</option>
+            <option value="cd">Carne diplomático</option>
+          </select>
+        </div>
+
+        <!-- Número de documento -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Número de documento: <span class="text-red-500">*</span>
+          </label>
+          <input id="numeroDoc" type="text" formControlName="numeroDoc" maxlength="10" pattern="[0-9]*"
+            (keypress)="soloNumeros($event)"
+            class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Ej: 1234567890">
+        </div>
+
+        <!-- Primer nombre -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Primer nombre <span class="text-red-500">*</span>
+          </label>
+          <input id="primerNombre" type="text" formControlName="primerNombre" maxlength="10"
+            pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*" (keypress)="soloLetras($event)"
+            class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Ej: Placeholder">
+        </div>
+
+        <!-- Segundo nombre -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Segundo nombre (opcional)
+          </label>
+          <input id="segundoNombre" type="text" formControlName="segundoNombre" maxlength="50"
+            pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*" (keypress)="soloLetras($event)"
+            class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Ej: Placeholder">
+        </div>
+
+        <!-- Primer apellido -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Primer apellido <span class="text-red-500">*</span>
+          </label>
+          <input id="primerApellido" type="text" formControlName="primerApellido" maxlength="10"
+            pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*" (keypress)="soloLetras($event)"
+            class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Ej: Placeholder">
+        </div>
+
+        <!-- Segundo apellido -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Segundo apellido <span class="text-red-500">*</span>
+          </label>
+          <input id="segundoApellido" type="text" formControlName="segundoApellido" maxlength="50"
+            pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*" (keypress)="soloLetras($event)"
+            class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Ej: Placeholder">
+        </div>
+
+        <!-- Cargo -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Cargo <span class="text-red-500">*</span>
+          </label>
+          <input id="cargo" type="text" formControlName="cargo" maxlength="50"
+            pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*" (keypress)="soloLetras($event)"
+            class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Ej: Placeholder">
+        </div>
+
+        <!-- Dirección laboral -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Dirección laboral <span class="text-red-500">*</span>
+          </label>
+          <input id="direccionLaboral" type="text" maxlength="50"
+            class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Ej: Cl. 40 #30-44">
+        </div>
+
+      </div>
+
+      <!-- Segunda fila -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+        <!-- Barrio -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Barrio <span class="text-red-500">*</span>
+          </label>
+          <input id="barrio" type="text" maxlength="50" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*"
+            (keypress)="soloLetras($event)"
+            class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Ej: Placeholder">
+        </div>
+
+        <!-- Ciudad/Municipio -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Ciudad/Municipio <span class="text-red-500">*</span>
+          </label>
+          <input id="ciudadMunicipio" type="text" maxlength="50" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*"
+            (keypress)="soloLetras($event)"
+            class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Ej: Palmira">
+        </div>
+
+        <!-- Departamento -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Departamento <span class="text-red-500">*</span>
+          </label>
+          <input id="departamento" type="text" maxlength="50" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*"
+            (keypress)="soloLetras($event)"
+            class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Ej: Valle del cauca">
+        </div>
+
+      </div>
+
+      <!-- Tercera fila -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+
+        <!-- País -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            País <span class="text-red-500">*</span>
+          </label>
+          <input id="pais" type="text" maxlength="50" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*"
+            (keypress)="soloLetras($event)"
+            class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Ej: Colombia">
+        </div>
+
+        <!-- Teléfono -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Teléfono <span class="text-red-500">*</span>
+          </label>
+          <input id="telefono" type="tel" maxlength="20" pattern="[0-9]*" (keypress)="soloNumeros($event)"
+            class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Ej: 1234567890">
+        </div>
+
+        <!-- Extensión -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Extensión <span class="text-red-500">*</span>
+          </label>
+          <input id="extension" type="text" maxlength="5" pattern="[0-9]*" (keypress)="soloNumeros($event)"
+            class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Ej: 1234567890">
+        </div>
+
+        <!-- Celular -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Celular <span class="text-red-500">*</span>
+          </label>
+          <input id="celular" type="tel" maxlength="20" pattern="[0-9]*" (keypress)="soloNumeros($event)"
+            class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Ej: 1234567890">
+        </div>
+
+      </div>
+
+      <!-- Correo electrónico laboral -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+          Correo electrónico laboral <span class="text-red-500">*</span>
+        </label>
+        <input id="correoLaboral" type="email" maxlength="100"
+          class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Ej: correo@example.com">
+      </div>
+
+    </div>
+
+    <!-- Botones -->
+    <div class="flex justify-between mt-6">
+      <button type="button" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors cursor-pointer" >Volver a la página anterior</button>
+      <button type="button" (click)="guardarSeccion()" [disabled]="!form.valid" [class]="form.valid
+      ? 'px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors cursor-pointer'
+      : 'px-6 py-2 bg-gray-300 text-gray-500 font-medium rounded-lg cursor-not-allowed'">
+        Guardar y continuar
+      </button>
+    </div>
+
+  </form>
+</div>

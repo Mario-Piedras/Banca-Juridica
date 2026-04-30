@@ -6,7 +6,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AsesorService } from '../../services/asesor.service';
 
 // Subcomponentes
-import { InfoGeneralComponent } from './info-general/info-general.component';
+import { InformacionGeneralComponent } from './info-general/info-general.component';
+import { RepresentanteLegalComponent } from './representante-legal/representante-legal.component';
+/* 
+import { NaturalezaEntidadComponent } from './naturaleza-entidad/naturaleza-entidad.component';
+import { InformacionFinancieraComponent } from './info-financiera/info-financiera.component';
+import { DeclaracionBienesComponent } from './declaracion-bienes/declaracion-bienes.component'; */
 
 @Component({
   selector: 'app-registrar-cliente-juridico',
@@ -15,43 +20,48 @@ import { InfoGeneralComponent } from './info-general/info-general.component';
     CommonModule,
     ReactiveFormsModule,
     HttpClientModule,
-    InfoGeneralComponent,
+    InformacionGeneralComponent,
+    RepresentanteLegalComponent,
+/*     NaturalezaEntidadComponent,
+    InformacionFinancieraComponent,
+    DeclaracionBienesComponent, */
   ],
   templateUrl: './registrar-cliente-juridico.component.html',
 })
 export class RegistrarClienteJuridicoComponent implements OnInit {
   // 🌐 Control de pestañas
-  pestanaActiva: string = 'datos-generales';
+  pestanaActiva: string = 'informacion-general';
   modo: 'nuevo' | 'editar' = 'nuevo';
   idCliente: number | null = null;
   cargando: boolean = false;
 
   // 🧠 Datos temporales de todos los subformularios
   clienteData: any = {
-    datosGenerales: null,
-    contacto: null,
-    actividad: null,
-    laboral: null,
-    financiera: null,
+    infoGeneral: null,
+    representanteLegal: null,
+    naturalezaEntidad: null,
+    infoFinanciera: null,
+    declaracionBienes: null,
     facta: null,
   };
 
   // 🧭 Datos cargados para cada subcomponente
   datosIniciales: any = {
-    datosGenerales: null,
-    contacto: null,
-    actividad: null,
-    laboral: null,
-    financiera: null,
+    infoGeneral: null,
+    representanteLegal: null,
+    naturalezaEntidad: null,
+    infoFinanciera: null,
+    declaracionBienes: null,
     facta: null,
   };
 
   // Orden de las pestañas para moverse automáticamente
   ordenPestanas = [ // ← AÑADIR ESTA VARIABLE
-    'datos-generales',
-    'contacto-personal',
-    'info-laboral',
-    'facta',
+    'informacion-general',
+    'representante-legal',
+    'naturaleza-tipo',
+    'info-financiera',
+    'declaracion-bienes',
   ];
 
   constructor(
@@ -81,7 +91,7 @@ export class RegistrarClienteJuridicoComponent implements OnInit {
 
           // Organizar datos en la estructura esperada por los subcomponentes
           this.datosIniciales = {
-            datosGenerales: {
+            infoGeneral: {
               tipoDocumento: cliente.tipoDocumento,
               numeroDocumento: cliente.numeroDocumento,
               lugarExpedicion: cliente.lugarExpedicion,
@@ -164,8 +174,8 @@ export class RegistrarClienteJuridicoComponent implements OnInit {
     }
 
     const payload = {
-      ...this.clienteData.datosGenerales,
-      contacto: this.clienteData.contacto,
+      ...this.clienteData.infoGeneral,
+      representanteLegal: this.clienteData.representanteLegal,
       actividad: this.clienteData.actividad,
       laboral: this.clienteData.laboral,
       financiera: this.clienteData.financiera,

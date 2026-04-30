@@ -11,7 +11,7 @@ export const ASESOR_ROUTES: Routes = [
         redirectTo: 'consultar-cliente',
         pathMatch: 'full'
       },
-         {
+        {
         path: 'consultar-cliente',
         loadComponent: () =>
           import('./components/consultar-cliente/consultar-cliente.component').then(
@@ -58,4 +58,3 @@ export const ASESOR_ROUTES: Routes = [
     ]
   }
 ];
-
