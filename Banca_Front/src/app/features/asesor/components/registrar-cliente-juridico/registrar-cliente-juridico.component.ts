@@ -39,29 +39,27 @@ export class RegistrarClienteJuridicoComponent implements OnInit {
   clienteData: any = {
     infoGeneral: null,
     representanteLegal: null,
-    naturalezaEntidad: null,
+/*     naturalezaEntidad: null,
     infoFinanciera: null,
-    declaracionBienes: null,
-    facta: null,
+    declaracionBienes: null, */
   };
 
   // 🧭 Datos cargados para cada subcomponente
   datosIniciales: any = {
     infoGeneral: null,
     representanteLegal: null,
-    naturalezaEntidad: null,
+/*     naturalezaEntidad: null,
     infoFinanciera: null,
-    declaracionBienes: null,
-    facta: null,
+    declaracionBienes: null, */
   };
 
   // Orden de las pestañas para moverse automáticamente
   ordenPestanas = [ // ← AÑADIR ESTA VARIABLE
     'informacion-general',
     'representante-legal',
-    'naturaleza-tipo',
+/*     'naturaleza-tipo',
     'info-financiera',
-    'declaracion-bienes',
+    'declaracion-bienes', */
   ];
 
   constructor(
