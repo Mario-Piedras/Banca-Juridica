@@ -1,4 +1,18 @@
 @import "tailwindcss";
+
+/* Fix para placeholders de input - asegura color gris normal */
+input::placeholder {
+  color: #9ca3af;
+}
+
+input::-webkit-input-placeholder {
+  color: #9ca3af;
+}
+
+input::-moz-placeholder {
+  color: #9ca3af;
+}
+
 /* Estilos de ng-select */
 @import "@ng-select/ng-select/themes/default.theme.css";
 

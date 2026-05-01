@@ -27,6 +27,7 @@ import { DeclaracionBienesComponent } from './declaracion-bienes/declaracion-bie
     DeclaracionBienesComponent, */
   ],
   templateUrl: './registrar-cliente-juridico.component.html',
+  styleUrls: ['./registrar-cliente-juridico.component.css']
 })
 export class RegistrarClienteJuridicoComponent implements OnInit {
   // 🌐 Control de pestañas

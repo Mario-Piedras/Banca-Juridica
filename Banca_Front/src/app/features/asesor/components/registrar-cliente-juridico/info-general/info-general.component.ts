@@ -7,6 +7,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './info-general.component.html',
+  styleUrls: ['../registrar-cliente-juridico.component.css']
 })
 export class InformacionGeneralComponent implements OnInit {
   @Input() datosIniciales: any;
