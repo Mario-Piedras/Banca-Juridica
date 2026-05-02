@@ -152,9 +152,22 @@ export class RegistrarClienteJuridicoComponent implements OnInit {
     console.log(`✅ Datos actualizados (${nombre}):`, data);
   }
 
-  // 📩 Escuchar evento de "nextTab" desde los subcomponentes
+// 📩 Escuchar evento de "nextTab" desde los subcomponentes
   manejarNextTab() {
     this.irASiguientePestanaActual();
+  }
+
+  // 📤 Manejar evento de "prevTab" para volver a la pestaña anterior
+  manejarPrevTab() {
+    this.irAPestanaAnterior();
+  }
+
+  // ⏮️ Ir a la pestaña anterior
+  irAPestanaAnterior() {
+    const indexActual = this.ordenPestanas.indexOf(this.pestanaActiva);
+    if (indexActual > 0) {
+      this.pestanaActiva = this.ordenPestanas[indexActual - 1];
+    }
   }
 
   // ✅ Validar que todo esté diligenciado antes de registrar

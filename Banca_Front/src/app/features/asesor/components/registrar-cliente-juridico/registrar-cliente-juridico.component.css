@@ -1,3 +1,35 @@
+/* Formulario de información general */
+
+.form-column {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.form-column2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+/* Formulario de representante legal */
+
+.form-column3 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+.fila-normal {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Varios */
+
 .input-box {
   width: -webkit-fill-available;
   border: 1px solid var(--color-gray-300);
@@ -9,4 +41,25 @@
 
 .input-box:focus {
   border: 2px solid var(--color-blue-500);
+}
+
+.form-spacing {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.btn-xd {
+  padding: 0.5rem 1.5rem;
+  background-color: #2563eb;
+  color: white;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease-in-out;
+  border: none;
+}
+
+.btn-xd:hover {
+  background-color: #1d4ed8; /* hover:bg-blue-700 */
 }

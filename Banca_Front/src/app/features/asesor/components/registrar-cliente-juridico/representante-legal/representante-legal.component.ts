@@ -13,6 +13,7 @@ export class RepresentanteLegalComponent implements OnInit {
   @Input() datosIniciales: any;
   @Output() formChange = new EventEmitter();
   @Output() nextTab = new EventEmitter();
+  @Output() prevTab = new EventEmitter<void>();
 
   form: FormGroup;
   constructor(private fb: FormBuilder) {
@@ -113,24 +114,26 @@ export class RepresentanteLegalComponent implements OnInit {
     });
   }
 
-guardarSeccion() {
-  if (this.form.valid) {
-    // TRANSFORMAR GÉNERO ANTES DE EMITIR
-    this.formChange.emit(this.form.value);
-    this.nextTab.emit();
-    alert('Sección de Información General guardada correctamente');
-  } else {
-    this.form.markAllAsTouched();
-    const errores = this.obtenerErroresFormulario();
-    if (errores.length > 0) {
-      alert('Por favor corrige los siguientes errores:\n\n' + errores.join('\n'));
+  guardarSeccion() {
+    if (this.form.valid) {
+      this.formChange.emit(this.form.value);
+      this.nextTab.emit();
+      alert('Sección de Información General guardada correctamente');
     } else {
-      alert('Por favor completa todos los campos obligatorios.');
+      this.form.markAllAsTouched();
+      const errores = this.obtenerErroresFormulario();
+      if (errores.length > 0) {
+        alert('Por favor corrige los siguientes errores:\n\n' + errores.join('\n'));
+      } else {
+        alert('Por favor completa todos los campos obligatorios.');
+      }
     }
   }
-}
 
-  // NUEVO: Obtener lista de errores del formulario
+  volver() {
+    this.prevTab.emit();
+  }
+
   obtenerErroresFormulario(): string[] {
     const errores: string[] = [];
     Object.keys(this.form.controls).forEach(key => {
@@ -151,7 +154,6 @@ guardarSeccion() {
     return errores;
   }
 
-  // NUEVO: Obtener nombre legible del campo
   obtenerNombreCampo(key: string): string {
     const nombres: { [key: string]: string } = {
       'numeroDoc': 'Número de documento',
@@ -167,7 +169,7 @@ guardarSeccion() {
       'pais': 'País',
       'telefonoLaboral': 'Teléfono laboral',
       'extension': 'Extensión',
-      'celular': 'Departamento',
+      'celular': 'Celular',
       'correoLaboral': 'Correo electrónico laboral'
     };
     return nombres[key] || key;
@@ -176,7 +178,6 @@ guardarSeccion() {
   soloLetras(event: KeyboardEvent) {
     const pattern = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]$/;
     const inputChar = event.key;
-    // MEJORA: Permitir teclas de control
     if (inputChar === 'Backspace' || inputChar === 'Delete' ||
       inputChar === 'Tab' || inputChar === 'ArrowLeft' || inputChar === 'ArrowRight') {
       return;
@@ -189,7 +190,6 @@ guardarSeccion() {
   soloNumeros(event: KeyboardEvent) {
     const pattern = /^[0-9]$/;
     const inputChar = event.key;
-    // MEJORA: Permitir teclas de control
     if (inputChar === 'Backspace' || inputChar === 'Delete' ||
       inputChar === 'Tab' || inputChar === 'ArrowLeft' || inputChar === 'ArrowRight') {
       return;

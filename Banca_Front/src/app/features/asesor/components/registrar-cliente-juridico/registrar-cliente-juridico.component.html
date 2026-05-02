@@ -52,10 +52,12 @@
         (formChange)="actualizarDatos('infoGeneral', $event)" (nextTab)="manejarNextTab()"></app-info-general>
     </div>
 
-    <!-- Pestaña 2: Representante-legal -->
+<!-- Pestaña 2: Representante-legal -->
     <div *ngIf="pestanaActiva === 'representante-legal'">
       <app-representante-legal [datosIniciales]="clienteData.representanteLegal"
-        (formChange)="actualizarDatos('representanteLegal', $event)" (nextTab)="manejarNextTab()"></app-representante-legal>
+        (formChange)="actualizarDatos('representanteLegal', $event)" 
+        (nextTab)="manejarNextTab()" 
+        (prevTab)="manejarPrevTab()"></app-representante-legal>
     </div>
 
   </div>
