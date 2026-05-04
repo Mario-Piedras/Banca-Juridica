@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core'; // ← AÑADIR OnInit
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AsesorService } from '../../services/asesor.service';
 
@@ -19,7 +18,6 @@ import { DeclaracionBienesComponent } from './declaracion-bienes/declaracion-bie
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    HttpClientModule,
     InformacionGeneralComponent,
     RepresentanteLegalComponent,
 /*     NaturalezaEntidadComponent,

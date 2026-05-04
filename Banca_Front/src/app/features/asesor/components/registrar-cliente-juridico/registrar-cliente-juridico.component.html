@@ -1,6 +1,15 @@
 <div class="p-4 max-w-7xl mx-auto">
   <!--  Navegación -->
-  <div class="flex justify-center mb-8 border-b border-gray-200">
+  <div class="navbar-items">
+
+<!--     <div class="coso-navbar">
+      Información general
+    </div>
+
+    <div class="coso-navbar2">
+      Representante legal
+    </div> -->
+
     <button class="px-6 py-3 font-medium text-sm transition-colors relative"
       [class.text-blue-600]="pestanaActiva === 'informacion-general'"
       [class.border-b-2]="pestanaActiva === 'informacion-general'"
@@ -48,15 +57,14 @@
 
     <!-- Pestaña 1: Información General -->
     <div *ngIf="pestanaActiva === 'informacion-general'">
-      <app-info-general [datosIniciales]="clienteData.infoGeneral"
-        (formChange)="actualizarDatos('infoGeneral', $event)" (nextTab)="manejarNextTab()"></app-info-general>
+      <app-info-general [datosIniciales]="clienteData.infoGeneral" (formChange)="actualizarDatos('infoGeneral', $event)"
+        (nextTab)="manejarNextTab()"></app-info-general>
     </div>
 
-<!-- Pestaña 2: Representante-legal -->
+    <!-- Pestaña 2: Representante-legal -->
     <div *ngIf="pestanaActiva === 'representante-legal'">
       <app-representante-legal [datosIniciales]="clienteData.representanteLegal"
-        (formChange)="actualizarDatos('representanteLegal', $event)" 
-        (nextTab)="manejarNextTab()" 
+        (formChange)="actualizarDatos('representanteLegal', $event)" (nextTab)="manejarNextTab()"
         (prevTab)="manejarPrevTab()"></app-representante-legal>
     </div>
 

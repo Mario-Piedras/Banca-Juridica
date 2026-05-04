@@ -61,5 +61,29 @@
 }
 
 .btn-xd:hover {
-  background-color: #1d4ed8; /* hover:bg-blue-700 */
+  background-color: #1d4ed8;
+}
+
+.coso-navbar {
+  color: var(--color-gray-500);
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+  text-align: center;
+}
+
+.coso-navbar2 {
+  color: var(--color-blue-600);
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+  text-align: center;
+  border-bottom: 2px solid var(--color-blue-600);
+}
+
+.navbar-items {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--color-gray-200);
 }

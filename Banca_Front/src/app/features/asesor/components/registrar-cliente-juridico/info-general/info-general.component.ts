@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-info-general',
@@ -15,7 +16,7 @@ export class InformacionGeneralComponent implements OnInit {
   @Output() nextTab = new EventEmitter();
 
   form: FormGroup;
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private http: HttpClient) {
     this.form = this.fb.group({
       numeroNIT: ['', [
         Validators.required,
@@ -27,13 +28,13 @@ export class InformacionGeneralComponent implements OnInit {
         Validators.required,
         Validators.minLength(5),
         Validators.maxLength(100),
-        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
+        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
       ]],
       nombreSigla: ['', [
         Validators.required,
         Validators.minLength(5),
         Validators.maxLength(10),
-        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
+        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
       ]],
       fechaConstitucion: ['', [
         Validators.required,
@@ -43,13 +44,13 @@ export class InformacionGeneralComponent implements OnInit {
         Validators.required,
         Validators.minLength(5),
         Validators.maxLength(20),
-        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
+        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
       ]],
       ciudadConstitucion: ['', [
         Validators.required,
         Validators.minLength(5),
         Validators.maxLength(20),
-        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
+        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
       ]],
       direccionEmpresa: ['', [
         Validators.required,
@@ -59,7 +60,7 @@ export class InformacionGeneralComponent implements OnInit {
         Validators.required,
         Validators.minLength(5),
         Validators.maxLength(50),
-        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
+        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
       ]],
       telefonoEmpresa: ['', [
         Validators.required,
@@ -76,17 +77,17 @@ export class InformacionGeneralComponent implements OnInit {
       barrioEmpresa: ['', [
         Validators.required,
         Validators.maxLength(50),
-        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
+        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
       ]],
       ciudadEmpresa: ['', [
         Validators.required,
         Validators.maxLength(50),
-        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
+        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
       ]],
       departamentoEmpresa: ['', [
         Validators.required,
         Validators.maxLength(50),
-        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
+        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
       ]],
       correoSede: ['', [
         Validators.required,
@@ -103,6 +104,18 @@ export class InformacionGeneralComponent implements OnInit {
     this.form.valueChanges.subscribe(valores => {
       this.formChange.emit(valores);
     });
+
+    this.form.statusChanges.subscribe(() => {
+      console.log('Formulario válido:', this.form.valid);
+
+      Object.keys(this.form.controls).forEach(key => {
+        const control = this.form.get(key);
+
+        if (control?.invalid) {
+          console.log(key, control.errors);
+        }
+      })
+    });
   }
 
   validarFechaNoFutura() {
@@ -116,22 +129,35 @@ export class InformacionGeneralComponent implements OnInit {
     };
   }
 
-guardarSeccion() {
-  if (this.form.valid) {
-    // TRANSFORMAR GÉNERO ANTES DE EMITIR
-    this.formChange.emit(this.form.value);
-    this.nextTab.emit();
-    alert('Sección de Información General guardada correctamente');
-  } else {
-    this.form.markAllAsTouched();
-    const errores = this.obtenerErroresFormulario();
-    if (errores.length > 0) {
-      alert('Por favor corrige los siguientes errores:\n\n' + errores.join('\n'));
+  guardarSeccion() {
+    console.log(this.form.value);
+    if (this.form.valid) {
+      this.http.post('http://localhost:3000/api/infoempresas', this.form.value)
+        .subscribe({
+          next: (res) => {
+            console.log('Guardado en BD:', res);
+            alert('Sección guardada correctamente');
+
+            this.formChange.emit(this.form.value);
+            this.nextTab.emit();
+          },
+          error: (err) => {
+            console.error(err);
+            alert('Error al guardar en la base de datos');
+          }
+        });
+
     } else {
-      alert('Por favor completa todos los campos obligatorios.');
+      this.form.markAllAsTouched();
+      const errores = this.obtenerErroresFormulario();
+
+      if (errores.length > 0) {
+        alert('Por favor corrige los siguientes errores:\n\n' + errores.join('\n'));
+      } else {
+        alert('Por favor completa todos los campos obligatorios.');
+      }
     }
   }
-}
 
   // NUEVO: Obtener lista de errores del formulario
   obtenerErroresFormulario(): string[] {
@@ -176,7 +202,7 @@ guardarSeccion() {
   }
 
   soloLetras(event: KeyboardEvent) {
-    const pattern = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]$/;
+    const pattern = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]$/;
     const inputChar = event.key;
     // MEJORA: Permitir teclas de control
     if (inputChar === 'Backspace' || inputChar === 'Delete' ||

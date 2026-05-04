@@ -18,68 +18,68 @@ export class RepresentanteLegalComponent implements OnInit {
   form: FormGroup;
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
+      tipoDocumento: ['', Validators.required],
       numeroDoc: ['', [
         Validators.required,
-        Validators.minLength(9),
-        Validators.maxLength(10),
+        Validators.minLength(10),
+        Validators.maxLength(20),
         Validators.pattern(/^[0-9]+$/)
       ]],
       primerNombre: ['', [
         Validators.required,
-        Validators.minLength(5),
+        Validators.minLength(2),
         Validators.maxLength(50),
-        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
+        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
       ]],
       segundoNombre: ['', [
-        Validators.required,
-        Validators.minLength(5),
+        Validators.minLength(2),
         Validators.maxLength(50),
-        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
+        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
       ]],
       primerApellido: ['', [
         Validators.required,
-        Validators.minLength(5),
+        Validators.minLength(2),
         Validators.maxLength(50),
-        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
+        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
       ]],
       segundoApellido: ['', [
         Validators.required,
-        Validators.minLength(5),
+        Validators.minLength(2),
         Validators.maxLength(50),
-        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
+        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
       ]],
       cargo: ['', [
         Validators.required,
-        Validators.minLength(5),
-        Validators.maxLength(10),
-        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
+        Validators.minLength(2),
+        Validators.maxLength(50),
+        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
       ]],
       direccionLaboral: ['', [
         Validators.required,
+        Validators.minLength(5),
         Validators.maxLength(50)
       ]],
       barrio: ['', [
-        Validators.required,
-        Validators.maxLength(50),
-        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
-      ]],
-      ciudadMunicipio: ['', [
-        Validators.required,
-        Validators.maxLength(50),
-        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
-      ]],
-      departamento: ['', [
-        Validators.required,
-        Validators.maxLength(50),
-        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
-      ]],
-      pais: ['', [
-        Validators.required,
         Validators.minLength(5),
         Validators.maxLength(50),
-        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
+        Validators.required
       ]],
-      telefono: ['', [
+      ciudadMunicipio: ['', [
+        Validators.minLength(5),
+        Validators.maxLength(50),
+        Validators.required
+      ]],
+      departamento: ['', [
+        Validators.minLength(5),
+        Validators.maxLength(50),
+        Validators.required
+      ]],
+      pais: ['', [
+        Validators.minLength(5),
+        Validators.maxLength(50),
+        Validators.required
+      ]],
+      telefonoLaboral: ['', [
         Validators.required,
         Validators.minLength(10),
         Validators.maxLength(20),
@@ -87,8 +87,8 @@ export class RepresentanteLegalComponent implements OnInit {
       ]],
       extension: ['', [
         Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(5),
+        Validators.minLength(1),
+        Validators.maxLength(10),
         Validators.pattern(/^[0-9]+$/)
       ]],
       celular: ['', [
@@ -99,7 +99,8 @@ export class RepresentanteLegalComponent implements OnInit {
       ]],
       correoLaboral: ['', [
         Validators.required,
-        Validators.email
+        Validators.email,
+        Validators.maxLength(100)
       ]]
     });
   }
@@ -111,6 +112,18 @@ export class RepresentanteLegalComponent implements OnInit {
 
     this.form.valueChanges.subscribe(valores => {
       this.formChange.emit(valores);
+    });
+
+    this.form.statusChanges.subscribe(() => {
+      console.log('Formulario válido:', this.form.valid);
+
+      Object.keys(this.form.controls).forEach(key => {
+        const control = this.form.get(key);
+
+        if (control?.invalid) {
+          console.log(key, control.errors);
+        }
+      })
     });
   }
 
@@ -156,6 +169,7 @@ export class RepresentanteLegalComponent implements OnInit {
 
   obtenerNombreCampo(key: string): string {
     const nombres: { [key: string]: string } = {
+      'tipoDocumento': 'Tipo de documento',
       'numeroDoc': 'Número de documento',
       'primerNombre': 'Primer nombre',
       'segundoNombre': 'Segundo nombre',
@@ -176,7 +190,7 @@ export class RepresentanteLegalComponent implements OnInit {
   }
 
   soloLetras(event: KeyboardEvent) {
-    const pattern = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]$/;
+    const pattern = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]$/;
     const inputChar = event.key;
     if (inputChar === 'Backspace' || inputChar === 'Delete' ||
       inputChar === 'Tab' || inputChar === 'ArrowLeft' || inputChar === 'ArrowRight') {

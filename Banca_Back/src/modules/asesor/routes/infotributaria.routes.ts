@@ -1,29 +1,29 @@
 import { Router } from 'express';
-import { DeclaracionbienesController } from '../controllers/declaracionbienesController';
+import { InfotributariaController } from '../controllers/infotributariaController';
 import { authMiddleware, requireRole } from '../../../shared/middleware/authMiddleware';
 
 
 const router = Router();
-const controller = new DeclaracionbienesController();
+const controller = new InfotributariaController();
 
 router.get('/', authMiddleware,
-    requireRole('Cajero'),
+    requireRole('Asesor'),
     (req, res) => controller.obtenerTodos(req, res));
 
-router.get('/:id',  authMiddleware,
-    requireRole('Cajero'),
+router.get('/:id', authMiddleware,
+    requireRole('Asesor'),
     (req, res) => controller.obtenerUno(req, res));
 
-router.post('/',  authMiddleware,
-    requireRole('Cajero'),
+router.post('/', authMiddleware,
+    requireRole('Asesor'),
     (req, res) => controller.crear(req, res));
 
-router.put('/:id',  authMiddleware,
-    requireRole('Cajero'),
+router.put('/:id', authMiddleware,
+    requireRole('Asesor'),
     (req, res) => controller.actualizar(req, res));
 
-router.delete('/:id',  authMiddleware,
-    requireRole('Cajero'),
+router.delete('/:id', authMiddleware,
+    requireRole('Asesor'),
     (req, res) => controller.eliminar(req, res));
 
 export default router;

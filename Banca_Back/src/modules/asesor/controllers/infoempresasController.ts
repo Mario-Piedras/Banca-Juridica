@@ -44,7 +44,26 @@ export class InfoempresasController {
 
     async crear(req: Request, res: Response): Promise<Response> {
         try {
-            const data = req.body;
+
+            const body = req.body;
+
+            const data = {
+                nit: body.numeroNIT,
+                razon_social: body.nombreRazon,
+                nombre_corto: body.nombreSigla,
+                fecha_constitución: body.fechaConstitucion,
+                ciudad_constitución: body.ciudadConstitucion,
+                pais_constitucion: body.paisConstitucion,
+                dir_sede_principal: body.direccionEmpresa,
+                barrio: body.barrioEmpresa,
+                ciudad_municipio: body.ciudadEmpresa,
+                departamento: body.departamentoEmpresa,
+                pais: body.paisEmpresa,
+                telefono: body.telefonoEmpresa,
+                ext: body.extensionEmpresa,
+                correo: body.correoSede
+            };
+            
             if (!data || Object.keys(data).length === 0) {
                 return res.status(400).json({ mensaje: 'Los datos son obligatorios' });
             }

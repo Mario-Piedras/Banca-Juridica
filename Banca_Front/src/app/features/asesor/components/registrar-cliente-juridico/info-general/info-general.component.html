@@ -18,8 +18,8 @@
         <label class="block text-sm font-medium text-gray-700 mb-2">
           Nombre o razón social <span class="text-red-500">*</span>
         </label>
-        <input id="nombreRazon" type="text" formControlName="nombreRazon" maxlength="100" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*"
-          (keypress)="soloLetras($event)"
+        <input id="nombreRazon" type="text" formControlName="nombreRazon" maxlength="100"
+          pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]*" (keypress)="soloLetras($event)"
           class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Ej: Placeholder">
       </div>
@@ -32,8 +32,8 @@
           <label class="block text-sm font-medium text-gray-700 mb-2">
             Nombre corto o sigla <span class="text-red-500">*</span>
           </label>
-          <input id="nombreSigla" type="text" formControlName="nombreSigla" maxlength="10" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*"
-            (keypress)="soloLetras($event)"
+          <input id="nombreSigla" type="text" formControlName="nombreSigla" maxlength="10"
+            pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]*" (keypress)="soloLetras($event)"
             class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Ej: Placeholder">
         </div>
@@ -43,7 +43,8 @@
           <label class="block text-sm font-medium text-gray-700 mb-2">
             Fecha de constitución <span class="text-red-500">*</span>
           </label>
-          <input id="fechaConstitucion" type="date" formControlName="fechaConstitucion" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <input id="fechaConstitucion" type="date" formControlName="fechaConstitucion"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
         </div>
 
         <!-- País de constitución -->
@@ -51,8 +52,8 @@
           <label class="block text-sm font-medium text-gray-700 mb-2">
             País de constitución <span class="text-red-500">*</span>
           </label>
-          <input id="paisConstitucion" type="text" formControlName="paisConstitucion" maxlength="50" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*"
-            (keypress)="soloLetras($event)"
+          <input id="paisConstitucion" type="text" formControlName="paisConstitucion" maxlength="20"
+            pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]*" (keypress)="soloLetras($event)"
             class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Ej: Colombia">
         </div>
@@ -62,8 +63,8 @@
           <label class="block text-sm font-medium text-gray-700 mb-2">
             Ciudad de constitución <span class="text-red-500">*</span>
           </label>
-          <input id="ciudadConstitucion" type="text" formControlName="ciudadConstitucion" maxlength="50" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*"
-          (keypress)="soloLetras($event)"
+          <input id="ciudadConstitucion" type="text" formControlName="ciudadConstitucion" maxlength="20"
+            pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]*" (keypress)="soloLetras($event)"
             class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Ej: Palmira">
         </div>
@@ -75,7 +76,7 @@
         <label class="block text-sm font-medium text-gray-700 mb-2">
           Dirección sede principal <span class="text-red-500">*</span>
         </label>
-        <input id="direccionEmpresa" type="text" maxlength="50"
+        <input id="direccionEmpresa" type="text" formControlName="direccionEmpresa" maxlength="50"
           class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Ej: Cl. 40 #30-44">
       </div>
@@ -88,8 +89,8 @@
           <label class="block text-sm font-medium text-gray-700 mb-2">
             País <span class="text-red-500">*</span>
           </label>
-          <input id="paisEmpresa" type="text" maxlength="50" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*"
-          (keypress)="soloLetras($event)"
+          <input id="paisEmpresa" type="text" formControlName="paisEmpresa" maxlength="50"
+            pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]*" (keypress)="soloLetras($event)"
             class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Ej: Colombia">
         </div>
@@ -99,8 +100,8 @@
           <label class="block text-sm font-medium text-gray-700 mb-2">
             Teléfono <span class="text-red-500">*</span>
           </label>
-          <input id="telefonoEmpresa" type="tel" maxlength="20" pattern="[0-9]*"
-          (keypress)="soloNumeros($event)"
+          <input id="telefonoEmpresa" type="tel" formControlName="telefonoEmpresa" maxlength="20" pattern="[0-9]*"
+            (keypress)="soloNumeros($event)"
             class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Ej: 1234567890">
         </div>
@@ -110,8 +111,8 @@
           <label class="block text-sm font-medium text-gray-700 mb-2">
             Extensión <span class="text-red-500">*</span>
           </label>
-          <input id="extensionEmpresa" type="text" maxlength="5" pattern="[0-9]*"
-          (keypress)="soloNumeros($event)"
+          <input id="extensionEmpresa" type="text" formControlName="extensionEmpresa" maxlength="5" pattern="[0-9]*"
+            (keypress)="soloNumeros($event)"
             class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Ej: 1234567890">
         </div>
@@ -121,8 +122,8 @@
           <label class="block text-sm font-medium text-gray-700 mb-2">
             Barrio <span class="text-red-500">*</span>
           </label>
-          <input id="barrioEmpresa" type="text" maxlength="50" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*"
-          (keypress)="soloLetras($event)"
+          <input id="barrioEmpresa" type="text" formControlName="barrioEmpresa" maxlength="50"
+            pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]*" (keypress)="soloLetras($event)"
             class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Ej: Placeholder">
         </div>
@@ -132,8 +133,8 @@
           <label class="block text-sm font-medium text-gray-700 mb-2">
             Ciudad/Municipio <span class="text-red-500">*</span>
           </label>
-          <input id="ciudadEmpresa" type="text" maxlength="50" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*"
-          (keypress)="soloLetras($event)"
+          <input id="ciudadEmpresa" type="text" formControlName="ciudadEmpresa" maxlength="50"
+            pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]*" (keypress)="soloLetras($event)"
             class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Ej: Palmira">
         </div>
@@ -143,8 +144,8 @@
           <label class="block text-sm font-medium text-gray-700 mb-2">
             Departamento <span class="text-red-500">*</span>
           </label>
-          <input id="departamentoEmpresa" type="text" maxlength="50" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*"
-          (keypress)="soloLetras($event)"
+          <input id="departamentoEmpresa" type="text" formControlName="departamentoEmpresa" maxlength="50"
+            pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]*" (keypress)="soloLetras($event)"
             class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Ej: Valle del cauca">
         </div>
@@ -156,7 +157,7 @@
         <label class="block text-sm font-medium text-gray-700 mb-2">
           Correo electrónico sede principal <span class="text-red-500">*</span>
         </label>
-        <input id="correoSede" type="email" maxlength="100"
+        <input id="correoSede" type="email" formControlName="correoSede" maxlength="100"
           class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Ej: correo@example.com">
       </div>
@@ -165,9 +166,9 @@
 
     <!-- Botón Guardar -->
     <div class="flex justify-end mt-6">
-      <button type="button" (click)="guardarSeccion()" [disabled]="!form.valid" [class]="form.valid
-      ? 'px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors cursor-pointer'
-      : 'px-6 py-2 bg-gray-300 text-gray-500 font-medium rounded-lg cursor-not-allowed'">
+      <button type="button" (click)="guardarSeccion()" [disabled]="form.invalid" [class]="form.valid
+    ? 'px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors cursor-pointer'
+    : 'px-6 py-2 bg-gray-300 text-gray-500 font-medium rounded-lg cursor-not-allowed'">
         Guardar y continuar
       </button>
     </div>
