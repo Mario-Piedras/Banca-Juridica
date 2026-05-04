@@ -3,11 +3,11 @@
 -- Host: banca-uno-santiago2006ortizp-5f86.b.aivencloud.com    Database: defaultdb
 -- ------------------------------------------------------
 -- Server version	8.0.35
-CREATE DATABASE IF NOT EXISTS `defaultdb`
+CREATE DATABASE IF NOT EXISTS `pruebadb`
   DEFAULT CHARACTER SET utf8mb4
   COLLATE utf8mb4_0900_ai_ci;
 
-USE `defaultdb`;
+USE `pruebadb`;
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
