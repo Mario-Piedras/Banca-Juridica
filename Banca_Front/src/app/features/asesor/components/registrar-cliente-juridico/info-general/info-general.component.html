@@ -7,10 +7,14 @@
         <label class="block text-sm font-medium text-gray-700 mb-2">
           Número de NIT <span class="text-red-500">*</span>
         </label>
-        <input id="numeroNIT" type="tel" formControlName="numeroNIT" maxlength="10" pattern="[0-9]*"
+        <input id="numeroNIT" type="text" formControlName="numeroNIT" maxlength="10" pattern="[0-9]*"
           (keypress)="soloNumeros($event)"
           class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Ej: 1234567890">
+        <div class="text-red-500 text-xs mt-1" *ngIf="form.get('numeroNIT')?.invalid && form.get('numeroNIT')?.touched">
+          <span *ngIf="form.get('numeroNIT')?.errors?.['required']">Campo obligatorio</span>
+          <span *ngIf="form.get('numeroNIT')?.errors?.['minlength']">Mínimo 8 dígitos</span>
+        </div>
       </div>
 
       <!-- Nombre o razón social -->
@@ -22,6 +26,11 @@
           pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]*" (keypress)="soloLetras($event)"
           class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Ej: Placeholder">
+        <div class="text-red-500 text-xs mt-1"
+          *ngIf="form.get('nombreRazon')?.invalid && form.get('nombreRazon')?.touched">
+          <span *ngIf="form.get('nombreRazon')?.errors?.['required']">Campo obligatorio</span>
+          <span *ngIf="form.get('nombreRazon')?.errors?.['minlength']">Mínimo 3 dígitos</span>
+        </div>
       </div>
 
       <!-- Varios -->
@@ -36,6 +45,11 @@
             pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]*" (keypress)="soloLetras($event)"
             class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Ej: Placeholder">
+          <div class="text-red-500 text-xs mt-1"
+            *ngIf="form.get('nombreSigla')?.invalid && form.get('nombreSigla')?.touched">
+            <span *ngIf="form.get('nombreSigla')?.errors?.['required']">Campo obligatorio</span>
+            <span *ngIf="form.get('nombreSigla')?.errors?.['minlength']">Mínimo 3 dígitos</span>
+          </div>
         </div>
 
         <!-- Fecha de constitución -->
@@ -45,6 +59,10 @@
           </label>
           <input id="fechaConstitucion" type="date" formControlName="fechaConstitucion"
             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <div class="text-red-500 text-xs mt-1"
+            *ngIf="form.get('fechaConstitucion')?.invalid && form.get('fechaConstitucion')?.touched">
+            <span *ngIf="form.get('fechaConstitucion')?.errors?.['required']">Campo obligatorio</span>
+          </div>
         </div>
 
         <!-- País de constitución -->
@@ -56,6 +74,11 @@
             pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]*" (keypress)="soloLetras($event)"
             class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Ej: Colombia">
+          <div class="text-red-500 text-xs mt-1"
+            *ngIf="form.get('paisConstitucion')?.invalid && form.get('paisConstitucion')?.touched">
+            <span *ngIf="form.get('paisConstitucion')?.errors?.['required']">Campo obligatorio</span>
+            <span *ngIf="form.get('paisConstitucion')?.errors?.['minlength']">Mínimo 3 dígitos</span>
+          </div>
         </div>
 
         <!-- Ciudad de constitución -->
@@ -67,6 +90,11 @@
             pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]*" (keypress)="soloLetras($event)"
             class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Ej: Palmira">
+          <div class="text-red-500 text-xs mt-1"
+            *ngIf="form.get('ciudadConstitucion')?.invalid && form.get('ciudadConstitucion')?.touched">
+            <span *ngIf="form.get('ciudadConstitucion')?.errors?.['required']">Campo obligatorio</span>
+            <span *ngIf="form.get('ciudadConstitucion')?.errors?.['minlength']">Mínimo 3 dígitos</span>
+          </div>
         </div>
 
       </div>
@@ -79,6 +107,11 @@
         <input id="direccionEmpresa" type="text" formControlName="direccionEmpresa" maxlength="50"
           class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Ej: Cl. 40 #30-44">
+        <div class="text-red-500 text-xs mt-1"
+          *ngIf="form.get('direccionEmpresa')?.invalid && form.get('direccionEmpresa')?.touched">
+          <span *ngIf="form.get('direccionEmpresa')?.errors?.['required']">Campo obligatorio</span>
+          <span *ngIf="form.get('direccionEmpresa')?.errors?.['minlength']">Mínimo 3 dígitos</span>
+        </div>
       </div>
 
       <!-- Varios2 -->
@@ -93,6 +126,11 @@
             pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]*" (keypress)="soloLetras($event)"
             class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Ej: Colombia">
+          <div class="text-red-500 text-xs mt-1"
+            *ngIf="form.get('paisEmpresa')?.invalid && form.get('paisEmpresa')?.touched">
+            <span *ngIf="form.get('paisEmpresa')?.errors?.['required']">Campo obligatorio</span>
+            <span *ngIf="form.get('paisEmpresa')?.errors?.['minlength']">Mínimo 3 dígitos</span>
+          </div>
         </div>
 
         <!-- Teléfono -->
@@ -104,6 +142,11 @@
             (keypress)="soloNumeros($event)"
             class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Ej: 1234567890">
+          <div class="text-red-500 text-xs mt-1"
+            *ngIf="form.get('telefonoEmpresa')?.invalid && form.get('telefonoEmpresa')?.touched">
+            <span *ngIf="form.get('telefonoEmpresa')?.errors?.['required']">Campo obligatorio</span>
+            <span *ngIf="form.get('telefonoEmpresa')?.errors?.['minlength']">Mínimo 10 dígitos</span>
+          </div>
         </div>
 
         <!-- Extensión -->
@@ -115,6 +158,10 @@
             (keypress)="soloNumeros($event)"
             class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Ej: 1234567890">
+          <div class="text-red-500 text-xs mt-1"
+            *ngIf="form.get('extensionEmpresa')?.invalid && form.get('extensionEmpresa')?.touched">
+            <span *ngIf="form.get('extensionEmpresa')?.errors?.['required']">Campo obligatorio</span>
+          </div>
         </div>
 
         <!-- Barrio -->
@@ -126,6 +173,11 @@
             pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]*" (keypress)="soloLetras($event)"
             class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Ej: Placeholder">
+          <div class="text-red-500 text-xs mt-1"
+            *ngIf="form.get('barrioEmpresa')?.invalid && form.get('barrioEmpresa')?.touched">
+            <span *ngIf="form.get('barrioEmpresa')?.errors?.['required']">Campo obligatorio</span>
+            <span *ngIf="form.get('barrioEmpresa')?.errors?.['minlength']">Mínimo 3 dígitos</span>
+          </div>
         </div>
 
         <!-- Ciudad/Municipio -->
@@ -137,6 +189,11 @@
             pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]*" (keypress)="soloLetras($event)"
             class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Ej: Palmira">
+          <div class="text-red-500 text-xs mt-1"
+            *ngIf="form.get('ciudadEmpresa')?.invalid && form.get('ciudadEmpresa')?.touched">
+            <span *ngIf="form.get('ciudadEmpresa')?.errors?.['required']">Campo obligatorio</span>
+            <span *ngIf="form.get('ciudadEmpresa')?.errors?.['minlength']">Mínimo 3 dígitos</span>
+          </div>
         </div>
 
         <!-- Departamento -->
@@ -148,6 +205,11 @@
             pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]*" (keypress)="soloLetras($event)"
             class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Ej: Valle del cauca">
+          <div class="text-red-500 text-xs mt-1"
+            *ngIf="form.get('departamentoEmpresa')?.invalid && form.get('departamentoEmpresa')?.touched">
+            <span *ngIf="form.get('departamentoEmpresa')?.errors?.['required']">Campo obligatorio</span>
+            <span *ngIf="form.get('departamentoEmpresa')?.errors?.['minlength']">Mínimo 3 dígitos</span>
+          </div>
         </div>
 
       </div>
@@ -160,15 +222,18 @@
         <input id="correoSede" type="email" formControlName="correoSede" maxlength="100"
           class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Ej: correo@example.com">
+        <div class="text-red-500 text-xs mt-1"
+          *ngIf="form.get('correoSede')?.invalid && form.get('correoSede')?.touched">
+          <span *ngIf="form.get('correoSede')?.errors?.['required']">Campo obligatorio</span>
+          <span *ngIf="form.get('correoSede')?.errors?.['minlength']">Mínimo 5 dígitos</span>
+        </div>
       </div>
 
     </div>
 
     <!-- Botón Guardar -->
     <div class="flex justify-end mt-6">
-      <button type="button" (click)="guardarSeccion()" [disabled]="form.invalid" [class]="form.valid
-    ? 'px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors cursor-pointer'
-    : 'px-6 py-2 bg-gray-300 text-gray-500 font-medium rounded-lg cursor-not-allowed'">
+      <button type="button" (click)="guardarSeccion()" [disabled]="form.invalid" class="form-btn">
         Guardar y continuar
       </button>
     </div>

@@ -15,6 +15,9 @@
             <option value="pa">Pasaporte</option>
             <option value="cd">Carne diplomático</option>
           </select>
+          <div class="text-red-500 text-xs mt-1" *ngIf="form.get('tipoDocumento')?.invalid && form.get('tipoDocumento')?.touched">
+            <span *ngIf="form.get('tipoDocumento')?.errors?.['required']">Campo obligatorio</span>
+          </div>
         </div>
 
         <!-- Número de documento -->
@@ -27,10 +30,8 @@
             placeholder="Ej: 1234567890">
           <div class="text-red-500 text-xs mt-1"
             *ngIf="form.get('numeroDoc')?.invalid && form.get('numeroDoc')?.touched">
-            <span *ngIf="form.get('numeroDoc')?.errors?.['required']">Campo obligatorio (entre 6 y 11
-              dígitos)</span>
-            <span *ngIf="form.get('numeroDoc')?.errors?.['minlength']">Mínimo 6 dígitos</span>
-            <span *ngIf="form.get('numeroDoc')?.errors?.['maxlength']">Máximo 11 dígitos</span>
+            <span *ngIf="form.get('numeroDoc')?.errors?.['required']">Campo obligatorio (5 dígitos)</span>
+            <span *ngIf="form.get('numeroDoc')?.errors?.['minlength']">Mínimo 5 dígitos</span>
           </div>
         </div>
 
@@ -43,6 +44,11 @@
             (keypress)="soloLetras($event)"
             class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Ej: Placeholder">
+          <div class="text-red-500 text-xs mt-1"
+            *ngIf="form.get('primerNombre')?.invalid && form.get('primerNombre')?.touched">
+            <span *ngIf="form.get('primerNombre')?.errors?.['required']">Campo obligatorio (5 dígitos)</span>
+            <span *ngIf="form.get('primerNombre')?.errors?.['minlength']">Mínimo 5 dígitos</span>
+          </div>
         </div>
 
         <!-- Segundo nombre -->
@@ -65,6 +71,11 @@
             (keypress)="soloLetras($event)"
             class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Ej: Placeholder">
+          <div class="text-red-500 text-xs mt-1"
+            *ngIf="form.get('primerApellido')?.invalid && form.get('primerApellido')?.touched">
+            <span *ngIf="form.get('primerApellido')?.errors?.['required']">Campo obligatorio (5 dígitos)</span>
+            <span *ngIf="form.get('primerApellido')?.errors?.['minlength']">Mínimo 5 dígitos</span>
+          </div>
         </div>
 
         <!-- Segundo apellido -->
@@ -76,6 +87,11 @@
             (keypress)="soloLetras($event)"
             class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Ej: Placeholder">
+          <div class="text-red-500 text-xs mt-1"
+            *ngIf="form.get('segundoApellido')?.invalid && form.get('segundoApellido')?.touched">
+            <span *ngIf="form.get('segundoApellido')?.errors?.['required']">Campo obligatorio (5 dígitos)</span>
+            <span *ngIf="form.get('segundoApellido')?.errors?.['minlength']">Mínimo 5 dígitos</span>
+          </div>
         </div>
 
         <!-- Cargo -->
@@ -86,6 +102,10 @@
           <input id="cargo" type="text" formControlName="cargo" maxlength="50" (keypress)="soloLetras($event)"
             class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Ej: Placeholder">
+          <div class="text-red-500 text-xs mt-1" *ngIf="form.get('cargo')?.invalid && form.get('cargo')?.touched">
+            <span *ngIf="form.get('cargo')?.errors?.['required']">Campo obligatorio (5 dígitos)</span>
+            <span *ngIf="form.get('cargo')?.errors?.['minlength']">Mínimo 5 dígitos</span>
+          </div>
         </div>
 
         <!-- Dirección laboral -->
@@ -96,6 +116,11 @@
           <input id="direccionLaboral" type="text" formControlName="direccionLaboral" maxlength="50"
             class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Ej: Cl. 40 #30-44">
+          <div class="text-red-500 text-xs mt-1"
+            *ngIf="form.get('direccionLaboral')?.invalid && form.get('direccionLaboral')?.touched">
+            <span *ngIf="form.get('direccionLaboral')?.errors?.['required']">Campo obligatorio (5 dígitos)</span>
+            <span *ngIf="form.get('direccionLaboral')?.errors?.['minlength']">Mínimo 5 dígitos</span>
+          </div>
         </div>
 
       </div>
@@ -111,6 +136,10 @@
           <input id="barrio" type="text" formControlName="barrio" maxlength="50" (keypress)="soloLetras($event)"
             class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Ej: Placeholder">
+          <div class="text-red-500 text-xs mt-1" *ngIf="form.get('barrio')?.invalid && form.get('barrio')?.touched">
+            <span *ngIf="form.get('barrio')?.errors?.['required']">Campo obligatorio (5 dígitos)</span>
+            <span *ngIf="form.get('barrio')?.errors?.['minlength']">Mínimo 5 dígitos</span>
+          </div>
         </div>
 
         <!-- Ciudad/Municipio -->
@@ -122,6 +151,11 @@
             (keypress)="soloLetras($event)"
             class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Ej: Palmira">
+          <div class="text-red-500 text-xs mt-1"
+            *ngIf="form.get('ciudadMunicipio')?.invalid && form.get('ciudadMunicipio')?.touched">
+            <span *ngIf="form.get('ciudadMunicipio')?.errors?.['required']">Campo obligatorio (5 dígitos)</span>
+            <span *ngIf="form.get('ciudadMunicipio')?.errors?.['minlength']">Mínimo 5 dígitos</span>
+          </div>
         </div>
 
         <!-- Departamento -->
@@ -133,6 +167,11 @@
             (keypress)="soloLetras($event)"
             class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Ej: Valle del cauca">
+          <div class="text-red-500 text-xs mt-1"
+            *ngIf="form.get('departamento')?.invalid && form.get('departamento')?.touched">
+            <span *ngIf="form.get('departamento')?.errors?.['required']">Campo obligatorio (5 dígitos)</span>
+            <span *ngIf="form.get('departamento')?.errors?.['minlength']">Mínimo 5 dígitos</span>
+          </div>
         </div>
 
       </div>
@@ -148,6 +187,10 @@
           <input id="pais" type="text" formControlName="pais" maxlength="50" (keypress)="soloLetras($event)"
             class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Ej: Colombia">
+          <div class="text-red-500 text-xs mt-1" *ngIf="form.get('pais')?.invalid && form.get('pais')?.touched">
+            <span *ngIf="form.get('pais')?.errors?.['required']">Campo obligatorio (5 dígitos)</span>
+            <span *ngIf="form.get('pais')?.errors?.['minlength']">Mínimo 5 dígitos</span>
+          </div>
         </div>
 
         <!-- Teléfono -->
@@ -159,6 +202,10 @@
             (keypress)="soloNumeros($event)"
             class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Ej: 1234567890">
+          <div class="text-red-500 text-xs mt-1" *ngIf="form.get('telefonoLaboral')?.invalid && form.get('telefonoLaboral')?.touched">
+            <span *ngIf="form.get('telefonoLaboral')?.errors?.['required']">Campo obligatorio (5 dígitos)</span>
+            <span *ngIf="form.get('telefonoLaboral')?.errors?.['minlength']">Mínimo 5 dígitos</span>
+          </div>
         </div>
 
         <!-- Extensión -->
@@ -169,6 +216,10 @@
           <input id="extension" type="text" formControlName="extension" maxlength="5" (keypress)="soloNumeros($event)"
             class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Ej: 1234567890">
+          <div class="text-red-500 text-xs mt-1" *ngIf="form.get('extension')?.invalid && form.get('extension')?.touched">
+            <span *ngIf="form.get('extension')?.errors?.['required']">Campo obligatorio (5 dígitos)</span>
+            <span *ngIf="form.get('extension')?.errors?.['minlength']">Mínimo 5 dígitos</span>
+          </div>
         </div>
 
         <!-- Celular -->
@@ -179,6 +230,10 @@
           <input id="celular" type="tel" formControlName="celular" maxlength="20" (keypress)="soloNumeros($event)"
             class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Ej: 1234567890">
+          <div class="text-red-500 text-xs mt-1" *ngIf="form.get('celular')?.invalid && form.get('celular')?.touched">
+            <span *ngIf="form.get('celular')?.errors?.['required']">Campo obligatorio (5 dígitos)</span>
+            <span *ngIf="form.get('celular')?.errors?.['minlength']">Mínimo 5 dígitos</span>
+          </div>
         </div>
 
       </div>
@@ -191,16 +246,19 @@
         <input id="correoLaboral" type="email" formControlName="correoLaboral" maxlength="100"
           class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Ej: correo@example.com">
+        <div class="text-red-500 text-xs mt-1"
+          *ngIf="form.get('correoLaboral')?.invalid && form.get('correoLaboral')?.touched">
+          <span *ngIf="form.get('correoLaboral')?.errors?.['required']">Campo obligatorio (5 dígitos)</span>
+          <span *ngIf="form.get('correoLaboral')?.errors?.['minlength']">Mínimo 5 dígitos</span>
+        </div>
       </div>
 
     </div>
 
     <!-- Botones -->
     <div class="flex justify-between mt-6">
-      <button type="button" (click)="volver()" class="btn-xd">Volver a la página anterior</button>
-      <button type="button" (click)="guardarSeccion()" [disabled]="form.invalid" [class]="form.valid
-    ? 'px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors cursor-pointer'
-    : 'px-6 py-2 bg-gray-300 text-gray-500 font-medium rounded-lg cursor-not-allowed'">
+      <button type="button" (click)="volver()" class="form-btn">Volver a la página anterior</button>
+      <button type="button" (click)="guardarSeccion()" [disabled]="form.invalid" class="form-btn">
         Guardar y continuar
       </button>
     </div>

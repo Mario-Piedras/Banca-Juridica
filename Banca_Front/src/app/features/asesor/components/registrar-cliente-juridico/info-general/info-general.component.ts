@@ -20,19 +20,19 @@ export class InformacionGeneralComponent implements OnInit {
     this.form = this.fb.group({
       numeroNIT: ['', [
         Validators.required,
-        Validators.minLength(9),
+        Validators.minLength(8),
         Validators.maxLength(10),
         Validators.pattern(/^[0-9]+$/)
       ]],
       nombreRazon: ['', [
         Validators.required,
-        Validators.minLength(5),
+        Validators.minLength(3),
         Validators.maxLength(100),
         Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
       ]],
       nombreSigla: ['', [
         Validators.required,
-        Validators.minLength(5),
+        Validators.minLength(3),
         Validators.maxLength(10),
         Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
       ]],
@@ -42,50 +42,54 @@ export class InformacionGeneralComponent implements OnInit {
       ]],
       paisConstitucion: ['', [
         Validators.required,
-        Validators.minLength(5),
+        Validators.minLength(3),
         Validators.maxLength(20),
         Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
       ]],
       ciudadConstitucion: ['', [
         Validators.required,
-        Validators.minLength(5),
+        Validators.minLength(3),
         Validators.maxLength(20),
         Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
       ]],
       direccionEmpresa: ['', [
         Validators.required,
+        Validators.minLength(3),
         Validators.maxLength(50)
       ]],
       paisEmpresa: ['', [
         Validators.required,
-        Validators.minLength(5),
+        Validators.minLength(3),
         Validators.maxLength(50),
         Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
       ]],
       telefonoEmpresa: ['', [
         Validators.required,
         Validators.minLength(10),
-        Validators.maxLength(20),
+        Validators.maxLength(10),
         Validators.pattern(/^[0-9]+$/)
       ]],
       extensionEmpresa: ['', [
         Validators.required,
-        Validators.minLength(3),
+        Validators.minLength(1),
         Validators.maxLength(5),
         Validators.pattern(/^[0-9]+$/)
       ]],
       barrioEmpresa: ['', [
         Validators.required,
+        Validators.minLength(3),
         Validators.maxLength(50),
         Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
       ]],
       ciudadEmpresa: ['', [
         Validators.required,
+        Validators.minLength(3),
         Validators.maxLength(50),
         Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
       ]],
       departamentoEmpresa: ['', [
         Validators.required,
+        Validators.minLength(3),
         Validators.maxLength(50),
         Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
       ]],
