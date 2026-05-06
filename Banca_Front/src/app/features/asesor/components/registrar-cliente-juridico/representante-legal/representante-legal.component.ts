@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-representante-legal',
@@ -12,11 +13,11 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 export class RepresentanteLegalComponent implements OnInit {
   @Input() datosIniciales: any;
   @Output() formChange = new EventEmitter();
-  @Output() nextTab = new EventEmitter();
   @Output() prevTab = new EventEmitter<void>();
+  @Output() nextTab = new EventEmitter();
 
   form: FormGroup;
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private http: HttpClient) {
     this.form = this.fb.group({
       tipoDocumento: ['', Validators.required],
       numeroDoc: ['', [
@@ -128,13 +129,27 @@ export class RepresentanteLegalComponent implements OnInit {
   }
 
   guardarSeccion() {
+    console.log(this.form.value);
     if (this.form.valid) {
-      this.formChange.emit(this.form.value);
-      this.nextTab.emit();
-      alert('Sección de Información General guardada correctamente');
+      this.http.post('http://localhost:3000/api/personasaso', this.form.value)
+        .subscribe({
+          next: (res) => {
+            console.log('Guardado en BD:', res);
+            alert('Sección guardada correctamente');
+
+            this.formChange.emit(this.form.value);
+            this.nextTab.emit();
+          },
+          error: (err) => {
+            console.error(err);
+            alert('Error al guardar en la base de datos');
+          }
+        });
+
     } else {
       this.form.markAllAsTouched();
       const errores = this.obtenerErroresFormulario();
+
       if (errores.length > 0) {
         alert('Por favor corrige los siguientes errores:\n\n' + errores.join('\n'));
       } else {

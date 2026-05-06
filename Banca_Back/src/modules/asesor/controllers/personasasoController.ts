@@ -35,7 +35,28 @@ export class PersonasasoController {
 
     async crear(req: Request, res: Response): Promise<Response> {
         try {
-        const data = req.body;
+
+        const body = req.body;
+
+            const data = {
+                tipo_documento: body.tipoDocumento,
+                num_documento: body.numeroDoc,
+                primer_nombre: body.primerNombre,
+                segundo_nombre: body.segundoNombre,
+                primer_apellido: body.primerApellido,
+                segundo_apellido: body.segundoApellido,
+                cargo: body.cargo,
+                dir_laboral: body.direccionLaboral,
+                barrio: body.barrio,
+                ciudad_municipio: body.ciudadMunicipio,
+                departamento: body.departamento,
+                pais: body.pais,
+                telefono: body.telefonoLaboral,
+                ext: body.extension,
+                celular: body.celular,
+                correo: body.correoLaboral
+            };
+            
         if (!data || Object.keys(data).length === 0) {
             return res.status(400).json({ mensaje: 'Los datos son obligatorios' });
         }

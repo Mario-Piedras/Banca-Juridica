@@ -10,10 +10,10 @@
           <select name="tipo-doc" id="tipo-doc" formControlName="tipoDocumento"
             class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
             <option value="" selected>Seleccione el tipo de documento</option>
-            <option value="cc">Cédula de ciudadania</option>
-            <option value="ce">Cédula de extranjería</option>
-            <option value="pa">Pasaporte</option>
-            <option value="cd">Carne diplomático</option>
+            <option value="CC">Cédula de ciudadania</option>
+            <option value="CedulaExtranjeria">Cédula de extranjería</option>
+            <option value="Pasaporte">Pasaporte</option>
+            <option value="CarneDiplomatico">Carne diplomático</option>
           </select>
           <div class="text-red-500 text-xs mt-1" *ngIf="form.get('tipoDocumento')?.invalid && form.get('tipoDocumento')?.touched">
             <span *ngIf="form.get('tipoDocumento')?.errors?.['required']">Campo obligatorio</span>
