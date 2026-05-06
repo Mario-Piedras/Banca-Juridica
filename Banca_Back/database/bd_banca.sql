@@ -711,7 +711,7 @@ CREATE TABLE personas_asociadas (
     dir_laboral VARCHAR(50) NOT NULL,
     barrio VARCHAR(50) NOT NULL,
     ciudad_municipio VARCHAR(50) NOT NULL,
-    deparatamento VARCHAR(50) NOT NULL,
+    departamento VARCHAR(50) NOT NULL,
     pais VARCHAR(50) NOT NULL,
     telefono VARCHAR(13),
     ext VARCHAR(10),
@@ -799,7 +799,7 @@ VALUES
     
 INSERT INTO personas_asociadas 
 	(tipo_documento, num_documento, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, cargo, dir_laboral, 
-    barrio, ciudad_municipio, deparatamento, pais, telefono, ext, celular, correo) 
+    barrio, ciudad_municipio, departamento, pais, telefono, ext, celular, correo) 
 VALUES 
     ("CC","1127055628","Mario","José","Piedras","Lenis","Gerente","Carrera. 16a #37-42","San Pedro","Palmira",
     "Valle del Cauca", "Colombia", "12345678", "123", "3052959858", "andrea@gmail.com"),

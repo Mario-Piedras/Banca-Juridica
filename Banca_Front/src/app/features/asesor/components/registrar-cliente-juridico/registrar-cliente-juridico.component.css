@@ -23,24 +23,57 @@
   gap: 1rem;
 }
 
+/* Naturaleza y tipo de entidad */
+
 .fila-normal {
   display: flex;
   justify-content: space-between;
+  gap: 16px;
+}
+
+
+.form-column4 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.naturaleza {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  width: fit-content;
+}
+
+.options {
+  display: flex;
+  gap: 16px;
+}
+
+.option-nat {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 /* Varios */
 
-.input-box {
+.input-stuff {
   width: -webkit-fill-available;
-  border: 1px solid var(--color-gray-300);
-  border-radius: var(--radius-lg);
-  padding-block: calc(var(--spacing) * 2);
-  padding-inline: calc(var(--spacing) * 3);
-  outline: none;
 }
 
-.input-box:focus {
-  border: 2px solid var(--color-blue-500);
+.input-field {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+.input-field:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #3b82f6;
 }
 
 .form-spacing {
@@ -65,7 +98,7 @@
 }
 
 .form-btn:disabled {
-  background-color:#d1d5dc;
+  background-color: #d1d5dc;
   color: #6a7282;
   cursor: default;
 }

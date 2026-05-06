@@ -55,17 +55,24 @@
   <!--  Contenido de pestañas -->
   <div class="space-y-6">
 
-    <!-- Pestaña 1: Información General -->
+    <!-- Pestaña 1: Información general -->
     <div *ngIf="pestanaActiva === 'informacion-general'">
       <app-info-general [datosIniciales]="clienteData.infoGeneral" (formChange)="actualizarDatos('infoGeneral', $event)"
         (nextTab)="manejarNextTab()"></app-info-general>
     </div>
 
-    <!-- Pestaña 2: Representante-legal -->
+    <!-- Pestaña 2: Representante legal -->
     <div *ngIf="pestanaActiva === 'representante-legal'">
       <app-representante-legal [datosIniciales]="clienteData.representanteLegal"
         (formChange)="actualizarDatos('representanteLegal', $event)" (nextTab)="manejarNextTab()"
         (prevTab)="manejarPrevTab()"></app-representante-legal>
+    </div>
+
+    <!-- Pestaña 3: Naturaleza y tipo de entidad -->
+    <div *ngIf="pestanaActiva === 'naturaleza-tipo'">
+      <app-naturaleza-tipo [datosIniciales]="clienteData.naturalezaEntidad"
+        (formChange)="actualizarDatos('naturalezaEntidad', $event)" (nextTab)="manejarNextTab()"
+        (prevTab)="manejarPrevTab()"></app-naturaleza-tipo>
     </div>
 
   </div>

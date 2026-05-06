@@ -7,8 +7,8 @@ import { AsesorService } from '../../services/asesor.service';
 // Subcomponentes
 import { InformacionGeneralComponent } from './info-general/info-general.component';
 import { RepresentanteLegalComponent } from './representante-legal/representante-legal.component';
+import { NaturalezaEntidadComponent } from './naturaleza-tipo/naturaleza-tipo.component';
 /* 
-import { NaturalezaEntidadComponent } from './naturaleza-entidad/naturaleza-entidad.component';
 import { InformacionFinancieraComponent } from './info-financiera/info-financiera.component';
 import { DeclaracionBienesComponent } from './declaracion-bienes/declaracion-bienes.component'; */
 
@@ -20,8 +20,8 @@ import { DeclaracionBienesComponent } from './declaracion-bienes/declaracion-bie
     ReactiveFormsModule,
     InformacionGeneralComponent,
     RepresentanteLegalComponent,
-/*     NaturalezaEntidadComponent,
-    InformacionFinancieraComponent,
+    NaturalezaEntidadComponent,
+/*  InformacionFinancieraComponent,
     DeclaracionBienesComponent, */
   ],
   templateUrl: './registrar-cliente-juridico.component.html',
@@ -38,8 +38,8 @@ export class RegistrarClienteJuridicoComponent implements OnInit {
   clienteData: any = {
     infoGeneral: null,
     representanteLegal: null,
-/*     naturalezaEntidad: null,
-    infoFinanciera: null,
+    naturalezaEntidad: null,
+/*  infoFinanciera: null,
     declaracionBienes: null, */
   };
 
@@ -47,7 +47,8 @@ export class RegistrarClienteJuridicoComponent implements OnInit {
   datosIniciales: any = {
     infoGeneral: null,
     representanteLegal: null,
-/*     naturalezaEntidad: null,
+    naturalezaEntidad: null,
+/*  
     infoFinanciera: null,
     declaracionBienes: null, */
   };
@@ -56,7 +57,8 @@ export class RegistrarClienteJuridicoComponent implements OnInit {
   ordenPestanas = [ // ← AÑADIR ESTA VARIABLE
     'informacion-general',
     'representante-legal',
-/*     'naturaleza-tipo',
+    'naturaleza-tipo',
+/*  
     'info-financiera',
     'declaracion-bienes', */
   ];
