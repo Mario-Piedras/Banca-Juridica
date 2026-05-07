@@ -19,31 +19,31 @@ export class RepresentanteLegalComponent implements OnInit {
   form: FormGroup;
   constructor(private fb: FormBuilder, private http: HttpClient) {
     this.form = this.fb.group({
-      tipoDocumento: ['', Validators.required],
-      numeroDoc: ['', [
+      tipo_documento: ['', Validators.required],
+      num_documento: ['', [
         Validators.required,
         Validators.minLength(10),
         Validators.maxLength(20),
         Validators.pattern(/^[0-9]+$/)
       ]],
-      primerNombre: ['', [
+      primer_nombre: ['', [
         Validators.required,
         Validators.minLength(2),
         Validators.maxLength(50),
         Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
       ]],
-      segundoNombre: ['', [
+      segundo_nombre: ['', [
         Validators.minLength(2),
         Validators.maxLength(50),
         Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
       ]],
-      primerApellido: ['', [
+      primer_apellido: ['', [
         Validators.required,
         Validators.minLength(2),
         Validators.maxLength(50),
         Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
       ]],
-      segundoApellido: ['', [
+      segundo_apellido: ['', [
         Validators.required,
         Validators.minLength(2),
         Validators.maxLength(50),
@@ -55,7 +55,7 @@ export class RepresentanteLegalComponent implements OnInit {
         Validators.maxLength(50),
         Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
       ]],
-      direccionLaboral: ['', [
+      dir_laboral: ['', [
         Validators.required,
         Validators.minLength(5),
         Validators.maxLength(50)
@@ -65,7 +65,7 @@ export class RepresentanteLegalComponent implements OnInit {
         Validators.maxLength(50),
         Validators.required
       ]],
-      ciudadMunicipio: ['', [
+      ciudad_municipio: ['', [
         Validators.minLength(5),
         Validators.maxLength(50),
         Validators.required
@@ -80,13 +80,13 @@ export class RepresentanteLegalComponent implements OnInit {
         Validators.maxLength(50),
         Validators.required
       ]],
-      telefonoLaboral: ['', [
+      telefono: ['', [
         Validators.required,
         Validators.minLength(10),
-        Validators.maxLength(20),
+        Validators.maxLength(13),
         Validators.pattern(/^[0-9]+$/)
       ]],
-      extension: ['', [
+      ext: ['', [
         Validators.required,
         Validators.minLength(1),
         Validators.maxLength(10),
@@ -95,10 +95,10 @@ export class RepresentanteLegalComponent implements OnInit {
       celular: ['', [
         Validators.required,
         Validators.minLength(10),
-        Validators.maxLength(20),
+        Validators.maxLength(10),
         Validators.pattern(/^[0-9]+$/)
       ]],
-      correoLaboral: ['', [
+      correo: ['', [
         Validators.required,
         Validators.email,
         Validators.maxLength(100)
@@ -184,22 +184,22 @@ export class RepresentanteLegalComponent implements OnInit {
 
   obtenerNombreCampo(key: string): string {
     const nombres: { [key: string]: string } = {
-      'tipoDocumento': 'Tipo de documento',
-      'numeroDoc': 'Número de documento',
-      'primerNombre': 'Primer nombre',
-      'segundoNombre': 'Segundo nombre',
-      'primerApellido': 'Primer apellido',
-      'segundoApellido': 'Segundo apellido',
+      'tipo_documento': 'Tipo de documento',
+      'num_documento': 'Número de documento',
+      'primer_nombre': 'Primer nombre',
+      'segundo_nombre': 'Segundo nombre',
+      'primer_apellido': 'Primer apellido',
+      'segundo_apellido': 'Segundo apellido',
       'cargo': 'Cargo',
-      'direccionLaboral': 'Dirección laboral',
+      'dir_laboral': 'Dirección laboral',
       'barrio': 'Barrio',
-      'ciudadMunicipio': 'Ciudad/Municipio',
+      'ciudad_municipio': 'Ciudad/Municipio',
       'departamento': 'Departamento',
       'pais': 'País',
-      'telefonoLaboral': 'Teléfono laboral',
-      'extension': 'Extensión',
+      'telefono': 'Teléfono laboral',
+      'ext': 'Extensión',
       'celular': 'Celular',
-      'correoLaboral': 'Correo electrónico laboral'
+      'correo': 'Correo electrónico laboral'
     };
     return nombres[key] || key;
   }

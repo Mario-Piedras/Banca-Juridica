@@ -48,20 +48,20 @@ export class InfoempresasController {
             const body = req.body;
 
             const data = {
-                nit: body.numeroNIT,
-                razon_social: body.nombreRazon,
-                nombre_corto: body.nombreSigla,
-                fecha_constitución: body.fechaConstitucion,
-                ciudad_constitución: body.ciudadConstitucion,
-                pais_constitucion: body.paisConstitucion,
-                dir_sede_principal: body.direccionEmpresa,
-                barrio: body.barrioEmpresa,
-                ciudad_municipio: body.ciudadEmpresa,
-                departamento: body.departamentoEmpresa,
-                pais: body.paisEmpresa,
-                telefono: body.telefonoEmpresa,
-                ext: body.extensionEmpresa,
-                correo: body.correoSede
+                nit: body.nit,
+                razon_social: body.razon_social,
+                nombre_corto: body.nombre_corto,
+                fecha_constitución: body.fecha_constitución,
+                ciudad_constitución: body.ciudad_constitución,
+                pais_constitucion: body.pais_constitucion,
+                dir_sede_principal: body.dir_sede_principal,
+                barrio: body.barrio,
+                ciudad_municipio: body.ciudad_municipio,
+                departamento: body.departamento,
+                pais: body.pais,
+                telefono: body.telefono,
+                ext: body.ext,
+                correo: body.correo
             };
             
             if (!data || Object.keys(data).length === 0) {

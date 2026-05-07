@@ -3,11 +3,11 @@
 -- Host: banca-uno-santiago2006ortizp-5f86.b.aivencloud.com    Database: defaultdb
 -- ------------------------------------------------------
 -- Server version	8.0.35
-CREATE DATABASE IF NOT EXISTS `pruebadb`
+CREATE DATABASE IF NOT EXISTS `defaultdb`
   DEFAULT CHARACTER SET utf8mb4
   COLLATE utf8mb4_0900_ai_ci;
 
-USE `pruebadb`;
+USE `defaultdb`;
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -655,7 +655,7 @@ CREATE TABLE info_socios (
 
 CREATE TABLE tipo_entidad (
 	id_tipo_entidad INT PRIMARY KEY AUTO_INCREMENT,
-    naturaleza ENUM('Privada', 'Publica', 'Mixta') NOT NULL,
+    naturaleza ENUM('Privada', 'Pública', 'Mixta') NOT NULL,
     codigo_ciiu VARCHAR(10) NOT NULL,
     actividad_economia VARCHAR(200) NOT NULL,
     num_empleados INT NOT NULL,
@@ -822,24 +822,28 @@ VALUES
 	("123456789", "Panadería y Pastelería Dulce Hogar S.A.S.", "PPDH S.A.S.", "2010-12-20", "Palmira", "Colombia", "Carrera. 16a #37-42","San Pedro","Palmira",
     "Valle del Cauca", "Colombia", "12345678", "123", "panaderia.dulce@gmail.com", 1, 1, 2, 1, 1, 1, 1);
 
-ALTER TABLE `pruebadb`.`solicitudes_apertura` 
+ALTER TABLE `defaultdb`.`solicitudes_apertura` 
 ADD COLUMN `id_empresa` INT NULL,
 ADD INDEX `solicitudes_apertura_fk_1_idx` (`id_empresa` ASC) VISIBLE;
 ;
-ALTER TABLE `pruebadb`.`solicitudes_apertura` 
+ALTER TABLE `defaultdb`.`solicitudes_apertura` 
 ADD CONSTRAINT `solicitudes_apertura_fk_1`
   FOREIGN KEY (`id_empresa`)
-  REFERENCES `pruebadb`.`info_empresas` (`id_info_empresas`)
+  REFERENCES `defaultdb`.`info_empresas` (`id_info_empresas`)
   ON DELETE CASCADE
   ON UPDATE CASCADE;
 
-ALTER TABLE `pruebadb`.`cuentas_ahorro` 
+ALTER TABLE `defaultdb`.`cuentas_ahorro` 
 ADD COLUMN `id_empresa` INT NULL,
 ADD INDEX `cuentas_ahorro_fk_1_idx` (`id_empresa` ASC) VISIBLE;
 ;
-ALTER TABLE `pruebadb`.`cuentas_ahorro` 
+ALTER TABLE `defaultdb`.`cuentas_ahorro` 
 ADD CONSTRAINT `cuentas_ahorro_fk_1`
   FOREIGN KEY (`id_empresa`)
-  REFERENCES `pruebadb`.`info_empresas` (`id_info_empresas`)
+  REFERENCES `defaultdb`.`info_empresas` (`id_info_empresas`)
   ON DELETE CASCADE
   ON UPDATE CASCADE;
+
+ALTER TABLE defaultdb.solicitudes_apertura 
+ADD COLUMN tipo_cliente ENUM('Natural', 'Jurídica') NOT NULL DEFAULT 'Natural' AFTER id_empresa,
+ADD COLUMN proposito_cuenta VARCHAR(200) NULL AFTER tipo_cliente;

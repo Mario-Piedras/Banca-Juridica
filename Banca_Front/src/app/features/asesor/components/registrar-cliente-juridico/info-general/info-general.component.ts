@@ -18,82 +18,82 @@ export class InformacionGeneralComponent implements OnInit {
   form: FormGroup;
   constructor(private fb: FormBuilder, private http: HttpClient) {
     this.form = this.fb.group({
-      numeroNIT: ['', [
+      nit: ['', [
         Validators.required,
         Validators.minLength(8),
         Validators.maxLength(10),
         Validators.pattern(/^[0-9]+$/)
       ]],
-      nombreRazon: ['', [
+      razon_social: ['', [
         Validators.required,
         Validators.minLength(3),
         Validators.maxLength(100),
         Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
       ]],
-      nombreSigla: ['', [
+      nombre_corto: ['', [
         Validators.required,
         Validators.minLength(3),
         Validators.maxLength(10),
         Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
       ]],
-      fechaConstitucion: ['', [
+      fecha_constitución: ['', [
         Validators.required,
         this.validarFechaNoFutura()
       ]],
-      paisConstitucion: ['', [
+      pais_constitucion: ['', [
         Validators.required,
         Validators.minLength(3),
         Validators.maxLength(20),
         Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
       ]],
-      ciudadConstitucion: ['', [
+      ciudad_constitución: ['', [
         Validators.required,
         Validators.minLength(3),
         Validators.maxLength(20),
         Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
       ]],
-      direccionEmpresa: ['', [
+      dir_sede_principal: ['', [
         Validators.required,
         Validators.minLength(3),
         Validators.maxLength(50)
       ]],
-      paisEmpresa: ['', [
+      pais: ['', [
         Validators.required,
         Validators.minLength(3),
         Validators.maxLength(50),
         Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
       ]],
-      telefonoEmpresa: ['', [
+      telefono: ['', [
         Validators.required,
         Validators.minLength(10),
         Validators.maxLength(10),
         Validators.pattern(/^[0-9]+$/)
       ]],
-      extensionEmpresa: ['', [
+      ext: ['', [
         Validators.required,
         Validators.minLength(1),
         Validators.maxLength(5),
         Validators.pattern(/^[0-9]+$/)
       ]],
-      barrioEmpresa: ['', [
+      barrio: ['', [
         Validators.required,
         Validators.minLength(3),
         Validators.maxLength(50),
         Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
       ]],
-      ciudadEmpresa: ['', [
+      ciudad_municipio: ['', [
         Validators.required,
         Validators.minLength(3),
         Validators.maxLength(50),
         Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
       ]],
-      departamentoEmpresa: ['', [
+      departamento: ['', [
         Validators.required,
         Validators.minLength(3),
         Validators.maxLength(50),
         Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
       ]],
-      correoSede: ['', [
+      correo: ['', [
         Validators.required,
         Validators.email
       ]]
@@ -187,20 +187,20 @@ export class InformacionGeneralComponent implements OnInit {
   // NUEVO: Obtener nombre legible del campo
   obtenerNombreCampo(key: string): string {
     const nombres: { [key: string]: string } = {
-      'numeroNIT': 'Número de NIT',
-      'nombreRazon': 'Nombre o razón social',
-      'nombreSigla': 'Nombre corto o sigla',
-      'fechaConstitucion': 'Fecha de constitución',
-      'paisConstitucion': 'País de constitución',
-      'ciudadConstitucion': 'Ciudad de constitución',
+      'nit': 'Número de NIT',
+      'razon_social': 'Nombre o razón social',
+      'nombre_corto': 'Nombre corto o sigla',
+      'fecha_constitución': 'Fecha de constitución',
+      'pais_constitucion': 'País de constitución',
+      'ciudad_constitución': 'Ciudad de constitución',
       'direccionEmpresa': 'Dirección sede principal',
-      'paisEmpresa': 'País',
-      'telefonoEmpresa': 'Teléfono',
-      'extensionEmpresa': 'Extensión',
-      'barrioEmpresa': 'Barrio',
+      'pais': 'País',
+      'telefono': 'Teléfono',
+      'ext': 'Extensión',
+      'barrio': 'Barrio',
       'ciudadEmpresa': 'Ciudad/Municipio',
       'departamentoEmpresa': 'Departamento',
-      'correoSede': 'Correo electrónico sede principal'
+      'correo': 'Correo electrónico sede principal'
     };
     return nombres[key] || key;
   }

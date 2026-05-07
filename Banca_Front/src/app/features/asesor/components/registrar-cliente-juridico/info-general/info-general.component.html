@@ -7,13 +7,13 @@
         <label class="block text-sm font-medium text-gray-700 mb-2">
           Número de NIT <span class="text-red-500">*</span>
         </label>
-        <input id="numeroNIT" type="text" formControlName="numeroNIT" maxlength="10" pattern="[0-9]*"
+        <input id="nit" type="text" formControlName="nit" maxlength="10" pattern="[0-9]*"
           (keypress)="soloNumeros($event)"
           class="input-field"
           placeholder="Ej: 1234567890">
-        <div class="text-red-500 text-xs mt-1" *ngIf="form.get('numeroNIT')?.invalid && form.get('numeroNIT')?.touched">
-          <span *ngIf="form.get('numeroNIT')?.errors?.['required']">Campo obligatorio</span>
-          <span *ngIf="form.get('numeroNIT')?.errors?.['minlength']">Mínimo 8 dígitos</span>
+        <div class="text-red-500 text-xs mt-1" *ngIf="form.get('nit')?.invalid && form.get('nit')?.touched">
+          <span *ngIf="form.get('nit')?.errors?.['required']">Campo obligatorio</span>
+          <span *ngIf="form.get('nit')?.errors?.['minlength']">Mínimo 8 dígitos</span>
         </div>
       </div>
 
@@ -22,14 +22,14 @@
         <label class="block text-sm font-medium text-gray-700 mb-2">
           Nombre o razón social <span class="text-red-500">*</span>
         </label>
-        <input id="nombreRazon" type="text" formControlName="nombreRazon" maxlength="100"
+        <input id="razon_social" type="text" formControlName="razon_social" maxlength="100"
           pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]*" (keypress)="soloLetras($event)"
           class="input-field"
           placeholder="Ej: Placeholder">
         <div class="text-red-500 text-xs mt-1"
-          *ngIf="form.get('nombreRazon')?.invalid && form.get('nombreRazon')?.touched">
-          <span *ngIf="form.get('nombreRazon')?.errors?.['required']">Campo obligatorio</span>
-          <span *ngIf="form.get('nombreRazon')?.errors?.['minlength']">Mínimo 3 dígitos</span>
+          *ngIf="form.get('razon_social')?.invalid && form.get('razon_social')?.touched">
+          <span *ngIf="form.get('razon_social')?.errors?.['required']">Campo obligatorio</span>
+          <span *ngIf="form.get('razon_social')?.errors?.['minlength']">Mínimo 3 dígitos</span>
         </div>
       </div>
 
@@ -41,14 +41,14 @@
           <label class="block text-sm font-medium text-gray-700 mb-2">
             Nombre corto o sigla <span class="text-red-500">*</span>
           </label>
-          <input id="nombreSigla" type="text" formControlName="nombreSigla" maxlength="10"
+          <input id="nombre_corto" type="text" formControlName="nombre_corto" maxlength="10"
             pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]*" (keypress)="soloLetras($event)"
             class="input-field"
             placeholder="Ej: Placeholder">
           <div class="text-red-500 text-xs mt-1"
-            *ngIf="form.get('nombreSigla')?.invalid && form.get('nombreSigla')?.touched">
-            <span *ngIf="form.get('nombreSigla')?.errors?.['required']">Campo obligatorio</span>
-            <span *ngIf="form.get('nombreSigla')?.errors?.['minlength']">Mínimo 3 dígitos</span>
+            *ngIf="form.get('nombre_corto')?.invalid && form.get('nombre_corto')?.touched">
+            <span *ngIf="form.get('nombre_corto')?.errors?.['required']">Campo obligatorio</span>
+            <span *ngIf="form.get('nombre_corto')?.errors?.['minlength']">Mínimo 3 dígitos</span>
           </div>
         </div>
 
@@ -57,11 +57,11 @@
           <label class="block text-sm font-medium text-gray-700 mb-2">
             Fecha de constitución <span class="text-red-500">*</span>
           </label>
-          <input id="fechaConstitucion" type="date" formControlName="fechaConstitucion"
+          <input id="fecha_constitución" type="date" formControlName="fecha_constitución"
             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
           <div class="text-red-500 text-xs mt-1"
-            *ngIf="form.get('fechaConstitucion')?.invalid && form.get('fechaConstitucion')?.touched">
-            <span *ngIf="form.get('fechaConstitucion')?.errors?.['required']">Campo obligatorio</span>
+            *ngIf="form.get('fecha_constitución')?.invalid && form.get('fecha_constitución')?.touched">
+            <span *ngIf="form.get('fecha_constitución')?.errors?.['required']">Campo obligatorio</span>
           </div>
         </div>
 
@@ -70,14 +70,14 @@
           <label class="block text-sm font-medium text-gray-700 mb-2">
             País de constitución <span class="text-red-500">*</span>
           </label>
-          <input id="paisConstitucion" type="text" formControlName="paisConstitucion" maxlength="20"
+          <input id="pais_constitucion" type="text" formControlName="pais_constitucion" maxlength="20"
             pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]*" (keypress)="soloLetras($event)"
             class="input-field"
             placeholder="Ej: Colombia">
           <div class="text-red-500 text-xs mt-1"
-            *ngIf="form.get('paisConstitucion')?.invalid && form.get('paisConstitucion')?.touched">
-            <span *ngIf="form.get('paisConstitucion')?.errors?.['required']">Campo obligatorio</span>
-            <span *ngIf="form.get('paisConstitucion')?.errors?.['minlength']">Mínimo 3 dígitos</span>
+            *ngIf="form.get('pais_constitucion')?.invalid && form.get('pais_constitucion')?.touched">
+            <span *ngIf="form.get('pais_constitucion')?.errors?.['required']">Campo obligatorio</span>
+            <span *ngIf="form.get('pais_constitucion')?.errors?.['minlength']">Mínimo 3 dígitos</span>
           </div>
         </div>
 
@@ -86,14 +86,14 @@
           <label class="block text-sm font-medium text-gray-700 mb-2">
             Ciudad de constitución <span class="text-red-500">*</span>
           </label>
-          <input id="ciudadConstitucion" type="text" formControlName="ciudadConstitucion" maxlength="20"
+          <input id="ciudad_constitución" type="text" formControlName="ciudad_constitución" maxlength="20"
             pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]*" (keypress)="soloLetras($event)"
             class="input-field"
             placeholder="Ej: Palmira">
           <div class="text-red-500 text-xs mt-1"
-            *ngIf="form.get('ciudadConstitucion')?.invalid && form.get('ciudadConstitucion')?.touched">
-            <span *ngIf="form.get('ciudadConstitucion')?.errors?.['required']">Campo obligatorio</span>
-            <span *ngIf="form.get('ciudadConstitucion')?.errors?.['minlength']">Mínimo 3 dígitos</span>
+            *ngIf="form.get('ciudad_constitución')?.invalid && form.get('ciudad_constitución')?.touched">
+            <span *ngIf="form.get('ciudad_constitución')?.errors?.['required']">Campo obligatorio</span>
+            <span *ngIf="form.get('ciudad_constitución')?.errors?.['minlength']">Mínimo 3 dígitos</span>
           </div>
         </div>
 
@@ -104,13 +104,13 @@
         <label class="block text-sm font-medium text-gray-700 mb-2">
           Dirección sede principal <span class="text-red-500">*</span>
         </label>
-        <input id="direccionEmpresa" type="text" formControlName="direccionEmpresa" maxlength="50"
+        <input id="dir_sede_principal" type="text" formControlName="dir_sede_principal" maxlength="50"
           class="input-field"
           placeholder="Ej: Cl. 40 #30-44">
         <div class="text-red-500 text-xs mt-1"
-          *ngIf="form.get('direccionEmpresa')?.invalid && form.get('direccionEmpresa')?.touched">
-          <span *ngIf="form.get('direccionEmpresa')?.errors?.['required']">Campo obligatorio</span>
-          <span *ngIf="form.get('direccionEmpresa')?.errors?.['minlength']">Mínimo 3 dígitos</span>
+          *ngIf="form.get('dir_sede_principal')?.invalid && form.get('dir_sede_principal')?.touched">
+          <span *ngIf="form.get('dir_sede_principal')?.errors?.['required']">Campo obligatorio</span>
+          <span *ngIf="form.get('dir_sede_principal')?.errors?.['minlength']">Mínimo 3 dígitos</span>
         </div>
       </div>
 
@@ -122,14 +122,14 @@
           <label class="block text-sm font-medium text-gray-700 mb-2">
             País <span class="text-red-500">*</span>
           </label>
-          <input id="paisEmpresa" type="text" formControlName="paisEmpresa" maxlength="50"
+          <input id="pais" type="text" formControlName="pais" maxlength="50"
             pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]*" (keypress)="soloLetras($event)"
             class="input-field"
             placeholder="Ej: Colombia">
           <div class="text-red-500 text-xs mt-1"
-            *ngIf="form.get('paisEmpresa')?.invalid && form.get('paisEmpresa')?.touched">
-            <span *ngIf="form.get('paisEmpresa')?.errors?.['required']">Campo obligatorio</span>
-            <span *ngIf="form.get('paisEmpresa')?.errors?.['minlength']">Mínimo 3 dígitos</span>
+            *ngIf="form.get('pais')?.invalid && form.get('pais')?.touched">
+            <span *ngIf="form.get('pais')?.errors?.['required']">Campo obligatorio</span>
+            <span *ngIf="form.get('pais')?.errors?.['minlength']">Mínimo 3 dígitos</span>
           </div>
         </div>
 
@@ -138,14 +138,14 @@
           <label class="block text-sm font-medium text-gray-700 mb-2">
             Teléfono <span class="text-red-500">*</span>
           </label>
-          <input id="telefonoEmpresa" type="tel" formControlName="telefonoEmpresa" maxlength="20" pattern="[0-9]*"
+          <input id="telefono" type="tel" formControlName="telefono" maxlength="10" pattern="[0-9]*"
             (keypress)="soloNumeros($event)"
             class="input-field"
             placeholder="Ej: 1234567890">
           <div class="text-red-500 text-xs mt-1"
-            *ngIf="form.get('telefonoEmpresa')?.invalid && form.get('telefonoEmpresa')?.touched">
-            <span *ngIf="form.get('telefonoEmpresa')?.errors?.['required']">Campo obligatorio</span>
-            <span *ngIf="form.get('telefonoEmpresa')?.errors?.['minlength']">Mínimo 10 dígitos</span>
+            *ngIf="form.get('telefono')?.invalid && form.get('telefono')?.touched">
+            <span *ngIf="form.get('telefono')?.errors?.['required']">Campo obligatorio</span>
+            <span *ngIf="form.get('telefono')?.errors?.['minlength']">Mínimo 10 dígitos</span>
           </div>
         </div>
 
@@ -154,13 +154,13 @@
           <label class="block text-sm font-medium text-gray-700 mb-2">
             Extensión <span class="text-red-500">*</span>
           </label>
-          <input id="extensionEmpresa" type="text" formControlName="extensionEmpresa" maxlength="5" pattern="[0-9]*"
+          <input id="ext" type="text" formControlName="ext" maxlength="5" pattern="[0-9]*"
             (keypress)="soloNumeros($event)"
             class="input-field"
             placeholder="Ej: 1234567890">
           <div class="text-red-500 text-xs mt-1"
-            *ngIf="form.get('extensionEmpresa')?.invalid && form.get('extensionEmpresa')?.touched">
-            <span *ngIf="form.get('extensionEmpresa')?.errors?.['required']">Campo obligatorio</span>
+            *ngIf="form.get('ext')?.invalid && form.get('ext')?.touched">
+            <span *ngIf="form.get('ext')?.errors?.['required']">Campo obligatorio</span>
           </div>
         </div>
 
@@ -169,14 +169,14 @@
           <label class="block text-sm font-medium text-gray-700 mb-2">
             Barrio <span class="text-red-500">*</span>
           </label>
-          <input id="barrioEmpresa" type="text" formControlName="barrioEmpresa" maxlength="50"
+          <input id="barrio" type="text" formControlName="barrio" maxlength="50"
             pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]*" (keypress)="soloLetras($event)"
             class="input-field"
             placeholder="Ej: Placeholder">
           <div class="text-red-500 text-xs mt-1"
-            *ngIf="form.get('barrioEmpresa')?.invalid && form.get('barrioEmpresa')?.touched">
-            <span *ngIf="form.get('barrioEmpresa')?.errors?.['required']">Campo obligatorio</span>
-            <span *ngIf="form.get('barrioEmpresa')?.errors?.['minlength']">Mínimo 3 dígitos</span>
+            *ngIf="form.get('barrio')?.invalid && form.get('barrio')?.touched">
+            <span *ngIf="form.get('barrio')?.errors?.['required']">Campo obligatorio</span>
+            <span *ngIf="form.get('barrio')?.errors?.['minlength']">Mínimo 3 dígitos</span>
           </div>
         </div>
 
@@ -185,14 +185,14 @@
           <label class="block text-sm font-medium text-gray-700 mb-2">
             Ciudad/Municipio <span class="text-red-500">*</span>
           </label>
-          <input id="ciudadEmpresa" type="text" formControlName="ciudadEmpresa" maxlength="50"
+          <input id="ciudad_municipio" type="text" formControlName="ciudad_municipio" maxlength="50"
             pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]*" (keypress)="soloLetras($event)"
             class="input-field"
             placeholder="Ej: Palmira">
           <div class="text-red-500 text-xs mt-1"
-            *ngIf="form.get('ciudadEmpresa')?.invalid && form.get('ciudadEmpresa')?.touched">
-            <span *ngIf="form.get('ciudadEmpresa')?.errors?.['required']">Campo obligatorio</span>
-            <span *ngIf="form.get('ciudadEmpresa')?.errors?.['minlength']">Mínimo 3 dígitos</span>
+            *ngIf="form.get('ciudad_municipio')?.invalid && form.get('ciudad_municipio')?.touched">
+            <span *ngIf="form.get('ciudad_municipio')?.errors?.['required']">Campo obligatorio</span>
+            <span *ngIf="form.get('ciudad_municipio')?.errors?.['minlength']">Mínimo 3 dígitos</span>
           </div>
         </div>
 
@@ -201,14 +201,14 @@
           <label class="block text-sm font-medium text-gray-700 mb-2">
             Departamento <span class="text-red-500">*</span>
           </label>
-          <input id="departamentoEmpresa" type="text" formControlName="departamentoEmpresa" maxlength="50"
+          <input id="departamento" type="text" formControlName="departamento" maxlength="50"
             pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]*" (keypress)="soloLetras($event)"
             class="input-field"
             placeholder="Ej: Valle del cauca">
           <div class="text-red-500 text-xs mt-1"
-            *ngIf="form.get('departamentoEmpresa')?.invalid && form.get('departamentoEmpresa')?.touched">
-            <span *ngIf="form.get('departamentoEmpresa')?.errors?.['required']">Campo obligatorio</span>
-            <span *ngIf="form.get('departamentoEmpresa')?.errors?.['minlength']">Mínimo 3 dígitos</span>
+            *ngIf="form.get('departamento')?.invalid && form.get('departamento')?.touched">
+            <span *ngIf="form.get('departamento')?.errors?.['required']">Campo obligatorio</span>
+            <span *ngIf="form.get('departamento')?.errors?.['minlength']">Mínimo 3 dígitos</span>
           </div>
         </div>
 
@@ -219,13 +219,13 @@
         <label class="block text-sm font-medium text-gray-700 mb-2">
           Correo electrónico sede principal <span class="text-red-500">*</span>
         </label>
-        <input id="correoSede" type="email" formControlName="correoSede" maxlength="100"
+        <input id="correo" type="email" formControlName="correo" maxlength="100"
           class="input-field"
           placeholder="Ej: correo@example.com">
         <div class="text-red-500 text-xs mt-1"
-          *ngIf="form.get('correoSede')?.invalid && form.get('correoSede')?.touched">
-          <span *ngIf="form.get('correoSede')?.errors?.['required']">Campo obligatorio</span>
-          <span *ngIf="form.get('correoSede')?.errors?.['minlength']">Mínimo 5 dígitos</span>
+          *ngIf="form.get('correo')?.invalid && form.get('correo')?.touched">
+          <span *ngIf="form.get('correo')?.errors?.['required']">Campo obligatorio</span>
+          <span *ngIf="form.get('correo')?.errors?.['minlength']">Mínimo 5 dígitos</span>
         </div>
       </div>
 

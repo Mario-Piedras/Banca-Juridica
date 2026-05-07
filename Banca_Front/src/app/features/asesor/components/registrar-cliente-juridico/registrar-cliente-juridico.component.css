@@ -57,6 +57,18 @@
   gap: 8px;
 }
 
+.ent-estatales {
+  width: -webkit-fill-available;
+  border-top: #D1D5DC solid 1px;
+  padding: 10px 0px;
+}
+
+.ent-descentralizada {
+  width: -webkit-fill-available;
+  border-top: #D1D5DC solid 1px;
+  padding: 10px 0px;
+}
+
 /* Varios */
 
 .input-stuff {

@@ -35,7 +35,21 @@ export class TipoentidadController {
 
     async crear(req: Request, res: Response): Promise<Response> {
         try {
-        const data = req.body;
+
+        const body = req.body;
+            const data = {
+                codigo_ciiu: body.codigo_ciiu,
+                actividad_economia: body.actividad_economia,
+                num_empleados: body.num_empleados,
+                tipo_sociedad: body.tipo_sociedad,
+                otra_sociedad: body.otra_sociedad,
+                tipo_asociacion: body.tipo_asociacion,
+                otra_asociacion: body.otra_asociacion,
+                ent_estatal: body.ent_estatal,
+                otra_ent_estatal: body.otra_ent_estatal,
+                ent_estatal_descentralizada: body.ent_estatal_descentralizada
+            };
+
         if (!data || Object.keys(data).length === 0) {
             return res.status(400).json({ mensaje: 'Los datos son obligatorios' });
         }

@@ -39,22 +39,22 @@ export class PersonasasoController {
         const body = req.body;
 
             const data = {
-                tipo_documento: body.tipoDocumento,
-                num_documento: body.numeroDoc,
-                primer_nombre: body.primerNombre,
-                segundo_nombre: body.segundoNombre,
-                primer_apellido: body.primerApellido,
-                segundo_apellido: body.segundoApellido,
+                tipo_documento: body.tipo_documento,
+                num_documento: body.num_documento,
+                primer_nombre: body.primer_nombre,
+                segundo_nombre: body.segundo_nombre,
+                primer_apellido: body.primer_apellido,
+                segundo_apellido: body.segundo_apellido,
                 cargo: body.cargo,
-                dir_laboral: body.direccionLaboral,
+                dir_laboral: body.dir_laboral,
                 barrio: body.barrio,
-                ciudad_municipio: body.ciudadMunicipio,
+                ciudad_municipio: body.ciudad_municipio,
                 departamento: body.departamento,
                 pais: body.pais,
-                telefono: body.telefonoLaboral,
-                ext: body.extension,
+                telefono: body.telefono,
+                ext: body.ext,
                 celular: body.celular,
-                correo: body.correoLaboral
+                correo: body.correo
             };
             
         if (!data || Object.keys(data).length === 0) {

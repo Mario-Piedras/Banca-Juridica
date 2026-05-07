@@ -19,31 +19,44 @@ export class NaturalezaEntidadComponent implements OnInit {
   form: FormGroup;
   constructor(private fb: FormBuilder, private http: HttpClient) {
     this.form = this.fb.group({
-      codigoCIIU: ['', [
+      naturaleza: ['', Validators.required],
+      codigo_ciiu: ['', [
         Validators.required,
-        Validators.minLength(2),
-        Validators.maxLength(20),
+        Validators.minLength(3),
+        Validators.maxLength(10),
         Validators.pattern(/^[0-9]+$/)
       ]],
-      detalleActividad: ['', [
+      actividad_economia: ['', [
         Validators.required,
-        Validators.minLength(2),
-        Validators.maxLength(50),
+        Validators.minLength(3),
+        Validators.maxLength(200),
         Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
       ]],
-      numeroEmpleados: ['', [
-        Validators.required,
-        Validators.minLength(2),
-        Validators.maxLength(20),
-        Validators.pattern(/^[0-9]+$/)
+      num_empleados: ['', [
+        Validators.required
       ]],
-      tipoSociedad: ['', Validators.required],
-      tipoEntidad: ['', Validators.required],
-      correoLaboral: ['', [
+      tipo_sociedad: ['', Validators.required],
+      otra_sociedad: ['', [
         Validators.required,
-        Validators.email,
-        Validators.maxLength(100)
-      ]]
+        Validators.minLength(3),
+        Validators.maxLength(100),
+        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
+      ]],
+      tipo_asociacion: ['', Validators.required],
+      otra_asociacion: ['', [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(100),
+        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
+      ]],
+      ent_estatal: ['', Validators.required],
+      otra_ent_estatal: ['', [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(100),
+        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
+      ]],
+      ent_estatal_descentralizada: ['', Validators.required],
     });
   }
 
@@ -56,6 +69,57 @@ export class NaturalezaEntidadComponent implements OnInit {
       this.formChange.emit(valores);
     });
 
+    /* Tipo de sociedad */
+    this.form.get('tipo_sociedad')?.valueChanges.subscribe(valor => {
+      const control = this.form.get('otra_sociedad');
+
+      if (valor === 'Otra') {
+        control?.setValidators([
+          Validators.required,
+          Validators.minLength(3)
+        ]);
+      } else {
+        control?.clearValidators();
+        control?.setValue('');
+      }
+
+      control?.updateValueAndValidity();
+    });
+
+    /* Tipo de entidad/asociación */
+    this.form.get('tipo_asociacion')?.valueChanges.subscribe(valor => {
+      const control = this.form.get('otra_asociacion');
+
+      if (valor === 'Otra') {
+        control?.setValidators([
+          Validators.required,
+          Validators.minLength(3)
+        ]);
+      } else {
+        control?.clearValidators();
+        control?.setValue('');
+      }
+
+      control?.updateValueAndValidity();
+    });
+
+    /* Entidad estatal */
+    this.form.get('ent_estatal')?.valueChanges.subscribe(valor => {
+      const otraControl = this.form.get('otra_ent_estatal');
+
+      if (valor === 'Otra') {
+        otraControl?.setValidators([
+          Validators.required,
+          Validators.minLength(3)
+        ]);
+      } else {
+        otraControl?.clearValidators();
+        otraControl?.setValue('');
+      }
+
+      otraControl?.updateValueAndValidity();
+    });
+    /* Informa los cambios del formulario en la consola */
     this.form.statusChanges.subscribe(() => {
       console.log('Formulario válido:', this.form.valid);
 
@@ -72,7 +136,7 @@ export class NaturalezaEntidadComponent implements OnInit {
   guardarSeccion() {
     console.log(this.form.value);
     if (this.form.valid) {
-      this.http.post('http://localhost:3000/api/personasaso', this.form.value)
+      this.http.post('http://localhost:3000/api/tipoentidad', this.form.value)
         .subscribe({
           next: (res) => {
             console.log('Guardado en BD:', res);
@@ -125,11 +189,14 @@ export class NaturalezaEntidadComponent implements OnInit {
 
   obtenerNombreCampo(key: string): string {
     const nombres: { [key: string]: string } = {
-      'codigoCIIU': 'Número de documento',
-      'detalleActividad': 'Primer nombre',
-      'numeroEmpleados': 'Segundo nombre',
-      'tipoSociedad': 'Primer apellido',
-      'tipoEntidad': 'Segundo apellido'
+      naturaleza: 'Naturaleza de la entidad',
+      codigo_ciiu: 'Código CIIU',
+      actividad_economia: 'Detalle de actividad económica',
+      num_empleados: 'Número de empleados',
+      tipo_sociedad: 'Tipo de sociedad',
+      tipo_asociacion: 'Tipo de entidad o asociación',
+      ent_estatal: 'Entidad estatal',
+      ent_estatal_descentralizada: 'Entidad descentralizada'
     };
     return nombres[key] || key;
   }

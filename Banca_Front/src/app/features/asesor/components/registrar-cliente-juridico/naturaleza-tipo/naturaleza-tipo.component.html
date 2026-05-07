@@ -10,19 +10,23 @@
 
           <div class="options">
             <div class="option-nat">
-              <input type="radio" name="naturaleza" id="priv" value="Privada">
+              <input type="radio" name="naturaleza" id="priv" value="Privada" formControlName="naturaleza">
               <label for="priv" class="text-sm font-medium text-gray-700">Privada</label>
             </div>
 
             <div class="option-nat">
-              <input type="radio" name="naturaleza" id="pub" value="Pública">
+              <input type="radio" name="naturaleza" id="pub" value="Pública" formControlName="naturaleza">
               <label for="pub" class="text-sm font-medium text-gray-700">Pública</label>
             </div>
 
             <div class="option-nat">
-              <input type="radio" name="naturaleza" id="mix" value="Mixta">
+              <input type="radio" name="naturaleza" id="mix" value="Mixta" formControlName="naturaleza">
               <label for="mix" class="text-sm font-medium text-gray-700">Mixta</label>
             </div>
+          </div>
+          <div class="text-red-500 text-xs mt-1"
+            *ngIf="form.get('naturaleza')?.invalid && form.get('naturaleza')?.touched">
+            Campo obligatorio
           </div>
         </fieldset>
 
@@ -31,30 +35,26 @@
           <label class="block text-sm font-medium text-gray-700 mb-2">
             Código CIIU <span class="text-red-500">*</span>
           </label>
-          <input id="codigoCIIU" type="text" formControlName="codigoCIIU" maxlength="20"
-            (keypress)="soloNumeros($event)"
-            class="input-field"
-            placeholder="Ej: 1234567890">
+          <input id="codigo_ciiu" type="text" formControlName="codigo_ciiu" maxlength="10"
+            (keypress)="soloNumeros($event)" class="input-field" placeholder="Ej: 1234567890">
           <div class="text-red-500 text-xs mt-1"
-            *ngIf="form.get('codigoCIIU')?.invalid && form.get('codigoCIIU')?.touched">
-            <span *ngIf="form.get('codigoCIIU')?.errors?.['required']">Campo obligatorio (5 dígitos)</span>
-            <span *ngIf="form.get('codigoCIIU')?.errors?.['minlength']">Mínimo 5 dígitos</span>
+            *ngIf="form.get('codigo_ciiu')?.invalid && form.get('codigo_ciiu')?.touched">
+            <span *ngIf="form.get('codigo_ciiu')?.errors?.['required']">Campo obligatorio</span>
+            <span *ngIf="form.get('codigo_ciiu')?.errors?.['minlength']">Mínimo 3 dígitos</span>
           </div>
         </div>
 
-        <!-- Detalle de la actividad eonómica principal -->
+        <!-- Detalle de la actividad económica principal -->
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-2">
             Detalle de la actividad eonómica principal <span class="text-red-500">*</span>
           </label>
-          <input id="detalleActividad" type="text" formControlName="detalleActividad" maxlength="50"
-            (keypress)="soloLetras($event)"
-            class="input-field"
-            placeholder="Ej: Placeholder">
+          <input id="actividad_economia" type="text" formControlName="actividad_economia" maxlength="200"
+            (keypress)="soloLetras($event)" class="input-field" placeholder="Ej: Placeholder">
           <div class="text-red-500 text-xs mt-1"
-            *ngIf="form.get('detalleActividad')?.invalid && form.get('detalleActividad')?.touched">
-            <span *ngIf="form.get('detalleActividad')?.errors?.['required']">Campo obligatorio (5 dígitos)</span>
-            <span *ngIf="form.get('detalleActividad')?.errors?.['minlength']">Mínimo 5 dígitos</span>
+            *ngIf="form.get('actividad_economia')?.invalid && form.get('actividad_economia')?.touched">
+            <span *ngIf="form.get('actividad_economia')?.errors?.['required']">Campo obligatorio</span>
+            <span *ngIf="form.get('actividad_economia')?.errors?.['minlength']">Mínimo 3 dígitos</span>
           </div>
         </div>
 
@@ -63,10 +63,7 @@
           <label class="block text-sm font-medium text-gray-700 mb-2">
             No. empleados
           </label>
-          <input id="numeroEmpleados" type="text" formControlName="numeroEmpleados" maxlength="50"
-            (keypress)="soloLetras($event)"
-            class="input-field"
-            placeholder="Ej: Placeholder">
+          <input id="num_empleados" type="number" formControlName="num_empleados" class="input-field" placeholder="Ej: 10">
         </div>
 
       </div>
@@ -76,9 +73,10 @@
 
         <!-- Sociedad comercial o civil -->
         <div class="input-stuff">
-          <label for="tipo-sociedad" class="block text-sm font-medium text-gray-700 mb-2">Sociedad comercial o civil:</label>
-          <select name="tipo-sociedad" id="tipo-sociedad" formControlName="tipoSociedad"
-            class="input-field">
+          <label for="tipo_sociedad" class="block text-sm font-medium text-gray-700 mb-2">
+            Sociedad comercial o civil <span class="text-red-500">*</span>
+          </label>
+          <select id="tipo_sociedad" formControlName="tipo_sociedad" class="input-field">
             <option value="" selected>Seleccione el tipo de sociedad</option>
             <option value="Por acciones simplificadas S.A.S">Por acciones simplificadas S.A.S</option>
             <option value="Anónima">Anónima</option>
@@ -89,24 +87,25 @@
             <option value="Sin animo de lucro">Sin animo de lucro</option>
             <option value="Empresa unirpersonal">Empresa unirpersonal</option>
             <option value="Asociación civil">Asociación civil</option>
-            <option value="Sociedad de hecho">Sociedad de hecho</option>
             <option value="Colectiva">Colectiva</option>
-            <option value="CarneDiplomatico">Otra</option>
+            <option value="Otra">Otra</option>
           </select>
           <div class="text-red-500 text-xs mt-1"
-            *ngIf="form.get('tipoSociedad')?.invalid && form.get('tipoSociedad')?.touched">
-            <span *ngIf="form.get('tipoSociedad')?.errors?.['required']">Campo obligatorio</span>
+            *ngIf="form.get('tipo_sociedad')?.invalid && form.get('tipo_sociedad')?.touched">Campo obligatorio
           </div>
         </div>
 
-        <!-- Tipo de entidad/asociación -->
+
+        <!-- Tipo entidad -->
         <div class="input-stuff">
-          <label for="tipo-sociedad" class="block text-sm font-medium text-gray-700 mb-2">Tipo de entidad/asociación:</label>
-          <select name="tipo-sociedad" id="tipo-sociedad" formControlName="tipoEntidad"
-            class="input-field">
-            <option value="" selected>Seleccione el tipo de entidad</option>
-            <option value="Establecimiento público">Establecimiento público</option>
-            <option value="Empresa industrial y comercial del estado">Empresa industrial y comercial del estado</option>
+
+          <label for="tipo_asociacion" class="block text-sm font-medium text-gray-700 mb-2">
+            Tipo de entidad/asociación <span class="text-red-500">*</span>
+          </label>
+
+          <select id="tipo_asociacion" formControlName="tipo_asociacion" class="input-field">
+            <option value="" selected>Seleccione el tipo de entidad/asociación</option>
+            <option value="Establecimiento público"> Establecimiento público </option>
             <option value="Empresa social del estado">Empresa social del estado</option>
             <option value="Empresa servicios públicos domiciliarios">Empresa servicios públicos domiciliarios</option>
             <option value="Entidades financieras">Entidades financieras</option>
@@ -126,90 +125,72 @@
             <option value="Otra">Otra</option>
           </select>
           <div class="text-red-500 text-xs mt-1"
-            *ngIf="form.get('tipoSociedad')?.invalid && form.get('tipoSociedad')?.touched">
-            <span *ngIf="form.get('tipoSociedad')?.errors?.['required']">Campo obligatorio</span>
+            *ngIf="form.get('tipo_asociacion')?.invalid && form.get('tipo_asociacion')?.touched">
+            Campo obligatorio
           </div>
         </div>
 
       </div>
 
       <!-- Tercera fila -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div>
 
-        <!-- País -->
-        <div class="input-stuff">
-          <label class="block text-sm font-medium text-gray-700 mb-2">
-            País <span class="text-red-500">*</span>
-          </label>
-          <input id="pais" type="text" formControlName="pais" maxlength="50" (keypress)="soloLetras($event)"
-            class="input-field"
-            placeholder="Ej: Colombia">
-          <div class="text-red-500 text-xs mt-1" *ngIf="form.get('pais')?.invalid && form.get('pais')?.touched">
-            <span *ngIf="form.get('pais')?.errors?.['required']">Campo obligatorio (5 dígitos)</span>
-            <span *ngIf="form.get('pais')?.errors?.['minlength']">Mínimo 5 dígitos</span>
+        <!-- Entidad estatal -->
+        <fieldset class="ent-estatales">
+          <legend class="text-sm font-medium text-gray-700">
+            Entidades estatales
+          </legend>
+          <div class="options">
+            <div class="option-nat">
+              <input type="radio" id="nacion" value="Nación" formControlName="ent_estatal">
+              <label for="nacion">Nación</label>
+            </div>
+            <div class="option-nat">
+              <input type="radio" id="departamento" value="Departamento" formControlName="ent_estatal">
+              <label for="departamento">Departamento</label>
+            </div>
+            <div class="option-nat">
+              <input type="radio" id="municipio1" value="Municipio" formControlName="ent_estatal">
+              <label for="municipio1">Municipio</label>
+            </div>
+            <div class="option-nat">
+              <input type="radio" id="otra" value="Otra" formControlName="ent_estatal">
+              <label for="otra">Otra</label>
+            </div>
           </div>
-        </div>
-
-        <!-- Teléfono -->
-        <div class="input-stuff">
-          <label class="block text-sm font-medium text-gray-700 mb-2">
-            Teléfono <span class="text-red-500">*</span>
-          </label>
-          <input id="telefono" type="tel" formControlName="telefonoLaboral" maxlength="20"
-            (keypress)="soloNumeros($event)"
-            class="input-field"
-            placeholder="Ej: 1234567890">
+          <!-- Solo aparece si selecciona la opción Otra -->
+          <div class="input-otra mt-3" *ngIf="form.get('ent_estatal')?.value === 'Otra'">
+            <input type="text" formControlName="otra_ent_estatal" maxlength="100" (keypress)="soloLetras($event)"
+              class="input-field" placeholder="Ej: Placeholder">
+          </div>
           <div class="text-red-500 text-xs mt-1"
-            *ngIf="form.get('telefonoLaboral')?.invalid && form.get('telefonoLaboral')?.touched">
-            <span *ngIf="form.get('telefonoLaboral')?.errors?.['required']">Campo obligatorio (5 dígitos)</span>
-            <span *ngIf="form.get('telefonoLaboral')?.errors?.['minlength']">Mínimo 5 dígitos</span>
+            *ngIf="form.get('otra_ent_estatal')?.invalid && form.get('otra_ent_estatal')?.touched">
+            <span *ngIf="form.get('otra_ent_estatal')?.errors?.['required']">Campo obligatorio</span>
+            <span *ngIf="form.get('otra_ent_estatal')?.errors?.['minlength']">Mínimo 3 dígitos</span>
           </div>
-        </div>
+        </fieldset>
 
-        <!-- Extensión -->
-        <div class="input-stuff">
-          <label class="block text-sm font-medium text-gray-700 mb-2">
-            Extensión <span class="text-red-500">*</span>
-          </label>
-          <input id="extension" type="text" formControlName="extension" maxlength="5" (keypress)="soloNumeros($event)"
-            class="input-field"
-            placeholder="Ej: 1234567890">
-          <div class="text-red-500 text-xs mt-1"
-            *ngIf="form.get('extension')?.invalid && form.get('extension')?.touched">
-            <span *ngIf="form.get('extension')?.errors?.['required']">Campo obligatorio (5 dígitos)</span>
-            <span *ngIf="form.get('extension')?.errors?.['minlength']">Mínimo 5 dígitos</span>
+        <!-- Entidad descentralizada -->
+        <fieldset class="ent-descentralizada">
+          <legend class="text-sm font-medium text-gray-700">
+            Entidades estatales descentralizadas
+          </legend>
+          <div class="options">
+            <div class="option-nat">
+              <input type="radio" id="nacional" value="Nacional" formControlName="ent_estatal_descentralizada">
+              <label for="nacional">Nacional</label>
+            </div>
+            <div class="option-nat">
+              <input type="radio" id="departamental" value="Departamental"
+                formControlName="ent_estatal_descentralizada">
+              <label for="departamental">Departamental</label>
+            </div>
+            <div class="option-nat">
+              <input type="radio" id="municipio2" value="Municipio" formControlName="ent_estatal_descentralizada">
+              <label for="municipio2">Municipio</label>
+            </div>
           </div>
-        </div>
-
-        <!-- Celular -->
-        <div class="input-stuff">
-          <label class="block text-sm font-medium text-gray-700 mb-2">
-            Celular <span class="text-red-500">*</span>
-          </label>
-          <input id="celular" type="tel" formControlName="celular" maxlength="20" (keypress)="soloNumeros($event)"
-            class="input-field"
-            placeholder="Ej: 1234567890">
-          <div class="text-red-500 text-xs mt-1" *ngIf="form.get('celular')?.invalid && form.get('celular')?.touched">
-            <span *ngIf="form.get('celular')?.errors?.['required']">Campo obligatorio (5 dígitos)</span>
-            <span *ngIf="form.get('celular')?.errors?.['minlength']">Mínimo 5 dígitos</span>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Correo electrónico laboral -->
-      <div class="input-stuff">
-        <label class="block text-sm font-medium text-gray-700 mb-2">
-          Correo electrónico laboral <span class="text-red-500">*</span>
-        </label>
-        <input id="correoLaboral" type="email" formControlName="correoLaboral" maxlength="100"
-          class="input-field"
-          placeholder="Ej: correo@example.com">
-        <div class="text-red-500 text-xs mt-1"
-          *ngIf="form.get('correoLaboral')?.invalid && form.get('correoLaboral')?.touched">
-          <span *ngIf="form.get('correoLaboral')?.errors?.['required']">Campo obligatorio (5 dígitos)</span>
-          <span *ngIf="form.get('correoLaboral')?.errors?.['minlength']">Mínimo 5 dígitos</span>
-        </div>
+        </fieldset>
       </div>
 
     </div>
