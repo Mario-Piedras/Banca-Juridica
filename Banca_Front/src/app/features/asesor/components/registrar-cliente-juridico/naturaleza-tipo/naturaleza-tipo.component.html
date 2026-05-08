@@ -3,12 +3,12 @@
 
     <div class="form-spacing">
       <!-- Primera fila -->
-      <div class="form-column4">
+      <div class="fila-normal2">
         <!-- Naturaleza de entidad -->
-        <fieldset class="naturaleza">
+        <fieldset class="naturaleza2">
           <label class="text-sm font-medium text-gray-700">Naturaleza de la entidad</label>
 
-          <div class="options">
+          <div class="options-natura">
             <div class="option-nat">
               <input type="radio" name="naturaleza" id="priv" value="Privada" formControlName="naturaleza">
               <label for="priv" class="text-sm font-medium text-gray-700">Privada</label>
@@ -31,7 +31,7 @@
         </fieldset>
 
         <!-- Código CIIU -->
-        <div>
+        <div class="input-stuff">
           <label class="block text-sm font-medium text-gray-700 mb-2">
             Código CIIU <span class="text-red-500">*</span>
           </label>
@@ -44,8 +44,13 @@
           </div>
         </div>
 
+      </div>
+
+      <!-- Segunda fila -->
+      <div class="fila-normal">
+
         <!-- Detalle de la actividad económica principal -->
-        <div>
+        <div class="input-stuff">
           <label class="block text-sm font-medium text-gray-700 mb-2">
             Detalle de la actividad eonómica principal <span class="text-red-500">*</span>
           </label>
@@ -61,14 +66,15 @@
         <!-- Número de empleados -->
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-2">
-            No. empleados
+            No. empleados <span class="text-red-500">*</span>
           </label>
-          <input id="num_empleados" type="number" formControlName="num_empleados" class="input-field" placeholder="Ej: 10">
+          <input id="num_empleados" type="number" formControlName="num_empleados" min="1"
+            (keydown)="bloquearNegativos($event)" class="input-field" placeholder="Ej: 10">
         </div>
 
       </div>
 
-      <!-- Segunda fila -->
+      <!-- Tercera fila -->
       <div class="fila-normal">
 
         <!-- Sociedad comercial o civil -->
@@ -93,8 +99,18 @@
           <div class="text-red-500 text-xs mt-1"
             *ngIf="form.get('tipo_sociedad')?.invalid && form.get('tipo_sociedad')?.touched">Campo obligatorio
           </div>
-        </div>
+          <!-- Solo aparece si selecciona la opción Otra -->
+          <div class="input-otra mt-3" *ngIf="form.get('tipo_sociedad')?.value === 'Otra'">
+            <input type="text" formControlName="otra_sociedad" maxlength="100" (keypress)="soloLetras($event)"
+              class="input-field" placeholder="Ej: Placeholder">
+          </div>
+          <div class="text-red-500 text-xs mt-1"
+            *ngIf="form.get('otra_sociedad')?.invalid && form.get('otra_sociedad')?.touched">
+            <span *ngIf="form.get('otra_sociedad')?.errors?.['required']">Campo obligatorio</span>
+            <span *ngIf="form.get('otra_sociedad')?.errors?.['minlength']">Mínimo 3 dígitos</span>
+          </div>
 
+        </div>
 
         <!-- Tipo entidad -->
         <div class="input-stuff">
@@ -128,11 +144,22 @@
             *ngIf="form.get('tipo_asociacion')?.invalid && form.get('tipo_asociacion')?.touched">
             Campo obligatorio
           </div>
+          <!-- Solo aparece si selecciona la opción Otra -->
+          <div class="input-otra mt-3" *ngIf="form.get('tipo_asociacion')?.value === 'Otra'">
+            <input type="text" formControlName="otra_asociacion" maxlength="100" (keypress)="soloLetras($event)"
+              class="input-field" placeholder="Ej: Placeholder">
+          </div>
+          <div class="text-red-500 text-xs mt-1"
+            *ngIf="form.get('otra_asociacion')?.invalid && form.get('otra_asociacion')?.touched">
+            <span *ngIf="form.get('otra_asociacion')?.errors?.['required']">Campo obligatorio</span>
+            <span *ngIf="form.get('otra_asociacion')?.errors?.['minlength']">Mínimo 3 dígitos</span>
+          </div>
+
         </div>
 
       </div>
 
-      <!-- Tercera fila -->
+      <!-- Cuarta fila -->
       <div>
 
         <!-- Entidad estatal -->

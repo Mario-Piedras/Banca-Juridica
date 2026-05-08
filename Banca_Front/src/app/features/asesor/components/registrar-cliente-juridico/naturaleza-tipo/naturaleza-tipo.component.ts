@@ -33,7 +33,8 @@ export class NaturalezaEntidadComponent implements OnInit {
         Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
       ]],
       num_empleados: ['', [
-        Validators.required
+        Validators.required,
+        Validators.min(1)
       ]],
       tipo_sociedad: ['', Validators.required],
       otra_sociedad: ['', [
@@ -119,6 +120,7 @@ export class NaturalezaEntidadComponent implements OnInit {
 
       otraControl?.updateValueAndValidity();
     });
+
     /* Informa los cambios del formulario en la consola */
     this.form.statusChanges.subscribe(() => {
       console.log('Formulario válido:', this.form.valid);
@@ -224,4 +226,11 @@ export class NaturalezaEntidadComponent implements OnInit {
       event.preventDefault();
     }
   }
+
+  bloquearNegativos(event: KeyboardEvent) {
+    if (['-', '+', 'e', 'E'].includes(event.key)) {
+      event.preventDefault();
+    }
+  }
+
 }

@@ -39,8 +39,8 @@ export class RegistrarClienteJuridicoComponent implements OnInit {
     infoGeneral: null,
     representanteLegal: null,
     naturalezaEntidad: null,
-/*  infoFinanciera: null,
-    declaracionBienes: null, */
+    /*  infoFinanciera: null,
+        declaracionBienes: null, */
   };
 
   // 🧭 Datos cargados para cada subcomponente
@@ -48,9 +48,9 @@ export class RegistrarClienteJuridicoComponent implements OnInit {
     infoGeneral: null,
     representanteLegal: null,
     naturalezaEntidad: null,
-/*  
-    infoFinanciera: null,
-    declaracionBienes: null, */
+    /*  
+        infoFinanciera: null,
+        declaracionBienes: null, */
   };
 
   // Orden de las pestañas para moverse automáticamente
@@ -58,9 +58,9 @@ export class RegistrarClienteJuridicoComponent implements OnInit {
     'informacion-general',
     'representante-legal',
     'naturaleza-tipo',
-/*  
-    'info-financiera',
-    'declaracion-bienes', */
+    /*  
+        'info-financiera',
+        'declaracion-bienes', */
   ];
 
   constructor(
@@ -152,7 +152,7 @@ export class RegistrarClienteJuridicoComponent implements OnInit {
     console.log(`✅ Datos actualizados (${nombre}):`, data);
   }
 
-// 📩 Escuchar evento de "nextTab" desde los subcomponentes
+  // 📩 Escuchar evento de "nextTab" desde los subcomponentes
   manejarNextTab() {
     this.irASiguientePestanaActual();
   }

@@ -31,6 +31,11 @@
   gap: 16px;
 }
 
+.fila-normal2 {
+  display: flex;
+  justify-content: space-between;
+  gap: 32px;
+}
 
 .form-column4 {
   display: grid;
@@ -44,6 +49,18 @@
   align-items: center;
   gap: 24px;
   width: fit-content;
+}
+
+.naturaleza2 {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  width: -webkit-fill-available;
+}
+
+.options-natura {
+  display: flex;
+  gap: 32px;
 }
 
 .options {
