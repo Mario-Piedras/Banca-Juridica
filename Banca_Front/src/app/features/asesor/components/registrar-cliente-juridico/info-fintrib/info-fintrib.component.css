@@ -1,0 +1,58 @@
+.form-spacing {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.form-column-finan {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.info-trib {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    border-top: solid #D1D5DC 2px;
+    padding: 16px 0px 0px 0px;
+}
+
+.filas-horizontales {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.primera-fila-trib {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.segun-fil-trib {
+    display: flex;
+    justify-content: space-between;
+}
+
+.options {
+    display: flex;
+    gap: 16px;
+}
+
+.option-nat {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.trib-otro {
+    display: flex;
+    gap: 16px;
+}
+
+.pais-trib {
+    display: flex;
+    justify-content: space-between;
+}

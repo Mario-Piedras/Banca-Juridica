@@ -1,0 +1,62 @@
+/* Naturaleza y tipo de entidad */
+
+.fila-normal {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.fila-normal2 {
+    display: flex;
+    justify-content: space-between;
+    gap: 32px;
+}
+
+.form-column4 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.naturaleza {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    width: fit-content;
+}
+
+.naturaleza2 {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    width: -webkit-fill-available;
+}
+
+.options-natura {
+    display: flex;
+    gap: 32px;
+}
+
+.options {
+    display: flex;
+    gap: 16px;
+}
+
+.option-nat {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ent-estatales {
+    width: -webkit-fill-available;
+    border-top: #D1D5DC solid 1px;
+    padding: 10px 0px;
+}
+
+.ent-descentralizada {
+    width: -webkit-fill-available;
+    border-top: #D1D5DC solid 1px;
+    padding: 10px 0px;
+}

@@ -8,9 +8,8 @@ import { AsesorService } from '../../services/asesor.service';
 import { InformacionGeneralComponent } from './info-general/info-general.component';
 import { RepresentanteLegalComponent } from './representante-legal/representante-legal.component';
 import { NaturalezaEntidadComponent } from './naturaleza-tipo/naturaleza-tipo.component';
-/* 
-import { InformacionFinancieraComponent } from './info-financiera/info-financiera.component';
-import { DeclaracionBienesComponent } from './declaracion-bienes/declaracion-bienes.component'; */
+import { InformacionFinancieraTributariaComponent } from './info-fintrib/info-fintrib.component';
+import { DeclaracionBienesComponent } from './declaracion-bienes/declaracion-bienes.component';
 
 @Component({
   selector: 'app-registrar-cliente-juridico',
@@ -21,8 +20,8 @@ import { DeclaracionBienesComponent } from './declaracion-bienes/declaracion-bie
     InformacionGeneralComponent,
     RepresentanteLegalComponent,
     NaturalezaEntidadComponent,
-/*  InformacionFinancieraComponent,
-    DeclaracionBienesComponent, */
+    InformacionFinancieraTributariaComponent,
+    DeclaracionBienesComponent,
   ],
   templateUrl: './registrar-cliente-juridico.component.html',
   styleUrls: ['./registrar-cliente-juridico.component.css']
@@ -39,8 +38,8 @@ export class RegistrarClienteJuridicoComponent implements OnInit {
     infoGeneral: null,
     representanteLegal: null,
     naturalezaEntidad: null,
-    /*  infoFinanciera: null,
-        declaracionBienes: null, */
+    infoFinancieraTributaria: null,
+    declaracionBienes: null,
   };
 
   // 🧭 Datos cargados para cada subcomponente
@@ -48,9 +47,8 @@ export class RegistrarClienteJuridicoComponent implements OnInit {
     infoGeneral: null,
     representanteLegal: null,
     naturalezaEntidad: null,
-    /*  
-        infoFinanciera: null,
-        declaracionBienes: null, */
+    infoFinancieraTributaria: null,
+    declaracionBienes: null,
   };
 
   // Orden de las pestañas para moverse automáticamente
@@ -58,9 +56,8 @@ export class RegistrarClienteJuridicoComponent implements OnInit {
     'informacion-general',
     'representante-legal',
     'naturaleza-tipo',
-    /*  
-        'info-financiera',
-        'declaracion-bienes', */
+    'info-fintrib',
+    'declaracion-bienes',
   ];
 
   constructor(
@@ -90,28 +87,11 @@ export class RegistrarClienteJuridicoComponent implements OnInit {
 
           // Organizar datos en la estructura esperada por los subcomponentes
           this.datosIniciales = {
-            infoGeneral: {
-              tipoDocumento: cliente.tipoDocumento,
-              numeroDocumento: cliente.numeroDocumento,
-              lugarExpedicion: cliente.lugarExpedicion,
-              ciudadNacimiento: cliente.ciudadNacimiento,
-              fechaNacimiento: cliente.fechaNacimiento,
-              fechaExpedicion: cliente.fechaExpedicion,
-              primerNombre: cliente.primerNombre,
-              segundoNombre: cliente.segundoNombre,
-              primerApellido: cliente.primerApellido,
-              segundoApellido: cliente.segundoApellido,
-              genero: cliente.genero,
-              nacionalidad: cliente.nacionalidad,
-              otraNacionalidad: cliente.otraNacionalidad,
-              estadoCivil: cliente.estadoCivil,
-              grupoEtnico: cliente.grupoEtnico,
-            },
-            contacto: cliente.contacto || {},
-            actividad: cliente.actividad || {},
-            laboral: cliente.laboral || {},
-            financiera: cliente.financiera || {},
-            facta: cliente.facta || {}
+            infoGeneral: {},
+            representanteLegal: cliente.representanteLegal || {},
+            naturalezaEntidad: cliente.naturalezaEntidad || {},
+            infoFinancieraTributaria: cliente.infoFinancieraTributaria || {},
+            declaracionBienes: cliente.declaracionBienes || {}
           };
 
           // También actualizar clienteData para validaciones
@@ -188,10 +168,9 @@ export class RegistrarClienteJuridicoComponent implements OnInit {
     const payload = {
       ...this.clienteData.infoGeneral,
       representanteLegal: this.clienteData.representanteLegal,
-      actividad: this.clienteData.actividad,
-      laboral: this.clienteData.laboral,
-      financiera: this.clienteData.financiera,
-      facta: this.clienteData.facta,
+      naturalezaEntidad: this.clienteData.naturalezaEntidad,
+      infoFinancieraTributaria: this.clienteData.infoFinancieraTributaria,
+      declaracionBienes: this.clienteData.declaracionBienes
     };
 
     if (this.modo === 'nuevo') {

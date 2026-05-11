@@ -38,7 +38,14 @@ export class PaistributarController {
 
     async crear(req: Request, res: Response): Promise<Response> {
         try {
-            const data = req.body;
+            
+            const body = req.body;
+
+            const data = {
+                pais: body.pais,
+                tin: body.tin
+            };
+            
             if (!data || Object.keys(data).length === 0) {
                 return res.status(400).json({ mensaje: 'Los datos son obligatorios' });
             }

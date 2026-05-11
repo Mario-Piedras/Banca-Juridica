@@ -35,7 +35,19 @@ export class InfotributariaController {
 
     async crear(req: Request, res: Response): Promise<Response> {
         try {
-        const data = req.body;
+
+        const body = req.body;
+
+            const data = {
+                tipo_contribuyente: body.tipo_contribuyente,
+                clase_contribuyente: body.clase_contribuyente,
+                responsable_iva: body.responsable_iva,
+                autorretenedor: body.autorretenedor,
+                intermediario_mercado: body.intermediario_mercado,
+                vigilado_superintendencia: body.vigilado_superintendencia,
+                tributa_exterior: body.tributa_exterior
+            };
+
         if (!data || Object.keys(data).length === 0) {
             return res.status(400).json({ mensaje: 'Los datos son obligatorios' });
         }

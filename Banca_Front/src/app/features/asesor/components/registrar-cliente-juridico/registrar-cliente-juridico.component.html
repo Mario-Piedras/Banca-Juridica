@@ -34,11 +34,10 @@
       Naturaleza y tipo de entidad
     </button>
 
-    <!-- <button class="px-6 py-3 font-medium text-sm transition-colors relative"
-      [class.text-blue-600]="pestanaActiva === 'info-financiera'"
-      [class.border-b-2]="pestanaActiva === 'info-financiera'"
-      [class.border-blue-600]="pestanaActiva === 'info-financiera'"
-      [class.text-gray-500]="pestanaActiva !== 'info-financiera'" (click)="cambiarPestana('info-financiera')">
+    <button class="px-6 py-3 font-medium text-sm transition-colors relative"
+      [class.text-blue-600]="pestanaActiva === 'info-fintrib'" [class.border-b-2]="pestanaActiva === 'info-fintrib'"
+      [class.border-blue-600]="pestanaActiva === 'info-fintrib'"
+      [class.text-gray-500]="pestanaActiva !== 'info-fintrib'" (click)="cambiarPestana('info-fintrib')">
       Información financiera y tributaria
     </button>
 
@@ -48,7 +47,7 @@
       [class.border-blue-600]="pestanaActiva === 'declaracion-bienes'"
       [class.text-gray-500]="pestanaActiva !== 'declaracion-bienes'" (click)="cambiarPestana('declaracion-bienes')">
       Declaración de origen de bienes y/o fondos
-    </button> -->
+    </button>
 
   </div>
 
@@ -73,6 +72,20 @@
       <app-naturaleza-tipo [datosIniciales]="clienteData.naturalezaEntidad"
         (formChange)="actualizarDatos('naturalezaEntidad', $event)" (nextTab)="manejarNextTab()"
         (prevTab)="manejarPrevTab()"></app-naturaleza-tipo>
+    </div>
+
+    <!-- Pestaña 4: Información financiera y tributaria -->
+    <div *ngIf="pestanaActiva === 'info-fintrib'">
+      <app-info-fintrib [datosIniciales]="clienteData.infoFinancieraTributaria"
+        (formChange)="actualizarDatos('infoFinancieraTributaria', $event)" (nextTab)="manejarNextTab()"
+        (prevTab)="manejarPrevTab()"></app-info-fintrib>
+    </div>
+
+    <!-- Pestaña 5: Declaración de origen de bienes y/o fondos -->
+    <div *ngIf="pestanaActiva === 'declaracion-bienes'">
+      <app-declaracion-bienes [datosIniciales]="clienteData.declaracionBienes"
+        (formChange)="actualizarDatos('declaracionBienes', $event)" (nextTab)="manejarNextTab()"
+        (prevTab)="manejarPrevTab()"></app-declaracion-bienes>
     </div>
 
   </div>

@@ -1,0 +1,387 @@
+<div class="p-6 max-w-7xl mx-auto bg-white shadow-sm rounded-lg border border-gray-200">
+  <form [formGroup]="form" class="space-y-4">
+    <div class="form-spacing">
+
+      <!-- Información financiera-->
+      <div class="form-spacing">
+        <!-- Primera fila -->
+        <div class="filas-horizontales">
+
+          <!-- Ingresos operacionales mensuales -->
+          <div class="input-stuff">
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Ingresos operacionales mensuales <span class="text-red-500">*</span>
+            </label>
+            <input id="ingresos_op" type="text" (input)="formatearMoneda($event, 'ingresos_op')"
+              formControlName="ingresos_op" min="1" (keydown)="bloquearNegativos($event)" class="input-field"
+              placeholder="Ej: $1.000.000.000">
+            <div class="text-red-500 text-xs mt-1"
+              *ngIf="form.get('ingresos_op')?.invalid && form.get('ingresos_op')?.touched">
+              <span *ngIf="form.get('ingresos_op')?.errors?.['required']">Campo obligatorio</span>
+            </div>
+          </div>
+
+          <!--  Ingresos no operacionales mensuales -->
+          <div class="input-stuff">
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Ingresos operacionales mensuales <span class="text-red-500">*</span>
+            </label>
+            <input id="ingresos_no_op" type="text" (input)="formatearMoneda($event, 'ingresos_no_op')"
+              formControlName="ingresos_no_op" min="1" (keydown)="bloquearNegativos($event)" class="input-field"
+              placeholder="Ej: $1.000.000.000">
+            <div class="text-red-500 text-xs mt-1"
+              *ngIf="form.get('ingresos_no_op')?.invalid && form.get('ingresos_no_op')?.touched">
+              <span *ngIf="form.get('ingresos_no_op')?.errors?.['required']">Campo obligatorio</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Detalle de ingresos -->
+        <div class="input-stuff">
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Detalle de ingresos no operacionales u originados en actividades diferentes a la principal <span
+              class="text-red-500">*</span>
+          </label>
+          <input id="detalle_ingresos" type="text" formControlName="detalle_ingresos" maxlength="100"
+            pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]*" (keypress)="soloLetras($event)" class="input-field"
+            placeholder="Ej: Placeholder">
+          <div class="text-red-500 text-xs mt-1"
+            *ngIf="form.get('detalle_ingresos')?.invalid && form.get('detalle_ingresos')?.touched">
+            <span *ngIf="form.get('detalle_ingresos')?.errors?.['required']">Campo obligatorio</span>
+            <span *ngIf="form.get('detalle_ingresos')?.errors?.['minlength']">Mínimo 3 dígitos</span>
+          </div>
+        </div>
+
+        <!-- Tercera fila -->
+        <div class="form-column-finan">
+
+          <!-- Ventas anuales -->
+          <div class="input-stuff">
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Ventas anuales <span class="text-red-500">*</span>
+            </label>
+            <input id="ventas_anuales" type="text" (input)="formatearMoneda($event, 'ventas_anuales')"
+              formControlName="ventas_anuales" min="1" (keydown)="bloquearNegativos($event)" class="input-field"
+              placeholder="Ej: $1.000.000.000">
+            <div class="text-red-500 text-xs mt-1"
+              *ngIf="form.get('ventas_anuales')?.invalid && form.get('ventas_anuales')?.touched">
+              <span *ngIf="form.get('ventas_anuales')?.errors?.['required']">Campo obligatorio</span>
+            </div>
+          </div>
+
+          <!-- Fecha de cierre de ventas -->
+          <div class="input-stuff">
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Fecha de cierre de ventas <span class="text-red-500">*</span>
+            </label>
+            <input id="fecha_cierre_ventas" type="date" formControlName="fecha_cierre_ventas"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <div class="text-red-500 text-xs mt-1"
+              *ngIf="form.get('fecha_cierre_ventas')?.invalid && form.get('fecha_cierre_ventas')?.touched">
+              <span *ngIf="form.get('fecha_cierre_ventas')?.errors?.['required']">Campo obligatorio</span>
+            </div>
+          </div>
+
+
+          <!-- Egresos mensuales -->
+          <div class="input-stuff">
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Egresos mensuales <span class="text-red-500">*</span>
+            </label>
+            <input id="egresos_mensuales" type="text" (input)="formatearMoneda($event, 'egresos_mensuales')"
+              formControlName="egresos_mensuales" min="1" (keydown)="bloquearNegativos($event)" class="input-field"
+              placeholder="Ej: $1.000.000.000">
+            <div class="text-red-500 text-xs mt-1"
+              *ngIf="form.get('egresos_mensuales')?.invalid && form.get('egresos_mensuales')?.touched">
+              <span *ngIf="form.get('egresos_mensuales')?.errors?.['required']">Campo obligatorio</span>
+            </div>
+          </div>
+
+          <!-- Utilidad neta -->
+          <div class="input-stuff">
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Utilidad neta <span class="text-red-500">*</span>
+            </label>
+            <input id="utilidad_neta" type="text" (input)="formatearMoneda($event, 'utilidad_neta')"
+              formControlName="utilidad_neta" min="1" (keydown)="bloquearNegativos($event)" class="input-field"
+              placeholder="Ej: $1.000.000.000">
+            <div class="text-red-500 text-xs mt-1"
+              *ngIf="form.get('utilidad_neta')?.invalid && form.get('utilidad_neta')?.touched">
+              <span *ngIf="form.get('utilidad_neta')?.errors?.['required']">Campo obligatorio</span>
+            </div>
+          </div>
+
+          <!-- Total activos -->
+          <div class="input-stuff">
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Total activos <span class="text-red-500">*</span>
+            </label>
+            <input id="total_activos" type="text" (input)="formatearMoneda($event, 'total_activos')"
+              formControlName="total_activos" min="1" (keydown)="bloquearNegativos($event)" class="input-field"
+              placeholder="Ej: $1.000.000.000">
+            <div class="text-red-500 text-xs mt-1"
+              *ngIf="form.get('total_activos')?.invalid && form.get('total_activos')?.touched">
+              <span *ngIf="form.get('total_activos')?.errors?.['required']">Campo obligatorio</span>
+            </div>
+          </div>
+
+          <!-- Total pasivos -->
+          <div class="input-stuff">
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Total pasivos <span class="text-red-500">*</span>
+            </label>
+            <input id="total_pasivos" type="text" (input)="formatearMoneda($event, 'total_pasivos')"
+              formControlName="total_pasivos" min="1" (keydown)="bloquearNegativos($event)" class="input-field"
+              placeholder="Ej: $1.000.000.000">
+            <div class="text-red-500 text-xs mt-1"
+              *ngIf="form.get('total_pasivos')?.invalid && form.get('total_pasivos')?.touched">
+              <span *ngIf="form.get('total_pasivos')?.errors?.['required']">Campo obligatorio</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!--  Total patrimonio -->
+        <div class="input-stuff">
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Total patrimonio <span class="text-red-500">*</span>
+          </label>
+          <input id="total_patrimonio" type="text" (input)="formatearMoneda($event, 'total_patrimonio')"
+            formControlName="total_patrimonio" min="1" (keydown)="bloquearNegativos($event)" class="input-field"
+            placeholder="Ej: $1.000.000.000">
+          <div class="text-red-500 text-xs mt-1"
+            *ngIf="form.get('total_patrimonio')?.invalid && form.get('total_patrimonio')?.touched">
+            <span *ngIf="form.get('total_patrimonio')?.errors?.['required']">Campo obligatorio</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Información tributaria-->
+      <div class="info-trib">
+
+        <!-- Primera fila -->
+        <div class="primera-fila-trib">
+
+          <!-- Tipo de contribuyente -->
+          <div class="input-stuff">
+
+            <label for="tipo_contribuyente" class="block text-sm font-medium text-gray-700 mb-2">
+              Tipo de contribuyente <span class="text-red-500">*</span>
+            </label>
+
+            <select id="tipo_contribuyente" formControlName="tipo_contribuyente" class="input-field">
+              <option value="" selected>Seleccione el tipo de contribuyente</option>
+              <option value="Personas jurídicas, comerciales y civiles, consorcios y uniones temporales">Personas
+                jurídicas, comerciales y civiles, consorcios y uniones temporales</option>
+              <option value=" Corporaciones, fundaciones y asociaciones sin ánimo de lucro"> Corporaciones, fundaciones
+                y asociaciones sin ánimo de lucro</option>
+              <option value="Empresa servicios públicos domiciliarios">Empresa servicios públicos domiciliarios</option>
+              <option value="Entidad pública res_ivaal o territorial">Entidad pública res_ivaal o territorial</option>
+              <option value="Cooperativa">Cooperativa</option>
+              <option value="Fondos de empleados">Fondos de empleados</option>
+              <option value="Cooperativas">Cooperativas</option>
+              <option value="Precooperativas">Precooperativas</option>
+              <option value="Copropiedades">Copropiedades</option>
+              <option value="Personas jurídicas de derecho canónico">Personas jurídicas de derecho canónico</option>
+              <option value="Entidades religiosas no católicas">Entidades religiosas no católicas</option>
+              <option value="Sindicatos">Sindicatos</option>
+              <option value="Fundaciones">Fundaciones</option>
+              <option value="Corporaciones y asociaciones">Corporaciones y asociaciones</option>
+              <option value="No contribuyente">No contribuyente</option>
+            </select>
+            <div class="text-red-500 text-xs mt-1"
+              *ngIf="form.get('tipo_contribuyente')?.invalid && form.get('tipo_contribuyente')?.touched">
+              Campo obligatorio
+            </div>
+
+          </div>
+
+          <!-- Clase de contribuyente -->
+          <div class="input-stuff">
+
+            <label for="clase_contribuyente" class="block text-sm font-medium text-gray-700 mb-2">
+              Clase de contribuyente <span class="text-red-500">*</span>
+            </label>
+
+            <select id="clase_contribuyente" formControlName="clase_contribuyente" class="input-field">
+              <option value="" selected>Seleccione la clase de contribuyente</option>
+              <option value="Gran contribuyente">Gran contribuyente</option>
+              <option value="No grancontribuyente">No gran contribuyente</option>
+            </select>
+            <div class="text-red-500 text-xs mt-1"
+              *ngIf="form.get('clase_contribuyente')?.invalid && form.get('clase_contribuyente')?.touched">
+              Campo obligatorio
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- Segunda fila-->
+        <div class="segun-fil-trib">
+          <!-- Responsable de IVA -->
+          <fieldset>
+            <legend class="text-sm font-medium text-gray-700">
+              Responsable de IVA
+            </legend>
+            <div class="options">
+              <div class="option-nat">
+                <input type="radio" id="responsable_iva_si" name="responsable_iva" value="Sí"
+                  formControlName="responsable_iva" />
+                <label for="responsable_iva_si">
+                  Sí
+                </label>
+              </div>
+              <div class="option-nat">
+                <input type="radio" id="responsable_iva_no" name="responsable_iva" value="No"
+                  formControlName="responsable_iva" />
+                <label for="responsable_iva_no">
+                  No
+                </label>
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Autorretenedor otros ingresos -->
+          <fieldset>
+            <legend class="text-sm font-medium text-gray-700">
+              Autorretenedor otros ingresos
+            </legend>
+            <div class="options">
+              <div class="option-nat">
+                <input type="radio" id="autorretenedor_si" name="autorretenedor" value="Sí"
+                  formControlName="autorretenedor" />
+                <label for="autorretenedor_si">
+                  Sí
+                </label>
+              </div>
+              <div class="option-nat">
+                <input type="radio" id="autorretenedor_no" name="autorretenedor" value="No"
+                  formControlName="autorretenedor" />
+                <label for="autorretenedor_no">
+                  No
+                </label>
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Intermediario del  mercado cambiario -->
+          <fieldset>
+            <legend class="text-sm font-medium text-gray-700">
+              Intermediario del mercado cambiario
+            </legend>
+            <div class="options">
+              <div class="option-nat">
+                <input type="radio" id="intermediario_mercado_si" name="intermediario_mercado" value="Sí"
+                  formControlName="intermediario_mercado" />
+                <label for="intermediario_mercado_si">
+                  Sí
+                </label>
+              </div>
+              <div class="option-nat">
+                <input type="radio" id="intermediario_mercado_no" name="intermediario_mercado" value="No"
+                  formControlName="intermediario_mercado" />
+                <label for="intermediario_mercado_no">
+                  No
+                </label>
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- ¿Es vigilado por la Superintendencia Financiera? -->
+          <fieldset>
+            <legend class="text-sm font-medium text-gray-700">
+              ¿Es vigilado por la Superintendencia Financiera?
+            </legend>
+            <div class="options">
+              <div class="option-nat">
+                <input type="radio" id="vigilado_superintendencia_si" name="vigilado_superintendencia" value="Sí"
+                  formControlName="vigilado_superintendencia" />
+                <label for="vigilado_superintendencia_si">
+                  Sí
+                </label>
+              </div>
+              <div class="option-nat">
+                <input type="radio" id="vigilado_superintendencia_no" name="vigilado_superintendencia" value="No"
+                  formControlName="vigilado_superintendencia" />
+                <label for="vigilado_superintendencia_no">
+                  No
+                </label>
+              </div>
+            </div>
+          </fieldset>
+
+        </div>
+
+        <!-- Tercera fila-->
+        <div class="segun-fil-trib">
+          <!-- ¿Está obligado a tributar como entidad domiciliada en los Estados Unidos u otros países diferentes a Colombia? -->
+          <div class="trib-otro">
+            <label class="text-sm font-medium text-gray-700">
+              ¿Está obligado a tributar como entidad domiciliada en los Estados Unidos u otros países diferentes a
+              Colombia?
+            </label>
+            <div class="options">
+              <div class="option-nat">
+                <input type="radio" id="tributa_exterior_si" name="tributa_exterior" value="Sí"
+                  formControlName="tributa_exterior" />
+                <label for="tributa_exterior_si">
+                  Sí
+                </label>
+              </div>
+              <div class="option-nat">
+                <input type="radio" id="tributa_exterior_no" name="tributa_exterior" value="No"
+                  formControlName="tributa_exterior" />
+                <label for="tributa_exterior_no">
+                  No
+                </label>
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+
+        <!-- Cuarta fila -->
+        <div class="filas-horizontales" *ngIf="form.get('tributa_exterior')?.value === 'Sí'">
+
+          <!--  Nombre del país -->
+          <div class="input-stuff">
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Nombre del país <span class="text-red-500">*</span>
+            </label>
+            <input id="pais" type="text" formControlName="pais" class="input-field" placeholder="Ej: Placeholder">
+            <div class="text-red-500 text-xs mt-1" *ngIf="form.get('pais')?.invalid && form.get('pais')?.touched">
+              <span *ngIf="form.get('pais')?.errors?.['required']">Campo obligatorio</span>
+            </div>
+          </div>
+
+          <!-- TIN / N°. Id. Tributario -->
+          <div class="input-stuff">
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              TIN / N°. Id. Tributario <span class="text-red-500">*</span>
+            </label>
+            <input id="tin" type="text" formControlName="tin" class="input-field" placeholder="Ej: 1234567890">
+            <div class="text-red-500 text-xs mt-1" *ngIf="form.get('tin')?.invalid && form.get('tin')?.touched">
+              <span *ngIf="form.get('tin')?.errors?.['required']">Campo obligatorio</span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Botones -->
+    <div class="flex justify-between mt-6">
+      <button type="button" (click)="volver()" class="form-btn">Volver a la página anterior</button>
+      <button type="button" (click)="guardarSeccion()" [disabled]="form.invalid" class="form-btn">
+        Guardar y continuar
+      </button>
+    </div>
+
+  </form>
+</div>

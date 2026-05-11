@@ -690,6 +690,9 @@ CREATE TABLE declaracion_bienes (
 
 CREATE TABLE info_financiera_emp (
 	id_info_financiera INT PRIMARY KEY AUTO_INCREMENT,
+  ingresos_op DECIMAL(15,2) DEFAULT 0.0,
+  ingresos_no_op DECIMAL(15,2) DEFAULT 0.0,
+  detalle_ingresos VARCHAR(100),
     ventas_anuales DECIMAL(15,2) DEFAULT 0.00,
     fecha_cierre_ventas DATE NOT NULL,
     egresos_mensuales DECIMAL(15,2) DEFAULT 0.00,
@@ -725,7 +728,7 @@ CREATE TABLE info_tributaria (
     'Corporaciones, fundaciones y asociaciones sin ánimo de lucro', 'Entidad pública nacional o territorial', 
     'Cooperativa', 'No contribuyente') DEFAULT 'No contribuyente',
     clase_contribuyente ENUM('Gran contribuyente', 'No gran contribuyente') DEFAULT 'No gran contribuyente',
-    responasble_iva ENUM('Sí','No') DEFAULT 'No',
+    responsable_iva ENUM('Sí','No') DEFAULT 'No',
     autorretenedor ENUM('Sí','No') DEFAULT 'No',
     intermediario_mercado ENUM('Sí','No') DEFAULT 'No',
     vigilado_superintendencia ENUM('Sí','No') DEFAULT 'No',
