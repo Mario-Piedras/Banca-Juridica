@@ -8,7 +8,10 @@ import { HttpClient } from '@angular/common/http';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './representante-legal.component.html',
-  styleUrls: ['../registrar-cliente-juridico.component.css']
+  styleUrls: [
+    '../registrar-cliente-juridico.component.css',
+    './representante-legal.component.css'
+  ]
 })
 export class RepresentanteLegalComponent implements OnInit {
   @Input() datosIniciales: any;

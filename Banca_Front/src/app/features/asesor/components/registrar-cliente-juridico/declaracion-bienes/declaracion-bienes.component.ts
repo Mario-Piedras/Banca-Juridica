@@ -8,95 +8,59 @@ import { HttpClient } from '@angular/common/http';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './declaracion-bienes.component.html',
-  styleUrls: ['../registrar-cliente-juridico.component.css']
+  styleUrls: [
+    '../registrar-cliente-juridico.component.css',
+    './declaracion-bienes.component.css'
+  ]
 })
 export class DeclaracionBienesComponent implements OnInit {
   @Input() datosIniciales: any;
   @Output() formChange = new EventEmitter();
+  @Output() prevTab = new EventEmitter<void>();
   @Output() nextTab = new EventEmitter();
 
   form: FormGroup;
   constructor(private fb: FormBuilder, private http: HttpClient) {
     this.form = this.fb.group({
-      nit: ['', [
+      naturaleza: ['', Validators.required],
+      codigo_ciiu: ['', [
         Validators.required,
-        Validators.minLength(8),
+        Validators.minLength(3),
         Validators.maxLength(10),
         Validators.pattern(/^[0-9]+$/)
       ]],
-      razon_social: ['', [
+      actividad_economia: ['', [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(200),
+        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
+      ]],
+      num_empleados: ['', [
+        Validators.required,
+        Validators.min(1)
+      ]],
+      tipo_sociedad: ['', Validators.required],
+      otra_sociedad: ['', [
         Validators.required,
         Validators.minLength(3),
         Validators.maxLength(100),
         Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
       ]],
-      nombre_corto: ['', [
+      tipo_asociacion: ['', Validators.required],
+      otra_asociacion: ['', [
         Validators.required,
         Validators.minLength(3),
-        Validators.maxLength(10),
+        Validators.maxLength(100),
         Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
       ]],
-      fecha_constitución: ['', [
-        Validators.required,
-        this.validarFechaNoFutura()
-      ]],
-      pais_constitucion: ['', [
+      ent_estatal: ['', Validators.required],
+      otra_ent_estatal: ['', [
         Validators.required,
         Validators.minLength(3),
-        Validators.maxLength(20),
+        Validators.maxLength(100),
         Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
       ]],
-      ciudad_constitución: ['', [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(20),
-        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
-      ]],
-      dir_sede_principal: ['', [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(50)
-      ]],
-      pais: ['', [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(50),
-        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
-      ]],
-      telefono: ['', [
-        Validators.required,
-        Validators.minLength(10),
-        Validators.maxLength(10),
-        Validators.pattern(/^[0-9]+$/)
-      ]],
-      ext: ['', [
-        Validators.required,
-        Validators.minLength(1),
-        Validators.maxLength(5),
-        Validators.pattern(/^[0-9]+$/)
-      ]],
-      barrio: ['', [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(50),
-        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
-      ]],
-      ciudad_municipio: ['', [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(50),
-        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
-      ]],
-      departamento: ['', [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(50),
-        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
-      ]],
-      correo: ['', [
-        Validators.required,
-        Validators.email
-      ]]
+      ent_estatal_descentralizada: ['', Validators.required],
     });
   }
 
@@ -109,6 +73,58 @@ export class DeclaracionBienesComponent implements OnInit {
       this.formChange.emit(valores);
     });
 
+    /* Tipo de sociedad */
+    this.form.get('tipo_sociedad')?.valueChanges.subscribe(valor => {
+      const control = this.form.get('otra_sociedad');
+
+      if (valor === 'Otra') {
+        control?.setValidators([
+          Validators.required,
+          Validators.minLength(3)
+        ]);
+      } else {
+        control?.clearValidators();
+        control?.setValue('');
+      }
+
+      control?.updateValueAndValidity();
+    });
+
+    /* Tipo de entidad/asociación */
+    this.form.get('tipo_asociacion')?.valueChanges.subscribe(valor => {
+      const control = this.form.get('otra_asociacion');
+
+      if (valor === 'Otra') {
+        control?.setValidators([
+          Validators.required,
+          Validators.minLength(3)
+        ]);
+      } else {
+        control?.clearValidators();
+        control?.setValue('');
+      }
+
+      control?.updateValueAndValidity();
+    });
+
+    /* Entidad estatal */
+    this.form.get('ent_estatal')?.valueChanges.subscribe(valor => {
+      const otraControl = this.form.get('otra_ent_estatal');
+
+      if (valor === 'Otra') {
+        otraControl?.setValidators([
+          Validators.required,
+          Validators.minLength(3)
+        ]);
+      } else {
+        otraControl?.clearValidators();
+        otraControl?.setValue('');
+      }
+
+      otraControl?.updateValueAndValidity();
+    });
+
+    /* Informa los cambios del formulario en la consola */
     this.form.statusChanges.subscribe(() => {
       console.log('Formulario válido:', this.form.valid);
 
@@ -122,21 +138,10 @@ export class DeclaracionBienesComponent implements OnInit {
     });
   }
 
-  validarFechaNoFutura() {
-    return (control: any) => {
-      if (!control.value) return null;
-      const fecha = new Date(control.value);
-      const hoy = new Date();
-      hoy.setHours(0, 0, 0, 0); // MEJORA: Ignorar hora
-      fecha.setHours(0, 0, 0, 0);
-      return fecha <= hoy ? null : { fechaFutura: true };
-    };
-  }
-
   guardarSeccion() {
     console.log(this.form.value);
     if (this.form.valid) {
-      this.http.post('http://localhost:3000/api/infoempresas', this.form.value)
+      this.http.post('http://localhost:3000/api/tipoentidad', this.form.value)
         .subscribe({
           next: (res) => {
             console.log('Guardado en BD:', res);
@@ -163,7 +168,10 @@ export class DeclaracionBienesComponent implements OnInit {
     }
   }
 
-  // NUEVO: Obtener lista de errores del formulario
+  volver() {
+    this.prevTab.emit();
+  }
+
   obtenerErroresFormulario(): string[] {
     const errores: string[] = [];
     Object.keys(this.form.controls).forEach(key => {
@@ -184,23 +192,16 @@ export class DeclaracionBienesComponent implements OnInit {
     return errores;
   }
 
-  // NUEVO: Obtener nombre legible del campo
   obtenerNombreCampo(key: string): string {
     const nombres: { [key: string]: string } = {
-      'nit': 'Número de NIT',
-      'razon_social': 'Nombre o razón social',
-      'nombre_corto': 'Nombre corto o sigla',
-      'fecha_constitución': 'Fecha de constitución',
-      'pais_constitucion': 'País de constitución',
-      'ciudad_constitución': 'Ciudad de constitución',
-      'direccionEmpresa': 'Dirección sede principal',
-      'pais': 'País',
-      'telefono': 'Teléfono',
-      'ext': 'Extensión',
-      'barrio': 'Barrio',
-      'ciudadEmpresa': 'Ciudad/Municipio',
-      'departamentoEmpresa': 'Departamento',
-      'correo': 'Correo electrónico sede principal'
+      naturaleza: 'Naturaleza de la entidad',
+      codigo_ciiu: 'Código CIIU',
+      actividad_economia: 'Detalle de actividad económica',
+      num_empleados: 'Número de empleados',
+      tipo_sociedad: 'Tipo de sociedad',
+      tipo_asociacion: 'Tipo de entidad o asociación',
+      ent_estatal: 'Entidad estatal',
+      ent_estatal_descentralizada: 'Entidad descentralizada'
     };
     return nombres[key] || key;
   }
@@ -208,7 +209,6 @@ export class DeclaracionBienesComponent implements OnInit {
   soloLetras(event: KeyboardEvent) {
     const pattern = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]$/;
     const inputChar = event.key;
-    // MEJORA: Permitir teclas de control
     if (inputChar === 'Backspace' || inputChar === 'Delete' ||
       inputChar === 'Tab' || inputChar === 'ArrowLeft' || inputChar === 'ArrowRight') {
       return;
@@ -221,7 +221,6 @@ export class DeclaracionBienesComponent implements OnInit {
   soloNumeros(event: KeyboardEvent) {
     const pattern = /^[0-9]$/;
     const inputChar = event.key;
-    // MEJORA: Permitir teclas de control
     if (inputChar === 'Backspace' || inputChar === 'Delete' ||
       inputChar === 'Tab' || inputChar === 'ArrowLeft' || inputChar === 'ArrowRight') {
       return;
@@ -230,4 +229,11 @@ export class DeclaracionBienesComponent implements OnInit {
       event.preventDefault();
     }
   }
+
+  bloquearNegativos(event: KeyboardEvent) {
+    if (['-', '+', 'e', 'E'].includes(event.key)) {
+      event.preventDefault();
+    }
+  }
+
 }
