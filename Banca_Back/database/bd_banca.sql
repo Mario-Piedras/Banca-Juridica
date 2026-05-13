@@ -681,7 +681,7 @@ CREATE TABLE declaracion_bienes (
     origen_bienes ENUM('Compraventa', 'Aporte de socios', 'Utilidades', 'Otros') NOT NULL,
     otro_origen_bienes VARCHAR(100),
     fuente_recursos ENUM('Capitalización por parte de socios', 'Utilidades del negocio', 'Desarrollo del objeto social', 'Otros') NOT NULL,
-    otro_fuente_recursos VARCHAR(100),
+    otra_fuente_recursos VARCHAR(100),
     pais_origen_bienes VARCHAR(100) NOT NULL,
     ciudad_origen_bienes VARCHAR(100) NOT NULL,
     recursos_inembargables ENUM('Sí','No') DEFAULT 'No',
@@ -849,4 +849,4 @@ ADD CONSTRAINT `cuentas_ahorro_fk_1`
 
 ALTER TABLE defaultdb.solicitudes_apertura 
 ADD COLUMN tipo_cliente ENUM('Natural', 'Jurídica') NOT NULL DEFAULT 'Natural' AFTER id_empresa,
-ADD COLUMN proposito_cuenta VARCHAR(200) NULL AFTER tipo_cliente;
+ADD COLUMN proposito_cuenta ENUM('Ahorrar', 'Invertir', 'Servicios financieros en negocios fiduciarios', 'Realizar transacciones', 'Financiación', 'Recibir servicios especializados Banca de Inversión') NULL DEFAULT NULL;

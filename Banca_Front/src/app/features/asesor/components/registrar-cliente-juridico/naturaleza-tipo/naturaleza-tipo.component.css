@@ -1,4 +1,9 @@
 /* Naturaleza y tipo de entidad */
+.form-spacing {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
 
 .fila-normal {
     display: flex;

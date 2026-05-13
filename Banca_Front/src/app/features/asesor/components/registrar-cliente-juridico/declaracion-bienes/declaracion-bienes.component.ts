@@ -22,45 +22,34 @@ export class DeclaracionBienesComponent implements OnInit {
   form: FormGroup;
   constructor(private fb: FormBuilder, private http: HttpClient) {
     this.form = this.fb.group({
-      naturaleza: ['', Validators.required],
-      codigo_ciiu: ['', [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(10),
-        Validators.pattern(/^[0-9]+$/)
-      ]],
-      actividad_economia: ['', [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(200),
-        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
-      ]],
-      num_empleados: ['', [
-        Validators.required,
-        Validators.min(1)
-      ]],
-      tipo_sociedad: ['', Validators.required],
-      otra_sociedad: ['', [
+      origen_bienes: ['', Validators.required],
+      otro_origen_bienes: ['', [
         Validators.required,
         Validators.minLength(3),
         Validators.maxLength(100),
         Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
       ]],
-      tipo_asociacion: ['', Validators.required],
-      otra_asociacion: ['', [
+      fuente_recursos: ['', Validators.required],
+      otra_fuente_recursos: ['', [
         Validators.required,
         Validators.minLength(3),
         Validators.maxLength(100),
         Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
       ]],
-      ent_estatal: ['', Validators.required],
-      otra_ent_estatal: ['', [
+      pais_origen_bienes: ['', [
         Validators.required,
         Validators.minLength(3),
         Validators.maxLength(100),
         Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
       ]],
-      ent_estatal_descentralizada: ['', Validators.required],
+      ciudad_origen_bienes: ['', [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(100),
+        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
+      ]],
+      recursos_inembargables: ['', Validators.required],
+      op_moneda_extj: ['', Validators.required],
     });
   }
 
@@ -73,58 +62,7 @@ export class DeclaracionBienesComponent implements OnInit {
       this.formChange.emit(valores);
     });
 
-    /* Tipo de sociedad */
-    this.form.get('tipo_sociedad')?.valueChanges.subscribe(valor => {
-      const control = this.form.get('otra_sociedad');
-
-      if (valor === 'Otra') {
-        control?.setValidators([
-          Validators.required,
-          Validators.minLength(3)
-        ]);
-      } else {
-        control?.clearValidators();
-        control?.setValue('');
-      }
-
-      control?.updateValueAndValidity();
-    });
-
-    /* Tipo de entidad/asociación */
-    this.form.get('tipo_asociacion')?.valueChanges.subscribe(valor => {
-      const control = this.form.get('otra_asociacion');
-
-      if (valor === 'Otra') {
-        control?.setValidators([
-          Validators.required,
-          Validators.minLength(3)
-        ]);
-      } else {
-        control?.clearValidators();
-        control?.setValue('');
-      }
-
-      control?.updateValueAndValidity();
-    });
-
-    /* Entidad estatal */
-    this.form.get('ent_estatal')?.valueChanges.subscribe(valor => {
-      const otraControl = this.form.get('otra_ent_estatal');
-
-      if (valor === 'Otra') {
-        otraControl?.setValidators([
-          Validators.required,
-          Validators.minLength(3)
-        ]);
-      } else {
-        otraControl?.clearValidators();
-        otraControl?.setValue('');
-      }
-
-      otraControl?.updateValueAndValidity();
-    });
-
-    /* Informa los cambios del formulario en la consola */
+    // Informa los cambios del formulario en la consola
     this.form.statusChanges.subscribe(() => {
       console.log('Formulario válido:', this.form.valid);
 
@@ -136,12 +74,48 @@ export class DeclaracionBienesComponent implements OnInit {
         }
       })
     });
+
+    // Origen de mis bienes
+    this.form.get('origen_bienes')?.valueChanges.subscribe(valor => {
+      const control = this.form.get('otro_origen_bienes');
+
+      if (valor === 'Otro') {
+        control?.setValidators([
+          Validators.required,
+          Validators.minLength(3)
+        ]);
+      } else {
+        control?.clearValidators();
+        control?.setValue('');
+      }
+
+      control?.updateValueAndValidity();
+    });
+
+    // Fuente de recursos
+    this.form.get('fuente_recursos')?.valueChanges.subscribe(valor => {
+      const control = this.form.get('otra_fuente_recursos');
+
+      if (valor === 'Otra') {
+        control?.setValidators([
+          Validators.required,
+          Validators.minLength(3)
+        ]);
+      } else {
+        control?.clearValidators();
+        control?.setValue('');
+      }
+
+      control?.updateValueAndValidity();
+    });
+
   }
 
+  // Botón de guardar formulario
   guardarSeccion() {
     console.log(this.form.value);
     if (this.form.valid) {
-      this.http.post('http://localhost:3000/api/tipoentidad', this.form.value)
+      this.http.post('http://localhost:3000/api/declaracionbienes', this.form.value)
         .subscribe({
           next: (res) => {
             console.log('Guardado en BD:', res);
@@ -168,6 +142,7 @@ export class DeclaracionBienesComponent implements OnInit {
     }
   }
 
+  // Botón de volver al formulario anterior
   volver() {
     this.prevTab.emit();
   }
@@ -201,11 +176,12 @@ export class DeclaracionBienesComponent implements OnInit {
       tipo_sociedad: 'Tipo de sociedad',
       tipo_asociacion: 'Tipo de entidad o asociación',
       ent_estatal: 'Entidad estatal',
-      ent_estatal_descentralizada: 'Entidad descentralizada'
+      op_moneda_extj: '¿Realiza operaciones en moneda extranjera?'
     };
     return nombres[key] || key;
   }
 
+  // Permite cualquier caracter excluyendo numericos
   soloLetras(event: KeyboardEvent) {
     const pattern = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]$/;
     const inputChar = event.key;
@@ -214,24 +190,6 @@ export class DeclaracionBienesComponent implements OnInit {
       return;
     }
     if (!pattern.test(inputChar)) {
-      event.preventDefault();
-    }
-  }
-
-  soloNumeros(event: KeyboardEvent) {
-    const pattern = /^[0-9]$/;
-    const inputChar = event.key;
-    if (inputChar === 'Backspace' || inputChar === 'Delete' ||
-      inputChar === 'Tab' || inputChar === 'ArrowLeft' || inputChar === 'ArrowRight') {
-      return;
-    }
-    if (!pattern.test(inputChar)) {
-      event.preventDefault();
-    }
-  }
-
-  bloquearNegativos(event: KeyboardEvent) {
-    if (['-', '+', 'e', 'E'].includes(event.key)) {
       event.preventDefault();
     }
   }

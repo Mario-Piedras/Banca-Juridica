@@ -1,0 +1,32 @@
+.form-spacing {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.fila-normal {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.options {
+    display: flex;
+    gap: 16px;
+}
+
+.option-nat {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.radio-options {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.radio-options label {
+    width: fit-content;
+}

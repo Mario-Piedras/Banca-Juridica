@@ -15,12 +15,6 @@
   box-shadow: 0 0 0 2px #3b82f6;
 }
 
-.form-spacing {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
 .form-btn {
   padding: 0.5rem 1.5rem;
   background-color: #2563eb;
