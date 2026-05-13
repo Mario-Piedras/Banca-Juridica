@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./consultar-solicitudes.component.css']
 })
 export class ConsultarSolicitudesComponent implements OnInit {
-  asesorId: string = '';
+  cedulaNombre: string = '';
   solicitudes: SolicitudConsulta[] = [];
   cargando: boolean = false;
   error: string = '';
@@ -21,42 +21,58 @@ export class ConsultarSolicitudesComponent implements OnInit {
   constructor(private consultarService: ConsultarService, private router: Router) {}
 
   ngOnInit(): void {
-    // Inicialización
+    // Por defecto, cargar todas las solicitudes (Pendiente, Aprobada y Rechazada)
+    this.cargarTodas();
   }
 
-  buscarSolicitudes(): void {
-    if (!this.asesorId.trim()) {
-      this.error = 'Por favor ingrese el ID del asesor';
-      return;
-    }
-
+  private cargarTodas(): void {
     this.cargando = true;
     this.error = '';
     this.busquedaRealizada = true;
 
-    // Simular tiempo de carga de 1 segundo
-    setTimeout(() => {
-      this.consultarService.buscarPorAsesor(this.asesorId.trim()).subscribe({
-        next: (response) => {
-          if (response.success) {
-            this.solicitudes = response.data;
-            if (this.solicitudes.length === 0) {
-              this.error = 'No se encontraron solicitudes para este asesor';
-            }
-          } else {
-            this.error = response.message || 'Error al buscar las solicitudes';
-            this.solicitudes = [];
-          }
-          this.cargando = false;
-        },
-        error: (err) => {
-          console.error('Error al buscar solicitudes:', err);
-          this.error = 'Error al conectar con el servidor. Verifique que el ID sea correcto.';
+    this.consultarService.obtenerTodasSolicitudes().subscribe({
+      next: (response) => {
+        if (response.success) {
+          const estadosPermitidos: Set<string> = new Set(['Pendiente', 'Aprobada', 'Rechazada']);
+          this.solicitudes = (response.data || []).filter((s) => estadosPermitidos.has(s.estado));
+        } else {
+          this.error = response.message || 'Error al cargar las solicitudes';
           this.solicitudes = [];
-          this.cargando = false;
         }
-      });
-    }, 500);
+        this.cargando = false;
+      },
+      error: (err) => {
+        console.error('Error al cargar solicitudes:', err);
+        this.error = 'Error al conectar con el servidor';
+        this.solicitudes = [];
+        this.cargando = false;
+      }
+    });
+  }
+
+
+  buscarSolicitudes(): void {
+    this.busquedaRealizada = true;
+    this.error = '';
+
+    const query = this.cedulaNombre.trim().toLowerCase();
+
+    if (!query) {
+      // Si no hay criterio, mostrar las de por defecto
+      this.cargarTodas();
+      return;
+    }
+
+    // Búsqueda en memoria sobre los datos cargados
+    this.solicitudes = (this.solicitudes || []).filter((s) => {
+      const cedula = (s.cedula || '').toLowerCase();
+      const nombre = (s.nombre_completo || '').toLowerCase();
+      return cedula.includes(query) || nombre.includes(query);
+    });
+
+    if (this.solicitudes.length === 0) {
+      this.error = 'No se encontraron solicitudes con ese criterio';
+    }
   }
 
   verDetalle(solicitud: SolicitudConsulta): void {
@@ -65,10 +81,10 @@ export class ConsultarSolicitudesComponent implements OnInit {
   }
 
   limpiarBusqueda(): void {
-    this.asesorId = '';
-    this.solicitudes = [];
+    this.cedulaNombre = '';
     this.error = '';
     this.busquedaRealizada = false;
+    this.cargarTodas();
   }
 
   obtenerClaseEstado(estado: string): string {
