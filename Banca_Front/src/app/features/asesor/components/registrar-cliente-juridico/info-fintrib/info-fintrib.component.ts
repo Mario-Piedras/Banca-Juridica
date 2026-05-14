@@ -86,7 +86,7 @@ export class InformacionFinancieraTributariaComponent implements OnInit {
       this.formChange.emit(valores);
     });
 
-    /* Informa los cambios del formulario en la consola */
+    // Informa los cambios del formulario en la consola
     this.form.statusChanges.subscribe(() => {
       console.log('Formulario válido:', this.form.valid);
 
@@ -98,6 +98,7 @@ export class InformacionFinancieraTributariaComponent implements OnInit {
         }
       })
     });
+
   }
 
   validarFechaNoFutura() {
@@ -111,6 +112,7 @@ export class InformacionFinancieraTributariaComponent implements OnInit {
     };
   }
 
+  // Botón de guardar formulario
   guardarSeccion() {
     if (!this.form.valid) {
       this.form.markAllAsTouched();
@@ -183,10 +185,12 @@ export class InformacionFinancieraTributariaComponent implements OnInit {
     });
   }
 
+  // Botón de volver al formulario anterior
   volver() {
     this.prevTab.emit();
   }
 
+  // Obtener lista de errores del formulario
   obtenerErroresFormulario(): string[] {
     const errores: string[] = [];
     Object.keys(this.form.controls).forEach(key => {
@@ -207,6 +211,7 @@ export class InformacionFinancieraTributariaComponent implements OnInit {
     return errores;
   }
 
+  // Obtener nombre legible del campo
   obtenerNombreCampo(key: string): string {
     const nombres: { [key: string]: string } = {
       ingresos_op: 'Ingresos operacionales mensuales',
@@ -223,6 +228,7 @@ export class InformacionFinancieraTributariaComponent implements OnInit {
     return nombres[key] || key;
   }
 
+  // Permite cualquier caracter excluyendo numericos
   soloLetras(event: KeyboardEvent) {
     const pattern = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]$/;
     const inputChar = event.key;
@@ -235,6 +241,7 @@ export class InformacionFinancieraTributariaComponent implements OnInit {
     }
   }
 
+  // Permite solamente caracteres númericos
   soloNumeros(event: KeyboardEvent) {
     const pattern = /^[0-9]$/;
     const inputChar = event.key;
@@ -247,13 +254,14 @@ export class InformacionFinancieraTributariaComponent implements OnInit {
     }
   }
 
+  // Bloquea números negativos y signos
   bloquearNegativos(event: KeyboardEvent) {
     if (['-', '+', 'e', 'E'].includes(event.key)) {
       event.preventDefault();
     }
   }
 
-  /* Muestra un formato de moneda colombiana visualmente */
+  // Muestra un formato de moneda colombiana visualmente
   formatearMoneda(event: Event, campo: string): void {
     const input = event.target as HTMLInputElement;
 
@@ -268,7 +276,7 @@ export class InformacionFinancieraTributariaComponent implements OnInit {
 
     const numero = Number(valor);
 
-    // Guardar el número real en el form
+    // Guardar el número real en el formulario
     this.form.get(campo)?.setValue(numero, {
       emitEvent: false
     });

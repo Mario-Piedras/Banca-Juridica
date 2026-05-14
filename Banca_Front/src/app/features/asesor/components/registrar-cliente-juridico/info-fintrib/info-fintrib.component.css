@@ -1,3 +1,4 @@
+/* Espaciado del formulario */
 .form-spacing {
     display: flex;
     flex-direction: column;
@@ -34,17 +35,6 @@
 .segun-fil-trib {
     display: flex;
     justify-content: space-between;
-}
-
-.options {
-    display: flex;
-    gap: 16px;
-}
-
-.option-nat {
-    display: flex;
-    align-items: center;
-    gap: 8px;
 }
 
 .trib-otro {

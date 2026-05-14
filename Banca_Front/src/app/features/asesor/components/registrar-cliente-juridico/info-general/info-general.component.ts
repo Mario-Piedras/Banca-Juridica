@@ -112,6 +112,7 @@ export class InformacionGeneralComponent implements OnInit {
       this.formChange.emit(valores);
     });
 
+    // Informa los cambios del formulario en la consola
     this.form.statusChanges.subscribe(() => {
       console.log('Formulario válido:', this.form.valid);
 
@@ -136,6 +137,7 @@ export class InformacionGeneralComponent implements OnInit {
     };
   }
 
+  // Botón de guardar formulario
   guardarSeccion() {
     console.log(this.form.value);
     if (this.form.valid) {
@@ -166,7 +168,7 @@ export class InformacionGeneralComponent implements OnInit {
     }
   }
 
-  // NUEVO: Obtener lista de errores del formulario
+  // Obtener lista de errores del formulario
   obtenerErroresFormulario(): string[] {
     const errores: string[] = [];
     Object.keys(this.form.controls).forEach(key => {
@@ -187,7 +189,7 @@ export class InformacionGeneralComponent implements OnInit {
     return errores;
   }
 
-  // NUEVO: Obtener nombre legible del campo
+  // Obtener nombre legible del campo
   obtenerNombreCampo(key: string): string {
     const nombres: { [key: string]: string } = {
       'nit': 'Número de NIT',
@@ -208,10 +210,10 @@ export class InformacionGeneralComponent implements OnInit {
     return nombres[key] || key;
   }
 
+  // Permite cualquier caracter excluyendo números
   soloLetras(event: KeyboardEvent) {
     const pattern = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]$/;
     const inputChar = event.key;
-    // MEJORA: Permitir teclas de control
     if (inputChar === 'Backspace' || inputChar === 'Delete' ||
       inputChar === 'Tab' || inputChar === 'ArrowLeft' || inputChar === 'ArrowRight') {
       return;
@@ -221,10 +223,10 @@ export class InformacionGeneralComponent implements OnInit {
     }
   }
 
+  // Permite solamente caracteres númericos
   soloNumeros(event: KeyboardEvent) {
     const pattern = /^[0-9]$/;
     const inputChar = event.key;
-    // MEJORA: Permitir teclas de control
     if (inputChar === 'Backspace' || inputChar === 'Delete' ||
       inputChar === 'Tab' || inputChar === 'ArrowLeft' || inputChar === 'ArrowRight') {
       return;
@@ -233,4 +235,5 @@ export class InformacionGeneralComponent implements OnInit {
       event.preventDefault();
     }
   }
+
 }

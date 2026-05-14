@@ -1,4 +1,4 @@
-<div class="p-6 max-w-7xl mx-auto bg-white shadow-sm rounded-lg border border-gray-200">
+<div class="form-box">
   <form [formGroup]="form" class="space-y-4">
 
     <div class="form-spacing">
@@ -8,18 +8,18 @@
         <fieldset class="naturaleza2">
           <label class="text-sm font-medium text-gray-700">Naturaleza de la entidad</label>
 
-          <div class="options-natura">
-            <div class="option-nat">
+          <div class="radio-spacing">
+            <div class="radio-option">
               <input type="radio" name="naturaleza" id="priv" value="Privada" formControlName="naturaleza">
               <label for="priv" class="text-sm font-medium text-gray-700">Privada</label>
             </div>
 
-            <div class="option-nat">
+            <div class="radio-option">
               <input type="radio" name="naturaleza" id="pub" value="Pública" formControlName="naturaleza">
               <label for="pub" class="text-sm font-medium text-gray-700">Pública</label>
             </div>
 
-            <div class="option-nat">
+            <div class="radio-option">
               <input type="radio" name="naturaleza" id="mix" value="Mixta" formControlName="naturaleza">
               <label for="mix" class="text-sm font-medium text-gray-700">Mixta</label>
             </div>
@@ -167,20 +167,20 @@
           <legend class="text-sm font-medium text-gray-700">
             Entidades estatales
           </legend>
-          <div class="options">
-            <div class="option-nat">
+          <div class="radio-spacing">
+            <div class="radio-option">
               <input type="radio" id="nacion" value="Nación" formControlName="ent_estatal">
               <label for="nacion">Nación</label>
             </div>
-            <div class="option-nat">
+            <div class="radio-option">
               <input type="radio" id="departamento" value="Departamento" formControlName="ent_estatal">
               <label for="departamento">Departamento</label>
             </div>
-            <div class="option-nat">
+            <div class="radio-option">
               <input type="radio" id="municipio1" value="Municipio" formControlName="ent_estatal">
               <label for="municipio1">Municipio</label>
             </div>
-            <div class="option-nat">
+            <div class="radio-option">
               <input type="radio" id="otra" value="Otra" formControlName="ent_estatal">
               <label for="otra">Otra</label>
             </div>
@@ -202,17 +202,17 @@
           <legend class="text-sm font-medium text-gray-700">
             Entidades estatales descentralizadas
           </legend>
-          <div class="options">
-            <div class="option-nat">
+          <div class="radio-spacing">
+            <div class="radio-option">
               <input type="radio" id="nacional" value="Nacional" formControlName="ent_estatal_descentralizada">
               <label for="nacional">Nacional</label>
             </div>
-            <div class="option-nat">
+            <div class="radio-option">
               <input type="radio" id="departamental" value="Departamental"
                 formControlName="ent_estatal_descentralizada">
               <label for="departamental">Departamental</label>
             </div>
-            <div class="option-nat">
+            <div class="radio-option">
               <input type="radio" id="municipio2" value="Municipio" formControlName="ent_estatal_descentralizada">
               <label for="municipio2">Municipio</label>
             </div>
@@ -223,7 +223,7 @@
     </div>
 
     <!-- Botones -->
-    <div class="flex justify-between mt-6">
+    <div class="form-buttons-display">
       <button type="button" (click)="volver()" class="form-btn">Volver a la página anterior</button>
       <button type="button" (click)="guardarSeccion()" [disabled]="form.invalid" class="form-btn">
         Guardar y continuar

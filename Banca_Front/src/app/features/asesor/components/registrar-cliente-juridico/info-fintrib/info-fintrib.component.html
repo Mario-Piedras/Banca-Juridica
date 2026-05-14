@@ -1,4 +1,4 @@
-<div class="p-6 max-w-7xl mx-auto bg-white shadow-sm rounded-lg border border-gray-200">
+<div class="form-box">
   <form [formGroup]="form" class="space-y-4">
     <div class="form-spacing">
 
@@ -226,15 +226,15 @@
             <legend class="text-sm font-medium text-gray-700">
               Responsable de IVA
             </legend>
-            <div class="options">
-              <div class="option-nat">
+            <div class="radio-spacing">
+              <div class="radio-option">
                 <input type="radio" id="responsable_iva_si" name="responsable_iva" value="Sí"
                   formControlName="responsable_iva" />
                 <label for="responsable_iva_si">
                   Sí
                 </label>
               </div>
-              <div class="option-nat">
+              <div class="radio-option">
                 <input type="radio" id="responsable_iva_no" name="responsable_iva" value="No"
                   formControlName="responsable_iva" />
                 <label for="responsable_iva_no">
@@ -249,15 +249,15 @@
             <legend class="text-sm font-medium text-gray-700">
               Autorretenedor otros ingresos
             </legend>
-            <div class="options">
-              <div class="option-nat">
+            <div class="radio-spacing">
+              <div class="radio-option">
                 <input type="radio" id="autorretenedor_si" name="autorretenedor" value="Sí"
                   formControlName="autorretenedor" />
                 <label for="autorretenedor_si">
                   Sí
                 </label>
               </div>
-              <div class="option-nat">
+              <div class="radio-option">
                 <input type="radio" id="autorretenedor_no" name="autorretenedor" value="No"
                   formControlName="autorretenedor" />
                 <label for="autorretenedor_no">
@@ -272,15 +272,15 @@
             <legend class="text-sm font-medium text-gray-700">
               Intermediario del mercado cambiario
             </legend>
-            <div class="options">
-              <div class="option-nat">
+            <div class="radio-spacing">
+              <div class="radio-option">
                 <input type="radio" id="intermediario_mercado_si" name="intermediario_mercado" value="Sí"
                   formControlName="intermediario_mercado" />
                 <label for="intermediario_mercado_si">
                   Sí
                 </label>
               </div>
-              <div class="option-nat">
+              <div class="radio-option">
                 <input type="radio" id="intermediario_mercado_no" name="intermediario_mercado" value="No"
                   formControlName="intermediario_mercado" />
                 <label for="intermediario_mercado_no">
@@ -295,15 +295,15 @@
             <legend class="text-sm font-medium text-gray-700">
               ¿Es vigilado por la Superintendencia Financiera?
             </legend>
-            <div class="options">
-              <div class="option-nat">
+            <div class="radio-spacing">
+              <div class="radio-option">
                 <input type="radio" id="vigilado_superintendencia_si" name="vigilado_superintendencia" value="Sí"
                   formControlName="vigilado_superintendencia" />
                 <label for="vigilado_superintendencia_si">
                   Sí
                 </label>
               </div>
-              <div class="option-nat">
+              <div class="radio-option">
                 <input type="radio" id="vigilado_superintendencia_no" name="vigilado_superintendencia" value="No"
                   formControlName="vigilado_superintendencia" />
                 <label for="vigilado_superintendencia_no">
@@ -323,15 +323,15 @@
               ¿Está obligado a tributar como entidad domiciliada en los Estados Unidos u otros países diferentes a
               Colombia?
             </label>
-            <div class="options">
-              <div class="option-nat">
+            <div class="radio-spacing">
+              <div class="radio-option">
                 <input type="radio" id="tributa_exterior_si" name="tributa_exterior" value="Sí"
                   formControlName="tributa_exterior" />
                 <label for="tributa_exterior_si">
                   Sí
                 </label>
               </div>
-              <div class="option-nat">
+              <div class="radio-option">
                 <input type="radio" id="tributa_exterior_no" name="tributa_exterior" value="No"
                   formControlName="tributa_exterior" />
                 <label for="tributa_exterior_no">
@@ -376,7 +376,7 @@
     </div>
 
     <!-- Botones -->
-    <div class="flex justify-between mt-6">
+    <div class="form-buttons-display">
       <button type="button" (click)="volver()" class="form-btn">Volver a la página anterior</button>
       <button type="button" (click)="guardarSeccion()" [disabled]="form.invalid" class="form-btn">
         Guardar y continuar

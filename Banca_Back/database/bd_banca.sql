@@ -678,9 +678,9 @@ CREATE TABLE tipo_entidad (
 
 CREATE TABLE declaracion_bienes (
 	id_declaracion INT PRIMARY KEY AUTO_INCREMENT,
-    origen_bienes ENUM('Compraventa', 'Aporte de socios', 'Utilidades', 'Otros') NOT NULL,
+    origen_bienes ENUM('Compraventa', 'Aporte de socios', 'Utilidades', 'Otro') NOT NULL,
     otro_origen_bienes VARCHAR(100),
-    fuente_recursos ENUM('Capitalización por parte de socios', 'Utilidades del negocio', 'Desarrollo del objeto social', 'Otros') NOT NULL,
+    fuente_recursos ENUM('Capitalización por parte de socios', 'Utilidades del negocio', 'Desarrollo del objeto social', 'Otra') NOT NULL,
     otra_fuente_recursos VARCHAR(100),
     pais_origen_bienes VARCHAR(100) NOT NULL,
     ciudad_origen_bienes VARCHAR(100) NOT NULL,

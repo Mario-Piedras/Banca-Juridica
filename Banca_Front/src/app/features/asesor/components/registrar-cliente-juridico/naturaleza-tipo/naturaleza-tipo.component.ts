@@ -73,7 +73,20 @@ export class NaturalezaEntidadComponent implements OnInit {
       this.formChange.emit(valores);
     });
 
-    /* Tipo de sociedad */
+    // Informa los cambios del formulario en la consola
+    this.form.statusChanges.subscribe(() => {
+      console.log('Formulario válido:', this.form.valid);
+
+      Object.keys(this.form.controls).forEach(key => {
+        const control = this.form.get(key);
+
+        if (control?.invalid) {
+          console.log(key, control.errors);
+        }
+      })
+    });
+
+    // Opcion de otro tipo de sociedad
     this.form.get('tipo_sociedad')?.valueChanges.subscribe(valor => {
       const control = this.form.get('otra_sociedad');
 
@@ -90,7 +103,7 @@ export class NaturalezaEntidadComponent implements OnInit {
       control?.updateValueAndValidity();
     });
 
-    /* Tipo de entidad/asociación */
+    // Opcion de otro tipo de entidad/asociación
     this.form.get('tipo_asociacion')?.valueChanges.subscribe(valor => {
       const control = this.form.get('otra_asociacion');
 
@@ -107,7 +120,7 @@ export class NaturalezaEntidadComponent implements OnInit {
       control?.updateValueAndValidity();
     });
 
-    /* Entidad estatal */
+    // Opcion de otra entidad estatal
     this.form.get('ent_estatal')?.valueChanges.subscribe(valor => {
       const otraControl = this.form.get('otra_ent_estatal');
 
@@ -124,20 +137,9 @@ export class NaturalezaEntidadComponent implements OnInit {
       otraControl?.updateValueAndValidity();
     });
 
-    /* Informa los cambios del formulario en la consola */
-    this.form.statusChanges.subscribe(() => {
-      console.log('Formulario válido:', this.form.valid);
-
-      Object.keys(this.form.controls).forEach(key => {
-        const control = this.form.get(key);
-
-        if (control?.invalid) {
-          console.log(key, control.errors);
-        }
-      })
-    });
   }
 
+  // Botón de guardar formulario
   guardarSeccion() {
     console.log(this.form.value);
     if (this.form.valid) {
@@ -168,10 +170,12 @@ export class NaturalezaEntidadComponent implements OnInit {
     }
   }
 
+  // Botón de volver al formulario anterior
   volver() {
     this.prevTab.emit();
   }
 
+  // Obtener lista de errores del formulario
   obtenerErroresFormulario(): string[] {
     const errores: string[] = [];
     Object.keys(this.form.controls).forEach(key => {
@@ -192,6 +196,7 @@ export class NaturalezaEntidadComponent implements OnInit {
     return errores;
   }
 
+  // Obtener nombre legible del campo
   obtenerNombreCampo(key: string): string {
     const nombres: { [key: string]: string } = {
       naturaleza: 'Naturaleza de la entidad',
@@ -206,6 +211,7 @@ export class NaturalezaEntidadComponent implements OnInit {
     return nombres[key] || key;
   }
 
+  // Permite cualquier caracter excluyendo numericos
   soloLetras(event: KeyboardEvent) {
     const pattern = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]$/;
     const inputChar = event.key;
@@ -218,6 +224,7 @@ export class NaturalezaEntidadComponent implements OnInit {
     }
   }
 
+  // Permite solamente caracteres númericos
   soloNumeros(event: KeyboardEvent) {
     const pattern = /^[0-9]$/;
     const inputChar = event.key;
@@ -230,6 +237,7 @@ export class NaturalezaEntidadComponent implements OnInit {
     }
   }
 
+  // Bloquea números negativos y signos
   bloquearNegativos(event: KeyboardEvent) {
     if (['-', '+', 'e', 'E'].includes(event.key)) {
       event.preventDefault();

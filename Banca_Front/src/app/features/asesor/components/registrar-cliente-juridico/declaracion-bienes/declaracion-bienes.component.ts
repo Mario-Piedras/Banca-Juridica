@@ -75,7 +75,7 @@ export class DeclaracionBienesComponent implements OnInit {
       })
     });
 
-    // Origen de mis bienes
+    // Opcion de otro origen de mis bienes
     this.form.get('origen_bienes')?.valueChanges.subscribe(valor => {
       const control = this.form.get('otro_origen_bienes');
 
@@ -92,7 +92,7 @@ export class DeclaracionBienesComponent implements OnInit {
       control?.updateValueAndValidity();
     });
 
-    // Fuente de recursos
+    // Opcion de otra fuente de recursos
     this.form.get('fuente_recursos')?.valueChanges.subscribe(valor => {
       const control = this.form.get('otra_fuente_recursos');
 
@@ -147,6 +147,7 @@ export class DeclaracionBienesComponent implements OnInit {
     this.prevTab.emit();
   }
 
+  // Obtener lista de errores del formulario
   obtenerErroresFormulario(): string[] {
     const errores: string[] = [];
     Object.keys(this.form.controls).forEach(key => {
@@ -167,15 +168,16 @@ export class DeclaracionBienesComponent implements OnInit {
     return errores;
   }
 
+  // Obtener nombre legible del campo
   obtenerNombreCampo(key: string): string {
     const nombres: { [key: string]: string } = {
-      naturaleza: 'Naturaleza de la entidad',
-      codigo_ciiu: 'Código CIIU',
-      actividad_economia: 'Detalle de actividad económica',
-      num_empleados: 'Número de empleados',
-      tipo_sociedad: 'Tipo de sociedad',
-      tipo_asociacion: 'Tipo de entidad o asociación',
-      ent_estatal: 'Entidad estatal',
+      origen_bienes: 'Origen de bienes',
+      otro_origen_bienes: 'Otro origen de bienes',
+      fuente_recursos: 'Fuente de recursos',
+      otra_fuente_recursos: 'Otra fuente de recursos',
+      pais_origen_bienes: 'País de origen',
+      ciudad_origen_bienes: 'Ciudad de origen de bienes y/o fondos',
+      recursos_inembargables: 'Manejan recursos públicos de naturaleza inembargable',
       op_moneda_extj: '¿Realiza operaciones en moneda extranjera?'
     };
     return nombres[key] || key;

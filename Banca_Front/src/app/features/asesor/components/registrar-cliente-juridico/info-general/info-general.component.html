@@ -1,4 +1,4 @@
-<div class="p-6 max-w-7xl mx-auto bg-white shadow-sm rounded-lg border border-gray-200">
+<div class="form-box">
   <form [formGroup]="form" class="space-y-4">
     <div class="form-spacing">
 
@@ -209,7 +209,7 @@
     </div>
 
     <!-- Botón Guardar -->
-    <div class="flex justify-end mt-6">
+    <div class="form-button-display">
       <button type="button" (click)="guardarSeccion()" [disabled]="form.invalid" class="form-btn">
         Guardar y continuar
       </button>

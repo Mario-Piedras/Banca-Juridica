@@ -1,3 +1,4 @@
+/* Espaciado del formulario */
 .form-spacing {
     display: flex;
     flex-direction: column;
@@ -10,23 +11,12 @@
     gap: 16px;
 }
 
-.options {
-    display: flex;
-    gap: 16px;
-}
-
-.option-nat {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.radio-options {
+.fieldset-display {
     display: flex;
     align-items: center;
     gap: 16px;
 }
 
-.radio-options label {
+.fieldset-display label {
     width: fit-content;
 }

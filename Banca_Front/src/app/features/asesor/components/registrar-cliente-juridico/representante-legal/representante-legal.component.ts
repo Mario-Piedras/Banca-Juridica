@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
@@ -21,7 +21,22 @@ export class RepresentanteLegalComponent implements OnInit {
 
   form: FormGroup;
   constructor(private fb: FormBuilder, private http: HttpClient) {
+
     this.form = this.fb.group({
+      representantes: this.fb.array([]),
+      contacto_adicional: ['No', Validators.required]
+    });
+
+  }
+
+  // Getter para usar en HTML
+  get representantes(): FormArray {
+    return this.form.get('representantes') as FormArray;
+  }
+
+  // Crear formulario individual
+  crearRepresentante(): FormGroup {
+    return this.fb.group({
       tipo_documento: ['', Validators.required],
       num_documento: ['', [
         Validators.required,
@@ -48,9 +63,8 @@ export class RepresentanteLegalComponent implements OnInit {
       ]],
       segundo_apellido: ['', [
         Validators.required,
-        Validators.minLength(2),
         Validators.maxLength(50),
-        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
+        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]*$/)
       ]],
       cargo: ['', [
         Validators.required,
@@ -109,15 +123,39 @@ export class RepresentanteLegalComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-    if (this.datosIniciales) {
-      this.form.patchValue(this.datosIniciales);
-    }
+  ngOnInit(): void {
+
+    // Crear representante principal
+    this.representantes.push(
+      this.crearRepresentante()
+    );
+
+    // Escuchar si desea contacto adicional
+    this.form.get('contacto_adicional')?.valueChanges.subscribe(valor => {
+
+      if (
+        valor === 'Sí' &&
+        this.representantes.length === 1
+      ) {
+        this.representantes.push(
+          this.crearRepresentante()
+        );
+      }
+
+      if (
+        valor === 'No' &&
+        this.representantes.length > 1
+      ) {
+        this.representantes.removeAt(1);
+      }
+
+    });
 
     this.form.valueChanges.subscribe(valores => {
       this.formChange.emit(valores);
     });
 
+    // Informa los cambios del formulario en la consola
     this.form.statusChanges.subscribe(() => {
       console.log('Formulario válido:', this.form.valid);
 
@@ -129,42 +167,43 @@ export class RepresentanteLegalComponent implements OnInit {
         }
       })
     });
+
   }
 
+  // Botón de guardar formulario
   guardarSeccion() {
     console.log(this.form.value);
-    if (this.form.valid) {
-      this.http.post('http://localhost:3000/api/personasaso', this.form.value)
-        .subscribe({
-          next: (res) => {
-            console.log('Guardado en BD:', res);
-            alert('Sección guardada correctamente');
-
-            this.formChange.emit(this.form.value);
-            this.nextTab.emit();
-          },
-          error: (err) => {
-            console.error(err);
-            alert('Error al guardar en la base de datos');
-          }
-        });
-
-    } else {
+    if (this.form.invalid) {
       this.form.markAllAsTouched();
-      const errores = this.obtenerErroresFormulario();
-
-      if (errores.length > 0) {
-        alert('Por favor corrige los siguientes errores:\n\n' + errores.join('\n'));
-      } else {
-        alert('Por favor completa todos los campos obligatorios.');
-      }
+      alert('Completa todos los campos obligatorios');
+      return;
     }
+
+    const datos = this.representantes.value;
+
+    this.http.post('http://localhost:3000/api/personasaso', datos)
+      .subscribe({
+        next: (res) => {
+          console.log('Guardado en BD:', res);
+          alert('Sección guardada correctamente');
+
+          this.formChange.emit(this.form.value);
+          this.nextTab.emit();
+        },
+        error: (err) => {
+          console.error(err);
+          alert('Error al guardar en la base de datos');
+        }
+      });
+
   }
 
+  // Botón de volver al formulario anterior
   volver() {
     this.prevTab.emit();
   }
 
+  // Obtener lista de errores del formulario
   obtenerErroresFormulario(): string[] {
     const errores: string[] = [];
     Object.keys(this.form.controls).forEach(key => {
@@ -185,6 +224,7 @@ export class RepresentanteLegalComponent implements OnInit {
     return errores;
   }
 
+  // Obtener nombre legible del campo
   obtenerNombreCampo(key: string): string {
     const nombres: { [key: string]: string } = {
       'tipo_documento': 'Tipo de documento',
@@ -207,6 +247,7 @@ export class RepresentanteLegalComponent implements OnInit {
     return nombres[key] || key;
   }
 
+  // Permite cualquier caracter excluyendo numericos
   soloLetras(event: KeyboardEvent) {
     const pattern = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]$/;
     const inputChar = event.key;
@@ -219,6 +260,7 @@ export class RepresentanteLegalComponent implements OnInit {
     }
   }
 
+  // Permite solamente caracteres númericos
   soloNumeros(event: KeyboardEvent) {
     const pattern = /^[0-9]$/;
     const inputChar = event.key;
@@ -230,4 +272,5 @@ export class RepresentanteLegalComponent implements OnInit {
       event.preventDefault();
     }
   }
+
 }

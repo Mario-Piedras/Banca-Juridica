@@ -1,8 +1,8 @@
-/* Naturaleza y tipo de entidad */
+/* Espaciado del formulario */
 .form-spacing {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .fila-normal {
@@ -36,22 +36,6 @@
     align-items: center;
     gap: 24px;
     width: -webkit-fill-available;
-}
-
-.options-natura {
-    display: flex;
-    gap: 32px;
-}
-
-.options {
-    display: flex;
-    gap: 16px;
-}
-
-.option-nat {
-    display: flex;
-    align-items: center;
-    gap: 8px;
 }
 
 .ent-estatales {

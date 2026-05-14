@@ -1,9 +1,8 @@
-/* Formulario de información general */
-
+/* Espaciado del formulario */
 .form-spacing {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .form-column {
@@ -18,4 +17,11 @@
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(3, 1fr);
     gap: 1rem;
+}
+
+/* Display del botón */
+.form-button-display {
+    display: flex;
+    justify-content: end;
+    margin-top: calc(var(--spacing) * 6)/* 1.5rem = 24px */;
 }
