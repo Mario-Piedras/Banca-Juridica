@@ -223,7 +223,7 @@ export class InformacionGeneralComponent implements OnInit {
     }
   }
 
-  // Permite solamente caracteres númericos
+  // Permite solamente caracteres numéricos
   soloNumeros(event: KeyboardEvent) {
     const pattern = /^[0-9]$/;
     const inputChar = event.key;

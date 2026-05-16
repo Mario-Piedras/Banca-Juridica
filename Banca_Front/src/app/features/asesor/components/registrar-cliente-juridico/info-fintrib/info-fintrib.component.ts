@@ -1,9 +1,13 @@
 import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { switchMap } from 'rxjs';
+import { switchMap, forkJoin, of } from 'rxjs';
 
+interface PaisTributar {
+  pais: string;
+  tin: string;
+}
 
 @Component({
   selector: 'app-info-fintrib',
@@ -22,13 +26,17 @@ export class InformacionFinancieraTributariaComponent implements OnInit {
   @Output() nextTab = new EventEmitter();
 
   form: FormGroup;
+  listaPaises: PaisTributar[] = [];
+
+  private STORAGE_KEY = 'paises_tributarios';
+
   constructor(private fb: FormBuilder, private http: HttpClient) {
     this.form = this.fb.group({
+      // Información financiera
       ingresos_op: ['', [
         Validators.required,
         Validators.min(1)
       ]],
-
       ingresos_no_op: ['', [
         Validators.required,
         Validators.min(1)
@@ -67,6 +75,7 @@ export class InformacionFinancieraTributariaComponent implements OnInit {
         Validators.required,
         Validators.min(1)
       ]],
+      // Información tributaria
       tipo_contribuyente: ['', Validators.required],
       clase_contribuyente: ['', Validators.required],
       responsable_iva: ['', Validators.required],
@@ -74,46 +83,45 @@ export class InformacionFinancieraTributariaComponent implements OnInit {
       intermediario_mercado: ['', Validators.required],
       vigilado_superintendencia: ['', Validators.required],
       tributa_exterior: ['', Validators.required],
-      paises_exterior: this.fb.array([], Validators.minLength(1))
+      // Países tributarios
+      pais: ['', [
+        Validators.minLength(3),
+        Validators.maxLength(50),
+        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
+      ]],
+      tin: ['', [
+        Validators.minLength(3),
+        Validators.maxLength(20),
+        Validators.pattern(/^[0-9]+$/)
+      ]]
     });
   }
 
-
-  ngOnInit() {
+  ngOnInit(): void {
+    // Precargar datos si existen
     if (this.datosIniciales) {
-      // Evitar romper el FormArray cuando viene null / undefined
-      if (this.datosIniciales.paises_exterior == null) {
-        this.datosIniciales.paises_exterior = [];
-      }
-
       this.form.patchValue(this.datosIniciales);
-
-      // Si vienen paises_exterior, sincronizar el FormArray (patchValue no crea FormGroups)
-      const payloadPaises = this.datosIniciales.paises_exterior;
-      const arr = this.form.get('paises_exterior') as FormArray;
-
-      arr.clear();
-      if (Array.isArray(payloadPaises)) {
-        payloadPaises.forEach((p: any) => arr.push(this.crearGrupoPaisTin(p)));
-      }
     }
 
-    this.form.get('tributa_exterior')?.valueChanges.subscribe(valor => {
-      const paisesArray = this.paisesExterior;
+    // Cargar localStorage
+    const dataStorage = localStorage.getItem(
+      this.STORAGE_KEY
+    );
 
-      if (valor === 'Sí') {
-        paisesArray.setValidators(Validators.minLength(1));
-      } else {
-        paisesArray.clear();
-        paisesArray.clearValidators();
+    if (dataStorage) {
+      this.listaPaises = JSON.parse(
+        dataStorage
+      );
+    }
+
+    // Emitir cambios del formulario
+    this.form.valueChanges.subscribe(
+      valores => {
+        this.formChange.emit(
+          valores
+        );
       }
-
-      paisesArray.updateValueAndValidity();
-    });
-
-    this.form.valueChanges.subscribe(valores => {
-      this.formChange.emit(valores);
-    });
+    );
 
     // Informa los cambios del formulario en la consola
     this.form.statusChanges.subscribe(() => {
@@ -130,56 +138,91 @@ export class InformacionFinancieraTributariaComponent implements OnInit {
 
   }
 
-  validarFechaNoFutura() {
-    return (control: any) => {
-      if (!control.value) return null;
-      const fecha = new Date(control.value);
-      const hoy = new Date();
-      hoy.setHours(0, 0, 0, 0); // MEJORA: Ignorar hora
-      fecha.setHours(0, 0, 0, 0);
-      return fecha <= hoy ? null : { fechaFutura: true };
+  agregarPais(): void {
+
+    const pais =
+      this.form.get('pais')
+        ?.value
+        ?.trim();
+
+    const tin =
+      this.form.get('tin')
+        ?.value
+        ?.trim();
+
+    if (!pais || !tin) {
+      alert(
+        'Debe ingresar país y TIN'
+      );
+      return;
+    }
+
+    const nuevoPais: PaisTributar = {
+      pais,
+      tin
     };
-  }
 
-  private crearGrupoPaisTin(p?: { pais?: string; tin?: string }) {
-    return this.fb.group({
-      pais: [p?.pais ?? '', [Validators.required, Validators.minLength(1)]],
-      tin: [p?.tin ?? '', [Validators.required, Validators.minLength(1)]],
+    this.listaPaises.push(
+      nuevoPais
+    );
+
+    localStorage.setItem(
+      this.STORAGE_KEY,
+      JSON.stringify(
+        this.listaPaises
+      )
+    );
+
+    // Limpiar inputs
+    this.form.patchValue({
+      pais: '',
+      tin: ''
     });
+
   }
 
-  addPaisExterior() {
-    this.paisesExterior.push(this.crearGrupoPaisTin());
-  }
+  eliminarPais(
+    index: number
+  ): void {
 
-  deletePaisExterior(index: number) {
-    this.paisesExterior.removeAt(index);
-  }
+    this.listaPaises.splice(
+      index,
+      1
+    );
 
-  get paisesExteriorControls(): any[] {
-    const arr = this.form.get('paises_exterior') as FormArray | null;
-    return (arr?.controls as any[]) ?? [];
-  }
+    localStorage.setItem(
+      this.STORAGE_KEY,
+      JSON.stringify(
+        this.listaPaises
+      )
+    );
 
-  private get paisesExterior(): FormArray {
-    return this.form.get('paises_exterior') as FormArray;
-  }
-
-
-  private tributaExteriorEsSi(): boolean {
-    const val = this.form.get('tributa_exterior')?.value;
-    return val === 'Sí' || val === 'Si';
   }
 
   // Botón de guardar formulario
-  guardarSeccion() {
-
+  guardarSeccion(): void {
     if (!this.form.valid) {
       this.form.markAllAsTouched();
       return;
     }
 
-    const formData = this.form.value;
+    // Validar mínimo 1 país
+    if (
+      this.form.value
+        .tributa_exterior === 'Sí'
+      &&
+      this.listaPaises.length === 0
+    ) {
+
+      alert(
+        'Debe agregar al menos un país tributario'
+      );
+
+      return;
+    }
+
+    const formData =
+      this.form.value;
 
     const infoFinanciera = {
       ingresos_op: formData.ingresos_op,
@@ -204,11 +247,13 @@ export class InformacionFinancieraTributariaComponent implements OnInit {
       tributa_exterior: formData.tributa_exterior
     };
 
+    // Flujo de guardado
     this.http.post<any>(
       'http://localhost:3000/api/infofinanciera',
       infoFinanciera
     ).pipe(
 
+      // Guardar info tributaria
       switchMap(() => {
         return this.http.post<any>(
           'http://localhost:3000/api/infotributaria',
@@ -216,41 +261,101 @@ export class InformacionFinancieraTributariaComponent implements OnInit {
         );
       }),
 
-      switchMap((infoTrib: any) => {
-        const idInfoTributaria = infoTrib?.id ?? infoTrib?.id_info_tributaria ?? infoTrib?.idInfoTributaria;
-
-        if (formData.tributa_exterior === 'Sí' || formData.tributa_exterior === 'Si') {
-          const paises: Array<{ pais: string; tin: string }> = (formData.paises_exterior ?? [])
-            .map((x: any) => ({ pais: x.pais, tin: x.tin }))
-            .filter((x: any) => x.pais && x.tin);
-
-          return this.http.post<any>(
-            'http://localhost:3000/api/paistributar/bulk',
-            { id_info_tributaria: idInfoTributaria, paises }
-          );
+      // Guardar países con FK
+      switchMap((tributariaResponse) => {
+        console.log(
+          'Respuesta tributaria:',
+          tributariaResponse
+        );
+        if (
+          formData
+            .tributa_exterior !== 'Sí'
+        ) {
+          return of(null);
         }
-        return [null];
-      })
+
+        const idInfoTributaria =
+          tributariaResponse
+            .id_info_tributaria;
+
+        const peticiones =
+          this.listaPaises.map(
+            item => {
+
+              return this.http.post(
+                'http://localhost:3000/api/paistributar',
+                {
+                  pais:
+                    item.pais,
+
+                  tin:
+                    item.tin,
+
+                  id_info_tributaria:
+                    idInfoTributaria
+                }
+              );
+
+            }
+          );
+
+        return forkJoin(
+          peticiones
+        );
+
+      }
+
+      )
 
     ).subscribe({
 
-
-
       next: () => {
-        alert('Datos guardados correctamente');
+
+        // Limpiar storage
+        localStorage.removeItem(
+          this.STORAGE_KEY
+        );
+
+        alert(
+          'Datos guardados correctamente'
+        );
+
         this.nextTab.emit();
+
       },
 
-      error: (err) => {
-        console.error(err);
-        alert('Error al guardar');
+      error: (
+        err
+      ) => {
+
+        console.error(
+          err
+        );
+
+        alert(
+          'Error al guardar'
+        );
+
       }
+
     });
+
   }
 
   // Botón de volver al formulario anterior
   volver() {
     this.prevTab.emit();
+  }
+
+  validarFechaNoFutura() {
+    return (control: any) => {
+      if (!control.value) return null;
+      const fecha = new Date(control.value);
+      const hoy = new Date();
+      hoy.setHours(0, 0, 0, 0); // MEJORA: Ignorar hora
+      fecha.setHours(0, 0, 0, 0);
+      return fecha <= hoy ? null : { fechaFutura: true };
+    };
   }
 
   // Obtener lista de errores del formulario
@@ -291,7 +396,7 @@ export class InformacionFinancieraTributariaComponent implements OnInit {
     return nombres[key] || key;
   }
 
-  // Permite cualquier caracter excluyendo numericos
+  // Permite cualquier caracter excluyendo numéricos
   soloLetras(event: KeyboardEvent) {
     const pattern = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]$/;
     const inputChar = event.key;
@@ -304,7 +409,7 @@ export class InformacionFinancieraTributariaComponent implements OnInit {
     }
   }
 
-  // Permite solamente caracteres númericos
+  // Permite solamente caracteres numéricos
   soloNumeros(event: KeyboardEvent) {
     const pattern = /^[0-9]$/;
     const inputChar = event.key;

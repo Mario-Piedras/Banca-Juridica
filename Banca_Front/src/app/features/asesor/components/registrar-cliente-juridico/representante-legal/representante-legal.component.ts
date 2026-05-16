@@ -247,7 +247,7 @@ export class RepresentanteLegalComponent implements OnInit {
     return nombres[key] || key;
   }
 
-  // Permite cualquier caracter excluyendo numericos
+  // Permite cualquier caracter excluyendo numéricos
   soloLetras(event: KeyboardEvent) {
     const pattern = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]$/;
     const inputChar = event.key;
@@ -260,7 +260,7 @@ export class RepresentanteLegalComponent implements OnInit {
     }
   }
 
-  // Permite solamente caracteres númericos
+  // Permite solamente caracteres numéricos
   soloNumeros(event: KeyboardEvent) {
     const pattern = /^[0-9]$/;
     const inputChar = event.key;

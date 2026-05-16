@@ -38,22 +38,44 @@ export class PaistributarController {
 
     async crear(req: Request, res: Response): Promise<Response> {
         try {
-            
+
             const body = req.body;
 
             const data = {
                 pais: body.pais,
-                tin: body.tin
+                tin: body.tin,
+                id_info_tributaria: body.id_info_tributaria
             };
-            
-            if (!data || Object.keys(data).length === 0) {
-                return res.status(400).json({ mensaje: 'Los datos son obligatorios' });
+            console.log(data);
+            // Validaciones
+            if (
+                !data.pais ||
+                !data.tin ||
+                !data.id_info_tributaria
+            ) {
+                return res.status(400).json({
+                    mensaje: 'Pais, TIN e id_info_tributaria son obligatorios'
+                });
             }
 
-            const nuevo = await crudController.crear(TABLE_NAME, data);
+            const nuevo = await crudController.crear(
+                TABLE_NAME,
+                data
+            );
+
             return res.status(201).json(nuevo);
+
         } catch (error: any) {
-            return res.status(500).json({ error: error.message });
+
+            console.error(
+                'Error creando país tributario:',
+                error
+            );
+
+            return res.status(500).json({
+                error: error.message
+            });
+
         }
     }
 

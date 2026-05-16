@@ -183,7 +183,7 @@ export class DeclaracionBienesComponent implements OnInit {
     return nombres[key] || key;
   }
 
-  // Permite cualquier caracter excluyendo numericos
+  // Permite cualquier caracter excluyendo numéricos
   soloLetras(event: KeyboardEvent) {
     const pattern = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]$/;
     const inputChar = event.key;

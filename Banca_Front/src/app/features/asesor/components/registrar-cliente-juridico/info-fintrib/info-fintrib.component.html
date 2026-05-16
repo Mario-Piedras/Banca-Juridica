@@ -345,28 +345,61 @@
         </div>
 
         <!-- Cuarta fila -->
-        <div class="filas-horizontales" *ngIf="form.get('tributa_exterior')?.value === 'Sí'">
+        <div class="info-extra" *ngIf="form.get('tributa_exterior')?.value === 'Sí'">
 
-          <!--  Nombre del país -->
-          <div class="input-stuff">
-            <label class="block text-sm font-medium text-gray-700 mb-2">
-              Nombre del país <span class="text-red-500">*</span>
-            </label>
-            <input id="pais" type="text" formControlName="pais" class="input-field" placeholder="Ej: Placeholder">
-            <div class="text-red-500 text-xs mt-1" *ngIf="form.get('pais')?.invalid && form.get('pais')?.touched">
-              <span *ngIf="form.get('pais')?.errors?.['required']">Campo obligatorio</span>
+          <div class="filas-horizontales">
+            <!--  Nombre del país -->
+            <div class="input-stuff">
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                Nombre del país <span class="text-red-500">*</span>
+              </label>
+              <input id="pais" type="text" formControlName="pais" class="input-field" placeholder="Ej: Placeholder">
+              <div class="text-red-500 text-xs mt-1" *ngIf="form.get('pais')?.invalid && form.get('pais')?.touched">
+                <span *ngIf="form.get('pais')?.errors?.['required']">Campo obligatorio</span>
+              </div>
             </div>
+
+            <!-- TIN / N°. Id. Tributario -->
+            <div class="input-stuff">
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                TIN / N°. Id. Tributario <span class="text-red-500">*</span>
+              </label>
+              <input id="tin" type="text" formControlName="tin" class="input-field" placeholder="Ej: 1234567890">
+              <div class="text-red-500 text-xs mt-1" *ngIf="form.get('tin')?.invalid && form.get('tin')?.touched">
+                <span *ngIf="form.get('tin')?.errors?.['required']">Campo obligatorio</span>
+              </div>
+            </div>
+
+            <button type="button" id="añadir" class="form-btn" (click)="agregarPais()">
+              +
+            </button>
           </div>
 
-          <!-- TIN / N°. Id. Tributario -->
-          <div class="input-stuff">
-            <label class="block text-sm font-medium text-gray-700 mb-2">
-              TIN / N°. Id. Tributario <span class="text-red-500">*</span>
-            </label>
-            <input id="tin" type="text" formControlName="tin" class="input-field" placeholder="Ej: 1234567890">
-            <div class="text-red-500 text-xs mt-1" *ngIf="form.get('tin')?.invalid && form.get('tin')?.touched">
-              <span *ngIf="form.get('tin')?.errors?.['required']">Campo obligatorio</span>
-            </div>
+          <div class="tablas" *ngIf="listaPaises.length > 0">
+
+            <table>
+              <tr>
+                <th>País</th>
+                <th>TIN</th>
+                <th>Acción</th>
+              </tr>
+
+              <tr *ngFor="let item of listaPaises; let i = index">
+
+                <td>{{ item.pais }}</td>
+
+                <td>{{ item.tin }}</td>
+
+                <td>
+                  <button type="button" class="form-btn" (click)="eliminarPais(i)">
+                    ✕
+                  </button>
+                </td>
+
+              </tr>
+
+            </table>
+
           </div>
 
         </div>
