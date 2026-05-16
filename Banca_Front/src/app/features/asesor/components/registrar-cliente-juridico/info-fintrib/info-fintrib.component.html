@@ -172,7 +172,7 @@
             </label>
 
             <select id="tipo_contribuyente" formControlName="tipo_contribuyente" class="input-field">
-              <option value="" selected>Seleccione el tipo de contribuyente</option>
+              <option value="" disabled>Seleccione el tipo de contribuyente</option>
               <option value="Personas jurídicas, comerciales y civiles, consorcios y uniones temporales">Personas
                 jurídicas, comerciales y civiles, consorcios y uniones temporales</option>
               <option value=" Corporaciones, fundaciones y asociaciones sin ánimo de lucro"> Corporaciones, fundaciones
@@ -206,7 +206,7 @@
             </label>
 
             <select id="clase_contribuyente" formControlName="clase_contribuyente" class="input-field">
-              <option value="" selected>Seleccione la clase de contribuyente</option>
+              <option value="" disabled>Seleccione la clase de contribuyente</option>
               <option value="Gran contribuyente">Gran contribuyente</option>
               <option value="No grancontribuyente">No gran contribuyente</option>
             </select>
@@ -224,7 +224,7 @@
           <!-- Responsable de IVA -->
           <fieldset>
             <legend class="text-sm font-medium text-gray-700">
-              Responsable de IVA
+              Responsable de IVA <span class="text-red-500">*</span>
             </legend>
             <div class="radio-spacing">
               <div class="radio-option">
@@ -247,7 +247,7 @@
           <!-- Autorretenedor otros ingresos -->
           <fieldset>
             <legend class="text-sm font-medium text-gray-700">
-              Autorretenedor otros ingresos
+              Autorretenedor otros ingresos <span class="text-red-500">*</span>
             </legend>
             <div class="radio-spacing">
               <div class="radio-option">
@@ -270,7 +270,7 @@
           <!-- Intermediario del  mercado cambiario -->
           <fieldset>
             <legend class="text-sm font-medium text-gray-700">
-              Intermediario del mercado cambiario
+              Intermediario del mercado cambiario <span class="text-red-500">*</span>
             </legend>
             <div class="radio-spacing">
               <div class="radio-option">
@@ -293,7 +293,7 @@
           <!-- ¿Es vigilado por la Superintendencia Financiera? -->
           <fieldset>
             <legend class="text-sm font-medium text-gray-700">
-              ¿Es vigilado por la Superintendencia Financiera?
+              ¿Es vigilado por la Superintendencia Financiera? <span class="text-red-500">*</span>
             </legend>
             <div class="radio-spacing">
               <div class="radio-option">
@@ -321,7 +321,7 @@
           <div class="trib-otro">
             <label class="text-sm font-medium text-gray-700">
               ¿Está obligado a tributar como entidad domiciliada en los Estados Unidos u otros países diferentes a
-              Colombia?
+              Colombia? <span class="text-red-500">*</span>
             </label>
             <div class="radio-spacing">
               <div class="radio-option">

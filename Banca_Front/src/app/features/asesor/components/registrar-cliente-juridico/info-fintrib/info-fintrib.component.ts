@@ -1,8 +1,9 @@
 import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { switchMap } from 'rxjs';
+
 
 @Component({
   selector: 'app-info-fintrib',
@@ -27,6 +28,7 @@ export class InformacionFinancieraTributariaComponent implements OnInit {
         Validators.required,
         Validators.min(1)
       ]],
+
       ingresos_no_op: ['', [
         Validators.required,
         Validators.min(1)
@@ -72,15 +74,42 @@ export class InformacionFinancieraTributariaComponent implements OnInit {
       intermediario_mercado: ['', Validators.required],
       vigilado_superintendencia: ['', Validators.required],
       tributa_exterior: ['', Validators.required],
-      pais: [''],
-      tin: ['']
+      paises_exterior: this.fb.array([], Validators.minLength(1))
     });
   }
 
+
   ngOnInit() {
     if (this.datosIniciales) {
+      // Evitar romper el FormArray cuando viene null / undefined
+      if (this.datosIniciales.paises_exterior == null) {
+        this.datosIniciales.paises_exterior = [];
+      }
+
       this.form.patchValue(this.datosIniciales);
+
+      // Si vienen paises_exterior, sincronizar el FormArray (patchValue no crea FormGroups)
+      const payloadPaises = this.datosIniciales.paises_exterior;
+      const arr = this.form.get('paises_exterior') as FormArray;
+
+      arr.clear();
+      if (Array.isArray(payloadPaises)) {
+        payloadPaises.forEach((p: any) => arr.push(this.crearGrupoPaisTin(p)));
+      }
     }
+
+    this.form.get('tributa_exterior')?.valueChanges.subscribe(valor => {
+      const paisesArray = this.paisesExterior;
+
+      if (valor === 'Sí') {
+        paisesArray.setValidators(Validators.minLength(1));
+      } else {
+        paisesArray.clear();
+        paisesArray.clearValidators();
+      }
+
+      paisesArray.updateValueAndValidity();
+    });
 
     this.form.valueChanges.subscribe(valores => {
       this.formChange.emit(valores);
@@ -112,8 +141,39 @@ export class InformacionFinancieraTributariaComponent implements OnInit {
     };
   }
 
+  private crearGrupoPaisTin(p?: { pais?: string; tin?: string }) {
+    return this.fb.group({
+      pais: [p?.pais ?? '', [Validators.required, Validators.minLength(1)]],
+      tin: [p?.tin ?? '', [Validators.required, Validators.minLength(1)]],
+    });
+  }
+
+  addPaisExterior() {
+    this.paisesExterior.push(this.crearGrupoPaisTin());
+  }
+
+  deletePaisExterior(index: number) {
+    this.paisesExterior.removeAt(index);
+  }
+
+  get paisesExteriorControls(): any[] {
+    const arr = this.form.get('paises_exterior') as FormArray | null;
+    return (arr?.controls as any[]) ?? [];
+  }
+
+  private get paisesExterior(): FormArray {
+    return this.form.get('paises_exterior') as FormArray;
+  }
+
+
+  private tributaExteriorEsSi(): boolean {
+    const val = this.form.get('tributa_exterior')?.value;
+    return val === 'Sí' || val === 'Si';
+  }
+
   // Botón de guardar formulario
   guardarSeccion() {
+
     if (!this.form.valid) {
       this.form.markAllAsTouched();
       return;
@@ -156,22 +216,25 @@ export class InformacionFinancieraTributariaComponent implements OnInit {
         );
       }),
 
-      switchMap(() => {
+      switchMap((infoTrib: any) => {
+        const idInfoTributaria = infoTrib?.id ?? infoTrib?.id_info_tributaria ?? infoTrib?.idInfoTributaria;
 
-        if (formData.tributa_exterior === 'Sí') {
+        if (formData.tributa_exterior === 'Sí' || formData.tributa_exterior === 'Si') {
+          const paises: Array<{ pais: string; tin: string }> = (formData.paises_exterior ?? [])
+            .map((x: any) => ({ pais: x.pais, tin: x.tin }))
+            .filter((x: any) => x.pais && x.tin);
+
           return this.http.post<any>(
-            'http://localhost:3000/api/paistributar',
-            {
-              pais: formData.pais,
-              tin: formData.tin
-            }
+            'http://localhost:3000/api/paistributar/bulk',
+            { id_info_tributaria: idInfoTributaria, paises }
           );
         }
-
         return [null];
       })
 
     ).subscribe({
+
+
 
       next: () => {
         alert('Datos guardados correctamente');

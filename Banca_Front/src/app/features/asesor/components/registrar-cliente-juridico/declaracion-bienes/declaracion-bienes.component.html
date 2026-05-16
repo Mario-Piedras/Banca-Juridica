@@ -13,7 +13,7 @@
           </label>
 
           <select id="origen_bienes" formControlName="origen_bienes" class="input-field">
-            <option value="" selected>Seleccione el origen de bienes</option>
+            <option value="" disabled>Seleccione el origen de bienes</option>
             <option value="Compraventa">Compraventa</option>
             <option value="Aporte de socios">Aporte de socios</option>
             <option value="Utilidades">Utilidades</option>
@@ -44,7 +44,7 @@
           </label>
 
           <select id="fuente_recursos" formControlName="fuente_recursos" class="input-field">
-            <option value="" selected>Seleccione la fuente de recursos</option>
+            <option value="" disabled>Seleccione la fuente de recursos</option>
             <option value="Capitalización por parte de socios">Capitalización por parte de socios</option>
             <option value="Utilidades del negocio">Utilidades del negocio</option>
             <option value="Desarrollo del objeto social">Desarrollo del objeto social</option>
@@ -105,7 +105,7 @@
         <!-- En las cuentas de las cuales sea titular mi representada, se manejan recursos públicos de naturaleza inembargable -->
         <fieldset class="fieldset-display">
           <label class="text-sm font-medium text-gray-700">
-            Manejan recursos públicos de naturaleza inembargable
+            Manejan recursos públicos de naturaleza inembargable <span class="text-red-500">*</span>
           </label>
           <div class="radio-spacing">
             <div class="radio-option">
@@ -128,7 +128,7 @@
         <!-- ¿Realiza operaciones en moneda extranjera? -->
         <fieldset class="fieldset-display">
           <label class="text-sm font-medium text-gray-700">
-            ¿Realiza operaciones en moneda extranjera?
+            ¿Realiza operaciones en moneda extranjera? <span class="text-red-500">*</span>
           </label>
           <div class="radio-spacing">
             <div class="radio-option">

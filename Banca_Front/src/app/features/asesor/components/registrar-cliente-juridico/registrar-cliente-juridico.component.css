@@ -57,7 +57,7 @@
 /* Espaciado de las opciones de radio */
 .radio-spacing {
   display: flex;
-  gap: 16px;
+  gap: 20px;
 }
 
 /* Espaciado de el label y radio */

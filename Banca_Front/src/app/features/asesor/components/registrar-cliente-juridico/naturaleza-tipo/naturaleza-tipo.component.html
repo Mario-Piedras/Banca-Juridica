@@ -6,22 +6,22 @@
       <div class="fila-normal2">
         <!-- Naturaleza de entidad -->
         <fieldset class="naturaleza2">
-          <label class="text-sm font-medium text-gray-700">Naturaleza de la entidad</label>
+          <label class="text-sm font-medium text-gray-700">Naturaleza de la entidad <span class="text-red-500">*</span></label>
 
           <div class="radio-spacing">
             <div class="radio-option">
               <input type="radio" name="naturaleza" id="priv" value="Privada" formControlName="naturaleza">
-              <label for="priv" class="text-sm font-medium text-gray-700">Privada</label>
+              <label for="priv">Privada</label>
             </div>
 
             <div class="radio-option">
               <input type="radio" name="naturaleza" id="pub" value="Pública" formControlName="naturaleza">
-              <label for="pub" class="text-sm font-medium text-gray-700">Pública</label>
+              <label for="pub">Pública</label>
             </div>
 
             <div class="radio-option">
               <input type="radio" name="naturaleza" id="mix" value="Mixta" formControlName="naturaleza">
-              <label for="mix" class="text-sm font-medium text-gray-700">Mixta</label>
+              <label for="mix">Mixta</label>
             </div>
           </div>
           <div class="text-red-500 text-xs mt-1"
@@ -83,7 +83,7 @@
             Sociedad comercial o civil <span class="text-red-500">*</span>
           </label>
           <select id="tipo_sociedad" formControlName="tipo_sociedad" class="input-field">
-            <option value="" selected>Seleccione el tipo de sociedad</option>
+            <option value="" disabled>Seleccione el tipo de sociedad</option>
             <option value="Por acciones simplificadas S.A.S">Por acciones simplificadas S.A.S</option>
             <option value="Anónima">Anónima</option>
             <option value="Limitada">Limitada</option>
@@ -120,7 +120,7 @@
           </label>
 
           <select id="tipo_asociacion" formControlName="tipo_asociacion" class="input-field">
-            <option value="" selected>Seleccione el tipo de entidad/asociación</option>
+            <option value="" disabled>Seleccione el tipo de entidad/asociación</option>
             <option value="Establecimiento público"> Establecimiento público </option>
             <option value="Empresa social del estado">Empresa social del estado</option>
             <option value="Empresa servicios públicos domiciliarios">Empresa servicios públicos domiciliarios</option>
@@ -165,7 +165,7 @@
         <!-- Entidad estatal -->
         <fieldset class="ent-estatales">
           <legend class="text-sm font-medium text-gray-700">
-            Entidades estatales
+            Entidades estatales <span class="text-red-500">*</span>
           </legend>
           <div class="radio-spacing">
             <div class="radio-option">
@@ -200,7 +200,7 @@
         <!-- Entidad descentralizada -->
         <fieldset class="ent-descentralizada">
           <legend class="text-sm font-medium text-gray-700">
-            Entidades estatales descentralizadas
+            Entidades estatales descentralizadas <span class="text-red-500">*</span>
           </legend>
           <div class="radio-spacing">
             <div class="radio-option">
