@@ -124,6 +124,28 @@ export class RepresentanteLegalComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Precargar datos si existen
+    if (this.datosIniciales) {
+      this.form.patchValue(this.datosIniciales);
+    }
+
+    // Emitir cambios del formulario
+    this.form.valueChanges.subscribe(valores => {
+      this.formChange.emit(valores);
+    });
+
+    // Informa los cambios del formulario en la consola
+    this.form.statusChanges.subscribe(() => {
+      console.log('Formulario válido:', this.form.valid);
+
+      Object.keys(this.form.controls).forEach(key => {
+        const control = this.form.get(key);
+
+        if (control?.invalid) {
+          console.log(key, control.errors);
+        }
+      })
+    });
 
     // Crear representante principal
     this.representantes.push(
@@ -149,23 +171,6 @@ export class RepresentanteLegalComponent implements OnInit {
         this.representantes.removeAt(1);
       }
 
-    });
-
-    this.form.valueChanges.subscribe(valores => {
-      this.formChange.emit(valores);
-    });
-
-    // Informa los cambios del formulario en la consola
-    this.form.statusChanges.subscribe(() => {
-      console.log('Formulario válido:', this.form.valid);
-
-      Object.keys(this.form.controls).forEach(key => {
-        const control = this.form.get(key);
-
-        if (control?.invalid) {
-          console.log(key, control.errors);
-        }
-      })
     });
 
   }

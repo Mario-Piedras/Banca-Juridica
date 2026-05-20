@@ -21,7 +21,7 @@ export class ConsultarSolicitudesComponent implements OnInit {
   constructor(private consultarService: ConsultarService, private router: Router) {}
 
   ngOnInit(): void {
-    // Por defecto, cargar todas las solicitudes (Pendiente, Aprobada y Rechazada)
+    // Por defecto, cargar todas las solicitudes pendientes
     this.cargarTodas();
   }
 
@@ -33,7 +33,7 @@ export class ConsultarSolicitudesComponent implements OnInit {
     this.consultarService.obtenerTodasSolicitudes().subscribe({
       next: (response) => {
         if (response.success) {
-          const estadosPermitidos: Set<string> = new Set(['Pendiente', 'Aprobada', 'Rechazada']);
+          const estadosPermitidos: Set<string> = new Set(['Pendiente']);
           this.solicitudes = (response.data || []).filter((s) => estadosPermitidos.has(s.estado));
         } else {
           this.error = response.message || 'Error al cargar las solicitudes';

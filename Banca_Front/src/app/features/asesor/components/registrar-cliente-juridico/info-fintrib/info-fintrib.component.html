@@ -175,20 +175,10 @@
               <option value="" disabled>Seleccione el tipo de contribuyente</option>
               <option value="Personas jurídicas, comerciales y civiles, consorcios y uniones temporales">Personas
                 jurídicas, comerciales y civiles, consorcios y uniones temporales</option>
-              <option value=" Corporaciones, fundaciones y asociaciones sin ánimo de lucro"> Corporaciones, fundaciones
+              <option value="Corporaciones, fundaciones y asociaciones sin ánimo de lucro">Corporaciones, fundaciones
                 y asociaciones sin ánimo de lucro</option>
-              <option value="Empresa servicios públicos domiciliarios">Empresa servicios públicos domiciliarios</option>
-              <option value="Entidad pública res_ivaal o territorial">Entidad pública res_ivaal o territorial</option>
+              <option value="Entidad pública nacional o territorial">Entidad pública nacional o territorial</option>
               <option value="Cooperativa">Cooperativa</option>
-              <option value="Fondos de empleados">Fondos de empleados</option>
-              <option value="Cooperativas">Cooperativas</option>
-              <option value="Precooperativas">Precooperativas</option>
-              <option value="Copropiedades">Copropiedades</option>
-              <option value="Personas jurídicas de derecho canónico">Personas jurídicas de derecho canónico</option>
-              <option value="Entidades religiosas no católicas">Entidades religiosas no católicas</option>
-              <option value="Sindicatos">Sindicatos</option>
-              <option value="Fundaciones">Fundaciones</option>
-              <option value="Corporaciones y asociaciones">Corporaciones y asociaciones</option>
               <option value="No contribuyente">No contribuyente</option>
             </select>
             <div class="text-red-500 text-xs mt-1"
@@ -208,7 +198,7 @@
             <select id="clase_contribuyente" formControlName="clase_contribuyente" class="input-field">
               <option value="" disabled>Seleccione la clase de contribuyente</option>
               <option value="Gran contribuyente">Gran contribuyente</option>
-              <option value="No grancontribuyente">No gran contribuyente</option>
+              <option value="No gran contribuyente">No gran contribuyente</option>
             </select>
             <div class="text-red-500 text-xs mt-1"
               *ngIf="form.get('clase_contribuyente')?.invalid && form.get('clase_contribuyente')?.touched">
@@ -353,9 +343,11 @@
               <label class="block text-sm font-medium text-gray-700 mb-2">
                 Nombre del país <span class="text-red-500">*</span>
               </label>
-              <input id="pais" type="text" formControlName="pais" class="input-field" placeholder="Ej: Placeholder">
+              <input id="pais" type="text" formControlName="pais" class="input-field" placeholder="Ej: Placeholder" maxlength="50"
+            (keypress)="soloLetras($event)">
               <div class="text-red-500 text-xs mt-1" *ngIf="form.get('pais')?.invalid && form.get('pais')?.touched">
                 <span *ngIf="form.get('pais')?.errors?.['required']">Campo obligatorio</span>
+                <span *ngIf="form.get('codigo_ciiu')?.errors?.['minlength']">Mínimo 3 dígitos</span>
               </div>
             </div>
 
@@ -364,7 +356,8 @@
               <label class="block text-sm font-medium text-gray-700 mb-2">
                 TIN / N°. Id. Tributario <span class="text-red-500">*</span>
               </label>
-              <input id="tin" type="text" formControlName="tin" class="input-field" placeholder="Ej: 1234567890">
+              <input id="tin" type="text" formControlName="tin" class="input-field" placeholder="Ej: 1234567890" maxlength="20"
+            (keypress)="soloNumeros($event)">
               <div class="text-red-500 text-xs mt-1" *ngIf="form.get('tin')?.invalid && form.get('tin')?.touched">
                 <span *ngIf="form.get('tin')?.errors?.['required']">Campo obligatorio</span>
               </div>

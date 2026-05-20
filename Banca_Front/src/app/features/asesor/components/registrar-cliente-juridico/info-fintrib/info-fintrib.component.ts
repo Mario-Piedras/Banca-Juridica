@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Output, Input, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -35,11 +35,13 @@ export class InformacionFinancieraTributariaComponent implements OnInit {
       // Información financiera
       ingresos_op: ['', [
         Validators.required,
-        Validators.min(1)
+        Validators.min(1),
+        Validators.max(9999999999999.99)
       ]],
       ingresos_no_op: ['', [
         Validators.required,
-        Validators.min(1)
+        Validators.min(1),
+        Validators.max(9999999999999.99)
       ]],
       detalle_ingresos: ['', [
         Validators.required,
@@ -49,7 +51,8 @@ export class InformacionFinancieraTributariaComponent implements OnInit {
       ]],
       ventas_anuales: ['', [
         Validators.required,
-        Validators.min(1)
+        Validators.min(1),
+        Validators.max(9999999999999.99)
       ]],
       fecha_cierre_ventas: ['', [
         Validators.required,
@@ -57,23 +60,28 @@ export class InformacionFinancieraTributariaComponent implements OnInit {
       ]],
       egresos_mensuales: ['', [
         Validators.required,
-        Validators.min(1)
+        Validators.min(1),
+        Validators.max(9999999999999.99)
       ]],
       utilidad_neta: ['', [
         Validators.required,
-        Validators.min(1)
+        Validators.min(1),
+        Validators.max(9999999999999.99)
       ]],
       total_activos: ['', [
         Validators.required,
-        Validators.min(1)
+        Validators.min(1),
+        Validators.max(9999999999999.99)
       ]],
       total_pasivos: ['', [
         Validators.required,
-        Validators.min(1)
+        Validators.min(1),
+        Validators.max(9999999999999.99)
       ]],
       total_patrimonio: ['', [
         Validators.required,
-        Validators.min(1)
+        Validators.min(1),
+        Validators.max(9999999999999.99)
       ]],
       // Información tributaria
       tipo_contribuyente: ['', Validators.required],
@@ -115,13 +123,9 @@ export class InformacionFinancieraTributariaComponent implements OnInit {
     }
 
     // Emitir cambios del formulario
-    this.form.valueChanges.subscribe(
-      valores => {
-        this.formChange.emit(
-          valores
-        );
-      }
-    );
+    this.form.valueChanges.subscribe(valores => {
+      this.formChange.emit(valores);
+    });
 
     // Informa los cambios del formulario en la consola
     this.form.statusChanges.subscribe(() => {
@@ -138,22 +142,59 @@ export class InformacionFinancieraTributariaComponent implements OnInit {
 
   }
 
+  // Limpia el localStorage al cerrar o recargar la página
+  @HostListener('window:beforeunload')
+  limpiarStorage(): void {
+    localStorage.removeItem(
+      this.STORAGE_KEY
+    );
+  }
+
   agregarPais(): void {
 
+    const paisControl = this.form.get('pais');
+    const tinControl = this.form.get('tin');
+
+    // Marcar campos como tocados para mostrar errores
+    paisControl?.markAsTouched();
+    tinControl?.markAsTouched();
+
+    // Validar formulario
+    if (
+      !paisControl ||
+      !tinControl ||
+      paisControl.invalid ||
+      tinControl.invalid
+    ) {
+
+      alert(
+        'Debe ingresar un país y TIN válidos'
+      );
+
+      return;
+    }
+
     const pais =
-      this.form.get('pais')
-        ?.value
-        ?.trim();
+      paisControl.value.trim();
 
     const tin =
-      this.form.get('tin')
-        ?.value
-        ?.trim();
+      tinControl.value.trim();
 
-    if (!pais || !tin) {
-      alert(
-        'Debe ingresar país y TIN'
+    // Evitar duplicados
+    const existe =
+      this.listaPaises.some(
+        item =>
+          item.pais.toLowerCase() === pais.toLowerCase()
+          &&
+          item.tin === tin
       );
+
+    if (existe) {
+
+      alert(
+        'El país y TIN ya fueron agregados'
+      );
+
       return;
     }
 
@@ -173,11 +214,15 @@ export class InformacionFinancieraTributariaComponent implements OnInit {
       )
     );
 
-    // Limpiar inputs
+    // Limpiar campos
     this.form.patchValue({
       pais: '',
       tin: ''
     });
+
+    // Resetear estado visual
+    paisControl.reset();
+    tinControl.reset();
 
   }
 
@@ -263,49 +308,51 @@ export class InformacionFinancieraTributariaComponent implements OnInit {
 
       // Guardar países con FK
       switchMap((tributariaResponse) => {
+
         console.log(
-          'Respuesta tributaria:',
+          'RESPUESTA INFO TRIBUTARIA:',
           tributariaResponse
         );
-        if (
-          formData
-            .tributa_exterior !== 'Sí'
-        ) {
+
+        if (formData.tributa_exterior !== 'Sí') {
           return of(null);
         }
 
+        // Detectar cuál campo trae el ID
         const idInfoTributaria =
-          tributariaResponse
-            .id_info_tributaria;
+          tributariaResponse.id_info_tributaria ||
+          tributariaResponse.insertId ||
+          tributariaResponse.id;
 
-        const peticiones =
-          this.listaPaises.map(
-            item => {
-
-              return this.http.post(
-                'http://localhost:3000/api/paistributar',
-                {
-                  pais:
-                    item.pais,
-
-                  tin:
-                    item.tin,
-
-                  id_info_tributaria:
-                    idInfoTributaria
-                }
-              );
-
-            }
-          );
-
-        return forkJoin(
-          peticiones
+        console.log(
+          'ID OBTENIDO:',
+          idInfoTributaria
         );
 
-      }
+        const peticiones =
+          this.listaPaises.map(item => {
 
-      )
+            const payload = {
+              pais: item.pais,
+              tin: item.tin,
+              id_info_tributaria: idInfoTributaria
+            };
+
+            console.log(
+              'ENVIANDO A PAISTRIBUTAR:',
+              payload
+            );
+
+            return this.http.post(
+              'http://localhost:3000/api/paistributar',
+              payload
+            );
+
+          });
+
+        return forkJoin(peticiones);
+
+      })
 
     ).subscribe({
 

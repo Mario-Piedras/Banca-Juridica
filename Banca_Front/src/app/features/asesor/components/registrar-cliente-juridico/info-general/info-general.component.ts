@@ -104,10 +104,12 @@ export class InformacionGeneralComponent implements OnInit {
   }
 
   ngOnInit() {
+    // Precargar datos si existen
     if (this.datosIniciales) {
       this.form.patchValue(this.datosIniciales);
     }
 
+    // Emitir cambios del formulario
     this.form.valueChanges.subscribe(valores => {
       this.formChange.emit(valores);
     });
