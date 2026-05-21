@@ -184,9 +184,12 @@ export class RepresentanteLegalComponent implements OnInit {
       return;
     }
 
-    const datos = this.representantes.value;
+    const id_empresa = localStorage.getItem('id_empresa');
+    const payload = { id_empresa, representantes: this.representantes.value };
 
-    this.http.post('http://localhost:3000/api/personasaso', datos)
+    console.log(payload);
+
+    this.http.post('http://localhost:3000/api/personasaso', payload)
       .subscribe({
         next: (res) => {
           console.log('Guardado en BD:', res);

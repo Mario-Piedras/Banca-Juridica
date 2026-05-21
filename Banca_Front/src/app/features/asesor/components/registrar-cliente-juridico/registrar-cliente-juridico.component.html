@@ -46,7 +46,7 @@
       [class.border-b-2]="pestanaActiva === 'declaracion-bienes'"
       [class.border-blue-600]="pestanaActiva === 'declaracion-bienes'"
       [class.text-gray-500]="pestanaActiva !== 'declaracion-bienes'" (click)="cambiarPestana('declaracion-bienes')">
-      Declaración de origen de bienes y/o fondos
+      Origen de bienes y socios relacionados
     </button>
 
   </div>
@@ -81,7 +81,7 @@
         (prevTab)="manejarPrevTab()"></app-info-fintrib>
     </div>
 
-    <!-- Pestaña 5: Declaración de origen de bienes y/o fondos -->
+    <!-- Pestaña 5: Origen de bienes y socios relacionados -->
     <div *ngIf="pestanaActiva === 'declaracion-bienes'">
       <app-declaracion-bienes [datosIniciales]="clienteData.declaracionBienes"
         (formChange)="actualizarDatos('declaracionBienes', $event)" (nextTab)="manejarNextTab()"

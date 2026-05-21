@@ -34,9 +34,22 @@ export class PersonasasoController {
     }
 
     async crear(req: Request, res: Response): Promise<Response> {
+
         try {
 
-            const representantes = req.body;
+            const {
+                id_empresa,
+                representantes
+            } = req.body;
+
+            // Validaciones
+            if (!id_empresa) {
+
+                return res.status(400).json({
+                    mensaje: 'El id de la empresa es obligatorio'
+                });
+
+            }
 
             if (
                 !Array.isArray(representantes) ||
@@ -51,7 +64,13 @@ export class PersonasasoController {
 
             const resultados = [];
 
-            for (const body of representantes) {
+            let idRepresentanteLegal = null;
+            let idContactoEntidad = null;
+
+            // INSERTAR REPRESENTANTES
+            for (let i = 0; i < representantes.length; i++) {
+
+                const body = representantes[i];
 
                 const data = {
                     tipo_documento: body.tipo_documento,
@@ -75,11 +94,32 @@ export class PersonasasoController {
                 const nuevo = await crudController.crear(TABLE_NAME, data);
                 resultados.push(nuevo);
 
+                // PRIMER REGISTRO = REPRESENTANTE LEGAL
+                if (i === 0) {
+                    idRepresentanteLegal = nuevo.id;
+                }
+
+                // SEGUNDO REGISTRO = CONTACTO ADICIONAL
+                if (i === 1) {
+                    idContactoEntidad = nuevo.id;
+                }
+
             }
+
+            // ACTUALIZAR EMPRESA
+            await crudController.actualizar(
+                'info_empresas',
+                { id_info_empresas: id_empresa },
+                {
+                    id_info_repre_legal: idRepresentanteLegal,
+                    id_cont_entidad: idContactoEntidad
+                }
+            );
 
             return res.status(201).json({
                 mensaje: 'Representantes guardados correctamente',
-                data: resultados
+                representante_legal: idRepresentanteLegal,
+                contacto_adicional: idContactoEntidad
             });
 
         } catch (error: any) {

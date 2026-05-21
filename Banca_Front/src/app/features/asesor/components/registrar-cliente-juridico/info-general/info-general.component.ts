@@ -145,8 +145,15 @@ export class InformacionGeneralComponent implements OnInit {
     if (this.form.valid) {
       this.http.post('http://localhost:3000/api/infoempresas', this.form.value)
         .subscribe({
-          next: (res) => {
+          next: (res: any) => {
             console.log('Guardado en BD:', res);
+
+            // Guardar ID de la empresa
+            localStorage.setItem(
+              'id_empresa',
+              res.id.toString()
+            );
+            console.log('ID EMPRESA:', localStorage.getItem('id_empresa'));
             alert('Sección guardada correctamente');
 
             this.formChange.emit(this.form.value);

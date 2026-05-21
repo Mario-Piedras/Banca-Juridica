@@ -20,3 +20,16 @@
 .fieldset-display label {
     width: fit-content;
 }
+
+.info-socios {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    border-top: solid #D1D5DC 2px;
+    padding: 16px 0px 0px 0px;
+}
+
+.trib-otro {
+    display: flex;
+    gap: 16px;
+}
