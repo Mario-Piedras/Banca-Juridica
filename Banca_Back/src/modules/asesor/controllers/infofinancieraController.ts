@@ -37,6 +37,7 @@ export class InfofinancieraController {
         try {
 
             const body = req.body;
+            const id_empresa = body.id_empresa;
 
             const data = {
                 ingresos_op: body.ingresos_op,
@@ -55,9 +56,25 @@ export class InfofinancieraController {
                 return res.status(400).json({ mensaje: 'Los datos son obligatorios' });
             }
 
+            // Guardar info financiera
             const nuevo = await crudController.crear(TABLE_NAME, data);
-            return res.status(201).json(nuevo);
+
+            // Actualizar FK
+            await crudController.actualizar(
+                'info_empresas',
+                {
+                    id_info_empresas: id_empresa
+                },
+                {
+                    id_info_financiera: nuevo.id
+                }
+            );
+            return res.status(201).json({
+                mensaje: 'Información financiera guardada',
+                data: nuevo
+            });
         } catch (error: any) {
+            console.error(error);
             return res.status(500).json({ error: error.message });
         }
     }

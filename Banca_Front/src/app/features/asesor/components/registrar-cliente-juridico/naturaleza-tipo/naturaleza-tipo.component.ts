@@ -145,7 +145,17 @@ export class NaturalezaEntidadComponent implements OnInit {
   guardarSeccion() {
     console.log(this.form.value);
     if (this.form.valid) {
-      this.http.post('http://localhost:3000/api/tipoentidad', this.form.value)
+
+      // Obtener id de empresa guardado previamente
+      const id_empresa = localStorage.getItem('id_empresa');
+      const datosEnviar = {
+        id_empresa,
+        ...this.form.value
+      };
+
+      console.log(datosEnviar);
+
+      this.http.post('http://localhost:3000/api/tipoentidad', datosEnviar)
         .subscribe({
           next: (res) => {
             console.log('Guardado en BD:', res);

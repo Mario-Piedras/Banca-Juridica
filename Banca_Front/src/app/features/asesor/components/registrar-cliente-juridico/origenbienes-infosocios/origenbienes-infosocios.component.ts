@@ -2,26 +2,29 @@ import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { switchMap } from 'rxjs';
 
 @Component({
-  selector: 'app-declaracion-bienes',
+  selector: 'app-origenbienes-infosocios',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './declaracion-bienes.component.html',
+  templateUrl: './origenbienes-infosocios.component.html',
   styleUrls: [
     '../registrar-cliente-juridico.component.css',
-    './declaracion-bienes.component.css'
+    './origenbienes-infosocios.component.css'
   ]
 })
-export class DeclaracionBienesComponent implements OnInit {
+export class DeclaracionBienesInfoSociosComponent implements OnInit {
   @Input() datosIniciales: any;
   @Output() formChange = new EventEmitter();
   @Output() prevTab = new EventEmitter<void>();
   @Output() nextTab = new EventEmitter();
+  @Input() idEmpresa!: number;
 
   form: FormGroup;
   constructor(private fb: FormBuilder, private http: HttpClient) {
     this.form = this.fb.group({
+      // Declaración de origen de bienes y/o fondos
       origen_bienes: ['', Validators.required],
       otro_origen_bienes: ['', [
         Validators.required,
@@ -50,6 +53,12 @@ export class DeclaracionBienesComponent implements OnInit {
       ]],
       recursos_inembargables: ['', Validators.required],
       op_moneda_extj: ['', Validators.required],
+      // Información de socios, accionistas y otros relacionados de Persona Jurídica
+      rnve: ['', Validators.required],
+      hay_socios_accionistas: ['', Validators.required],
+      personas_control: ['', Validators.required],
+      personas_expuestas: ['', Validators.required],
+      bolsa_valores: ['', Validators.required]
     });
   }
 
@@ -116,23 +125,8 @@ export class DeclaracionBienesComponent implements OnInit {
   // Botón de guardar formulario
   guardarSeccion() {
     console.log(this.form.value);
-    if (this.form.valid) {
-      this.http.post('http://localhost:3000/api/declaracionbienes', this.form.value)
-        .subscribe({
-          next: (res) => {
-            console.log('Guardado en BD:', res);
-            alert('Sección guardada correctamente');
+    if (!this.form.valid) {
 
-            this.formChange.emit(this.form.value);
-            this.nextTab.emit();
-          },
-          error: (err) => {
-            console.error(err);
-            alert('Error al guardar en la base de datos');
-          }
-        });
-
-    } else {
       this.form.markAllAsTouched();
       const errores = this.obtenerErroresFormulario();
 
@@ -141,7 +135,102 @@ export class DeclaracionBienesComponent implements OnInit {
       } else {
         alert('Por favor completa todos los campos obligatorios.');
       }
+      return;
     }
+
+    const formData = this.form.value;
+
+    // Obtener id empresa
+    const id_empresa = localStorage.getItem('id_empresa');
+
+    // Datos declaración bienes
+    const declaracionBienesInfoSocios = {
+      origen_bienes: formData.origen_bienes,
+      otro_origen_bienes: formData.otro_origen_bienes,
+      fuente_recursos: formData.fuente_recursos,
+      otra_fuente_recursos: formData.otra_fuente_recursos,
+      pais_origen_bienes: formData.pais_origen_bienes,
+      ciudad_origen_bienes: formData.ciudad_origen_bienes,
+      recursos_inembargables: formData.recursos_inembargables,
+      op_moneda_extj: formData.op_moneda_extj
+    };
+
+    // Datos info socios
+    const infoSocios = {
+      rnve: formData.rnve,
+      hay_socios_accionistas: formData.hay_socios_accionistas,
+      personas_control: formData.personas_control,
+      personas_expuestas: formData.personas_expuestas,
+      bolsa_valores: formData.bolsa_valores
+    };
+
+    // Guardar declaración bienes
+    this.http.post<any>(
+      'http://localhost:3000/api/declaracionbienes',
+      declaracionBienesInfoSocios
+    ).pipe(
+
+      // Guardar info socios
+      switchMap((declaracionResponse) => {
+
+        const id_declaracion =
+          declaracionResponse.id ||
+          declaracionResponse.insertId ||
+          declaracionResponse.id_declaracion;
+
+        return this.http.post<any>(
+          'http://localhost:3000/api/infosocios',
+          infoSocios
+        ).pipe(
+
+          switchMap((sociosResponse) => {
+
+            const id_info_socios =
+              sociosResponse.id ||
+              sociosResponse.insertId ||
+              sociosResponse.id_info_socios;
+
+            // Actualizar empresa
+            const payloadActualizar = {
+              id_declaracion,
+              id_info_socios
+            };
+
+            return this.http.put(
+              `http://localhost:3000/api/infoempresas/${id_empresa}`,
+              payloadActualizar
+            );
+
+          })
+
+        );
+
+      })
+
+    ).subscribe({
+
+      next: (res) => {
+
+        console.log('Datos guardados:', res);
+
+        alert('Sección guardada correctamente');
+
+        this.formChange.emit(this.form.value);
+
+        this.nextTab.emit();
+
+      },
+
+      error: (err) => {
+
+        console.error(err);
+
+        alert('Error al guardar en la base de datos');
+
+      }
+
+    });
+
   }
 
   // Botón de volver al formulario anterior

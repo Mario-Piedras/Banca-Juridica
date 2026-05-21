@@ -21,6 +21,12 @@
     width: fit-content;
 }
 
+.declaracion-bienes {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
 .info-socios {
     display: flex;
     flex-direction: column;
@@ -32,4 +38,10 @@
 .trib-otro {
     display: flex;
     gap: 16px;
+}
+
+.segun-fil-trib {
+    display: flex;
+    justify-content: space-between;
+    gap: 32px
 }

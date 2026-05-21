@@ -253,23 +253,23 @@ export class InformacionFinancieraTributariaComponent implements OnInit {
 
     // Validar mínimo 1 país
     if (
-      this.form.value
-        .tributa_exterior === 'Sí'
+      this.form.value.tributa_exterior === 'Sí'
       &&
       this.listaPaises.length === 0
     ) {
 
-      alert(
-        'Debe agregar al menos un país tributario'
-      );
-
+      alert('Debe agregar al menos un país tributario');
       return;
     }
 
-    const formData =
-      this.form.value;
+    const formData = this.form.value;
+
+    // Obtener empresa guardada
+    const id_empresa =
+      localStorage.getItem('id_empresa');
 
     const infoFinanciera = {
+      id_empresa,
       ingresos_op: formData.ingresos_op,
       ingresos_no_op: formData.ingresos_no_op,
       detalle_ingresos: formData.detalle_ingresos,
@@ -283,6 +283,7 @@ export class InformacionFinancieraTributariaComponent implements OnInit {
     };
 
     const infoTributaria = {
+      id_empresa,
       tipo_contribuyente: formData.tipo_contribuyente,
       clase_contribuyente: formData.clase_contribuyente,
       responsable_iva: formData.responsable_iva,
@@ -292,42 +293,28 @@ export class InformacionFinancieraTributariaComponent implements OnInit {
       tributa_exterior: formData.tributa_exterior
     };
 
-    // Flujo de guardado
-    this.http.post<any>(
-      'http://localhost:3000/api/infofinanciera',
-      infoFinanciera
-    ).pipe(
-
+    // Flujo guardado
+    this.http.post<any>('http://localhost:3000/api/infofinanciera', infoFinanciera).pipe(
       // Guardar info tributaria
       switchMap(() => {
-        return this.http.post<any>(
-          'http://localhost:3000/api/infotributaria',
-          infoTributaria
-        );
+        return this.http.post<any>('http://localhost:3000/api/infotributaria', infoTributaria);
       }),
 
-      // Guardar países con FK
+      // Guardar países tributarios
       switchMap((tributariaResponse) => {
-
-        console.log(
-          'RESPUESTA INFO TRIBUTARIA:',
-          tributariaResponse
-        );
+        console.log('RESPUESTA INFO TRIBUTARIA:', tributariaResponse);
 
         if (formData.tributa_exterior !== 'Sí') {
           return of(null);
         }
 
-        // Detectar cuál campo trae el ID
         const idInfoTributaria =
+          tributariaResponse.data?.id ||
           tributariaResponse.id_info_tributaria ||
-          tributariaResponse.insertId ||
-          tributariaResponse.id;
+          tributariaResponse.id ||
+          tributariaResponse.insertId;
 
-        console.log(
-          'ID OBTENIDO:',
-          idInfoTributaria
-        );
+        console.log('ID INFO TRIBUTARIA:', idInfoTributaria);
 
         const peticiones =
           this.listaPaises.map(item => {
@@ -337,11 +324,6 @@ export class InformacionFinancieraTributariaComponent implements OnInit {
               tin: item.tin,
               id_info_tributaria: idInfoTributaria
             };
-
-            console.log(
-              'ENVIANDO A PAISTRIBUTAR:',
-              payload
-            );
 
             return this.http.post(
               'http://localhost:3000/api/paistributar',
@@ -363,30 +345,17 @@ export class InformacionFinancieraTributariaComponent implements OnInit {
           this.STORAGE_KEY
         );
 
-        alert(
-          'Datos guardados correctamente'
-        );
-
+        alert('Datos guardados correctamente');
         this.nextTab.emit();
 
       },
 
-      error: (
-        err
-      ) => {
+      error: (err) => {
+        console.error(err);
 
-        console.error(
-          err
-        );
-
-        alert(
-          'Error al guardar'
-        );
-
+        alert('Error al guardar');
       }
-
     });
-
   }
 
   // Botón de volver al formulario anterior

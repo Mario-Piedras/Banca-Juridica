@@ -42,11 +42,11 @@
     </button>
 
     <button class="px-6 py-3 font-medium text-sm transition-colors relative"
-      [class.text-blue-600]="pestanaActiva === 'declaracion-bienes'"
-      [class.border-b-2]="pestanaActiva === 'declaracion-bienes'"
-      [class.border-blue-600]="pestanaActiva === 'declaracion-bienes'"
-      [class.text-gray-500]="pestanaActiva !== 'declaracion-bienes'" (click)="cambiarPestana('declaracion-bienes')">
-      Origen de bienes y socios relacionados
+      [class.text-blue-600]="pestanaActiva === 'origenbienes-infosocios'"
+      [class.border-b-2]="pestanaActiva === 'origenbienes-infosocios'"
+      [class.border-blue-600]="pestanaActiva === 'origenbienes-infosocios'"
+      [class.text-gray-500]="pestanaActiva !== 'origenbienes-infosocios'" (click)="cambiarPestana('origenbienes-infosocios')">
+      Origen de bienes y asociados
     </button>
 
   </div>
@@ -81,11 +81,11 @@
         (prevTab)="manejarPrevTab()"></app-info-fintrib>
     </div>
 
-    <!-- Pestaña 5: Origen de bienes y socios relacionados -->
-    <div *ngIf="pestanaActiva === 'declaracion-bienes'">
-      <app-declaracion-bienes [datosIniciales]="clienteData.declaracionBienes"
-        (formChange)="actualizarDatos('declaracionBienes', $event)" (nextTab)="manejarNextTab()"
-        (prevTab)="manejarPrevTab()"></app-declaracion-bienes>
+    <!-- Pestaña 5: Origen de bienes y asociados -->
+    <div *ngIf="pestanaActiva === 'origenbienes-infosocios'">
+      <app-origenbienes-infosocios [datosIniciales]="clienteData.declaracionBienesInfoSocios"
+        (formChange)="actualizarDatos('declaracionBienesInfoSocios', $event)" (nextTab)="manejarNextTab()"
+        (prevTab)="manejarPrevTab()"></app-origenbienes-infosocios>
     </div>
 
   </div>

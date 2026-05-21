@@ -3,7 +3,7 @@
     <div class="form-spacing">
 
       <!-- Declaración de origen de bienes y/o fondos -->
-      <div class="div">
+      <div class="declaracion-bienes">
         <!-- Primera fila -->
         <div class="fila-normal">
 
@@ -154,121 +154,124 @@
       </div>
       <!-- Información de socios, accionistas y otros relacionados de Persona Jurídica -->
       <div class="info-socios">
+        
+        <div class="segun-fil-trib">
+          <!-- 1. ¿Se encuentra inscrito en el Registro Nacional de Valores y Emisores? -->
+          <fieldset>
+            <legend class="text-sm font-medium text-gray-700">
+              ¿Se encuentra inscrito en el Registro Nacional de Valores y Emisores? <span class="text-red-500">*</span>
+            </legend>
+            <div class="radio-spacing">
+              <div class="radio-option">
+                <input type="radio" id="rnve_si" name="rnve" value="Sí" formControlName="rnve" />
+                <label for="rnve_si">
+                  Sí
+                </label>
+              </div>
+              <div class="radio-option">
+                <input type="radio" id="rnve_no" name="rnve" value="No" formControlName="rnve" />
+                <label for="rnve_no">
+                  No
+                </label>
+              </div>
+            </div>
+          </fieldset>
 
-        <!-- 1. ¿Se encuentra inscrito en el Registro Nacional de Valores y Emisores? -->
-        <div class="trib-otro">
-          <label class="text-sm font-medium text-gray-700">
-            1. ¿Se encuentra inscrito en el Registro Nacional de Valores y Emisores? <span class="text-red-500">*</span>
-          </label>
-          <div class="radio-spacing">
-            <div class="radio-option">
-              <input type="radio" id="rnve_si" name="rnve" value="Sí" formControlName="rnve" />
-              <label for="rnve_si">
-                Sí
-              </label>
+          <!-- 2. De acuerdo con la naturaleza o el tipo de entidad, ¿la entidad cuenta con socios o accionistas? -->
+          <fieldset>
+            <legend class="text-sm font-medium text-gray-700">
+              ¿La entidad cuenta con socios o accionistas? <span class="text-red-500">*</span>
+            </legend>
+            <div class="radio-spacing">
+              <div class="radio-option">
+                <input type="radio" id="hay_socios_accionistas_si" name="hay_socios_accionistas" value="Sí"
+                  formControlName="hay_socios_accionistas" />
+                <label for="hay_socios_accionistas_si">
+                  Sí
+                </label>
+              </div>
+              <div class="radio-option">
+                <input type="radio" id="hay_socios_accionistas_no" name="hay_socios_accionistas" value="No"
+                  formControlName="hay_socios_accionistas" />
+                <label for="hay_socios_accionistas_no">
+                  No
+                </label>
+              </div>
             </div>
-            <div class="radio-option">
-              <input type="radio" id="rnve_no" name="rnve" value="No" formControlName="rnve" />
-              <label for="rnve_no">
-                No
-              </label>
+          </fieldset>
+
+          <!-- 3. ¿Tiene personas (naturales o jurídicas) que ejerzan control sobre la entidad? -->
+          <fieldset>
+            <legend class="text-sm font-medium text-gray-700">
+              ¿Tiene personas (naturales o jurídicas) que ejerzan control sobre la entidad? <span
+                class="text-red-500">*</span>
+            </legend>
+            <div class="radio-spacing">
+              <div class="radio-option">
+                <input type="radio" id="personas_control_si" name="personas_control" value="Sí"
+                  formControlName="personas_control" />
+                <label for="personas_control_si">
+                  Sí
+                </label>
+              </div>
+              <div class="radio-option">
+                <input type="radio" id="personas_control_no" name="personas_control" value="No"
+                  formControlName="personas_control" />
+                <label for="personas_control_no">
+                  No
+                </label>
+              </div>
             </div>
-          </div>
+          </fieldset>
+
+          <!-- 4. ¿Tiene socios o accionistas, administradores, controlantes o gestores que sean Personas Expuestas Políticamente? -->
+          <fieldset>
+            <legend class="text-sm font-medium text-gray-700">
+              ¿Tiene socios o accionistas, administradores, controlantes o gestores que sean Personas Expuestas
+              Políticamente? <span class="text-red-500">*</span>
+            </legend>
+            <div class="radio-spacing">
+              <div class="radio-option">
+                <input type="radio" id="personas_expuestas_si" name="personas_expuestas" value="Sí"
+                  formControlName="personas_expuestas" />
+                <label for="personas_expuestas_si">
+                  Sí
+                </label>
+              </div>
+              <div class="radio-option">
+                <input type="radio" id="personas_expuestas_no" name="personas_expuestas" value="No"
+                  formControlName="personas_expuestas" />
+                <label for="personas_expuestas_no">
+                  No
+                </label>
+              </div>
+            </div>
+          </fieldset>
+
+          <!--  5.¿Está listado en alguna Bolsa de Valores internacional? -->
+          <fieldset>
+            <legend class="text-sm font-medium text-gray-700">
+              ¿Está listado en alguna Bolsa de Valores internacional? <span class="text-red-500">*</span>
+            </legend>
+            <div class="radio-spacing">
+              <div class="radio-option">
+                <input type="radio" id="bolsa_valores_si" name="bolsa_valores" value="Sí"
+                  formControlName="bolsa_valores" />
+                <label for="bolsa_valores_si">
+                  Sí
+                </label>
+              </div>
+              <div class="radio-option">
+                <input type="radio" id="bolsa_valores_no" name="bolsa_valores" value="No"
+                  formControlName="bolsa_valores" />
+                <label for="bolsa_valores_no">
+                  No
+                </label>
+              </div>
+            </div>
+          </fieldset>
+
         </div>
-
-        <!-- 2. De acuerdo con la naturaleza o el tipo de entidad, ¿la entidad cuenta con socios o accionistas? -->
-        <div class="trib-otro">
-          <label class="text-sm font-medium text-gray-700">
-            2. De acuerdo con la naturaleza o el tipo de entidad, ¿la entidad cuenta con socios o accionistas? <span
-              class="text-red-500">*</span>
-          </label>
-          <div class="radio-spacing">
-            <div class="radio-option">
-              <input type="radio" id="hay_socios_accionistas_si" name="hay_socios_accionistas" value="Sí"
-                formControlName="hay_socios_accionistas" />
-              <label for="hay_socios_accionistas_si">
-                Sí
-              </label>
-            </div>
-            <div class="radio-option">
-              <input type="radio" id="hay_socios_accionistas_no" name="hay_socios_accionistas" value="No"
-                formControlName="hay_socios_accionistas" />
-              <label for="hay_socios_accionistas_no">
-                No
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <!-- 3. ¿Tiene personas (naturales o jurídicas) que ejerzan control sobre la entidad? -->
-        <div class="trib-otro">
-          <label class="text-sm font-medium text-gray-700">
-            3. ¿Tiene personas (naturales o jurídicas) que ejerzan control sobre la entidad? <span
-              class="text-red-500">*</span>
-          </label>
-          <div class="radio-spacing">
-            <div class="radio-option">
-              <input type="radio" id="personas_control_si" name="personas_control" value="Sí"
-                formControlName="personas_control" />
-              <label for="personas_control_si">
-                Sí
-              </label>
-            </div>
-            <div class="radio-option">
-              <input type="radio" id="personas_control_no" name="personas_control" value="No"
-                formControlName="personas_control" />
-              <label for="personas_control_no">
-                No
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <!-- 4. ¿Tiene socios o accionistas, administradores, controlantes o gestores que sean Personas Expuestas Políticamente? -->
-        <div class="trib-otro">
-          <label class="text-sm font-medium text-gray-700">
-            4. ¿Tiene socios o accionistas, administradores, controlantes o gestores que sean Personas Expuestas
-            Políticamente? <span class="text-red-500">*</span>
-          </label>
-          <div class="radio-spacing">
-            <div class="radio-option">
-              <input type="radio" id="personas_expuestas_si" name="personas_expuestas" value="Sí"
-                formControlName="personas_expuestas" />
-              <label for="personas_expuestas_si">
-                Sí
-              </label>
-            </div>
-            <div class="radio-option">
-              <input type="radio" id="personas_expuestas_no" name="personas_expuestas" value="No"
-                formControlName="personas_expuestas" />
-              <label for="personas_expuestas_no">
-                No
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <!--  5.¿Está listado en alguna Bolsa de Valores internacional? -->
-        <div class="trib-otro">
-          <label class="text-sm font-medium text-gray-700">
-            5. ¿Está listado en alguna Bolsa de Valores internacional? <span class="text-red-500">*</span>
-          </label>
-          <div class="radio-spacing">
-            <div class="radio-option">
-              <input type="radio" id="bolsa_valores_si" name="bolsa_valores" value="Sí" formControlName="bolsa_valores" />
-              <label for="bolsa_valores_si">
-                Sí
-              </label>
-            </div>
-            <div class="radio-option">
-              <input type="radio" id="bolsa_valores_no" name="bolsa_valores" value="No" formControlName="bolsa_valores" />
-              <label for="bolsa_valores_no">
-                No
-              </label>
-            </div>
-          </div>
-        </div>
-
       </div>
 
     </div>
