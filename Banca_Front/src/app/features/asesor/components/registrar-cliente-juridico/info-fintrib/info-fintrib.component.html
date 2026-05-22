@@ -24,7 +24,7 @@
           <!--  Ingresos no operacionales mensuales -->
           <div class="input-stuff">
             <label class="block text-sm font-medium text-gray-700 mb-2">
-              Ingresos operacionales mensuales <span class="text-red-500">*</span>
+              Ingresos no operacionales mensuales <span class="text-red-500">*</span>
             </label>
             <input id="ingresos_no_op" type="text" (input)="formatearMoneda($event, 'ingresos_no_op')"
               formControlName="ingresos_no_op" min="1" (keydown)="bloquearNegativos($event)" class="input-field"
