@@ -69,3 +69,20 @@ td {
     border: 1px solid black;
     text-align: center;
 }
+
+.table-btn {
+    padding: 5px;
+    width: 64px;
+    height: 32px;
+    background-color: #2563eb;
+    color: white;
+    font-weight: 500;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.15s ease-in-out;
+    border: none;
+}
+
+.table-btn:hover {
+    background-color: #1d4ed8;
+}

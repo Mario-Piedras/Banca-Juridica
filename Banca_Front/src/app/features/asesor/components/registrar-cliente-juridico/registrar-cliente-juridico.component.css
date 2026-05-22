@@ -68,6 +68,13 @@
   cursor: pointer;
 }
 
+/* Formato del label de las opciones de radio */
+.radio-option label {
+  color: var(--color-gray-700);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--text-sm);
+}
+
 /* Estilos de botones del formulario */
 .form-btn {
   padding: 0.5rem 1.5rem;
@@ -93,5 +100,7 @@
 .form-buttons-display {
   display: flex;
   justify-content: space-between;
-  margin-top: calc(var(--spacing) * 6)/* 1.5rem = 24px */;
+  margin-top: calc(var(--spacing) * 6)
+    /* 1.5rem = 24px */
+  ;
 }
