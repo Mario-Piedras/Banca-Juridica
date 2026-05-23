@@ -6,11 +6,8 @@
       <div *ngFor="let representante of representantes.controls; let i = index" [formGroupName]="i"
         class="form-spacing">
 
-        <h2 class="text-lg font-bold mb-4">
-          {{ i === 0
-          ? ' '
-          : 'Contacto adicional'
-          }}
+        <h2 *ngIf="i !== 0" class="text-lg font-bold mb-4">
+          Contacto adicional
         </h2>
 
         <!-- Primera fila -->
@@ -36,13 +33,13 @@
             <label class="block text-sm font-medium text-gray-700 mb-2">
               Número de documento: <span class="text-red-500">*</span>
             </label>
-            <input id="num_documento" type="text" formControlName="num_documento" maxlength="20"
-              (keypress)="soloNumeros($event)" class="input-field" placeholder="Ej: 1234567890">
+            <input id="num_documento" type="text" formControlName="num_documento" maxlength="12"
+              (keypress)="validarDocumento($event, representante)" class="input-field" placeholder="Ej: 1234567890"/>
             <div class="text-red-500 text-xs mt-1"
               *ngIf="representante.get('num_documento')?.invalid && representante.get('num_documento')?.touched">
-              <span *ngIf="representante.get('num_documento')?.errors?.['required']">Campo obligatorio (5
+              <span *ngIf="representante.get('num_documento')?.errors?.['required']">Campo obligatorio (6
                 dígitos)</span>
-              <span *ngIf="representante.get('num_documento')?.errors?.['minlength']">Mínimo 5 dígitos</span>
+              <span *ngIf="representante.get('num_documento')?.errors?.['minlength']">Mínimo 6 dígitos</span>
             </div>
           </div>
 
@@ -88,14 +85,12 @@
           <!-- Segundo apellido -->
           <div class="input-stuff">
             <label class="block text-sm font-medium text-gray-700 mb-2">
-              Segundo apellido <span class="text-red-500">*</span>
+              Segundo apellido (opcional)
             </label>
             <input id="segundo_apellido" type="text" formControlName="segundo_apellido" maxlength="50"
               (keypress)="soloLetras($event)" class="input-field" placeholder="Ej: Placeholder">
             <div class="text-red-500 text-xs mt-1"
               *ngIf="representante.get('segundo_apellido')?.invalid && representante.get('segundo_apellido')?.touched">
-              <span *ngIf="representante.get('segundo_apellido')?.errors?.['required']">Campo obligatorio (5
-                dígitos)</span>
               <span *ngIf="representante.get('segundo_apellido')?.errors?.['minlength']">Mínimo 5 dígitos</span>
             </div>
           </div>

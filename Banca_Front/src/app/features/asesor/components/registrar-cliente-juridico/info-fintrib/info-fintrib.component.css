@@ -62,7 +62,7 @@
 table,
 th {
     border: 1px solid black;
-    width: -webkit-fill-available;
+    width: 512px;
 }
 
 td {

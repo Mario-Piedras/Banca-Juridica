@@ -36,12 +36,12 @@ export class InformacionFinancieraTributariaComponent implements OnInit {
       ingresos_op: ['', [
         Validators.required,
         Validators.min(1),
-        Validators.max(9999999999999.99)
+        Validators.max(9999999999999)
       ]],
       ingresos_no_op: ['', [
         Validators.required,
         Validators.min(1),
-        Validators.max(9999999999999.99)
+        Validators.max(9999999999999)
       ]],
       detalle_ingresos: ['', [
         Validators.required,
@@ -52,7 +52,7 @@ export class InformacionFinancieraTributariaComponent implements OnInit {
       ventas_anuales: ['', [
         Validators.required,
         Validators.min(1),
-        Validators.max(9999999999999.99)
+        Validators.max(9999999999999)
       ]],
       fecha_cierre_ventas: ['', [
         Validators.required,
@@ -61,27 +61,26 @@ export class InformacionFinancieraTributariaComponent implements OnInit {
       egresos_mensuales: ['', [
         Validators.required,
         Validators.min(1),
-        Validators.max(9999999999999.99)
+        Validators.max(9999999999999)
       ]],
       utilidad_neta: ['', [
         Validators.required,
         Validators.min(1),
-        Validators.max(9999999999999.99)
+        Validators.max(9999999999999)
       ]],
       total_activos: ['', [
         Validators.required,
         Validators.min(1),
-        Validators.max(9999999999999.99)
+        Validators.max(9999999999999)
       ]],
       total_pasivos: ['', [
         Validators.required,
         Validators.min(1),
-        Validators.max(9999999999999.99)
+        Validators.max(9999999999999)
       ]],
       total_patrimonio: ['', [
         Validators.required,
-        Validators.min(1),
-        Validators.max(9999999999999.99)
+        Validators.max(9999999999999)
       ]],
       // Información tributaria
       tipo_contribuyente: ['', Validators.required],
@@ -110,6 +109,15 @@ export class InformacionFinancieraTributariaComponent implements OnInit {
     if (this.datosIniciales) {
       this.form.patchValue(this.datosIniciales);
     }
+
+    // Calcular patrimonio automáticamente
+    this.form.get('total_activos')?.valueChanges.subscribe(() => {
+      this.calcularPatrimonio();
+    });
+
+    this.form.get('total_pasivos')?.valueChanges.subscribe(() => {
+      this.calcularPatrimonio();
+    });
 
     // Cargar localStorage
     const dataStorage = localStorage.getItem(
@@ -148,6 +156,27 @@ export class InformacionFinancieraTributariaComponent implements OnInit {
     localStorage.removeItem(
       this.STORAGE_KEY
     );
+  }
+
+  calcularPatrimonio(): void {
+    const activos = Number(this.form.get('total_activos')?.value) || 0;
+    const pasivos = Number(this.form.get('total_pasivos')?.value) || 0;
+    const patrimonio = activos - pasivos;
+
+    // Guardar valor numérico real
+    this.form.get('total_patrimonio')?.setValue(
+      patrimonio > 0 ? patrimonio : 0,
+      { emitEvent: false }
+    );
+
+    // Mostrar formato moneda en el input
+    const inputPatrimonio =
+      document.getElementById('total_patrimonio') as HTMLInputElement;
+
+    if (inputPatrimonio) {
+      inputPatrimonio.value =
+        patrimonio.toLocaleString('es-CO');
+    }
   }
 
   agregarPais(): void {
@@ -449,8 +478,11 @@ export class InformacionFinancieraTributariaComponent implements OnInit {
   formatearMoneda(event: Event, campo: string): void {
     const input = event.target as HTMLInputElement;
 
-    // Solo números
+    // Eliminar todo lo que no sea número
     let valor = input.value.replace(/\D/g, '');
+
+    // Limitar a 13 dígitos reales
+    valor = valor.substring(0, 13);
 
     if (!valor) {
       input.value = '';
@@ -460,13 +492,13 @@ export class InformacionFinancieraTributariaComponent implements OnInit {
 
     const numero = Number(valor);
 
-    // Guardar el número real en el formulario
+    // Guardar valor limpio
     this.form.get(campo)?.setValue(numero, {
       emitEvent: false
     });
 
-    // Mostrar formato COP
-    input.value = '' + numero.toLocaleString('es-CO');
+    // Mostrar con separadores
+    input.value = numero.toLocaleString('es-CO');
   }
 
 }

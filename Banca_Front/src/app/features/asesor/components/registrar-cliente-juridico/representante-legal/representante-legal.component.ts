@@ -40,7 +40,7 @@ export class RepresentanteLegalComponent implements OnInit {
       tipo_documento: ['', Validators.required],
       num_documento: ['', [
         Validators.required,
-        Validators.minLength(10),
+        Validators.minLength(6),
         Validators.maxLength(20),
         Validators.pattern(/^[0-9]+$/)
       ]],
@@ -62,7 +62,6 @@ export class RepresentanteLegalComponent implements OnInit {
         Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
       ]],
       segundo_apellido: ['', [
-        Validators.required,
         Validators.maxLength(50),
         Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]*$/)
       ]],
@@ -145,6 +144,39 @@ export class RepresentanteLegalComponent implements OnInit {
           console.log(key, control.errors);
         }
       })
+    });
+
+    // Tipo documentos
+    this.representantes.controls.forEach((rep: any) => {
+
+      rep.get('tipo_documento')?.valueChanges.subscribe((tipo: string) => {
+
+        const numDocumento = rep.get('num_documento');
+
+        if (tipo === 'Pasaporte') {
+
+          numDocumento?.setValidators([
+            Validators.required,
+            Validators.minLength(6),
+            Validators.maxLength(12),
+            Validators.pattern(/^[a-zA-Z0-9]+$/)
+          ]);
+
+        } else {
+
+          numDocumento?.setValidators([
+            Validators.required,
+            Validators.minLength(6),
+            Validators.maxLength(11),
+            Validators.pattern(/^[0-9]+$/)
+          ]);
+
+        }
+
+        numDocumento?.updateValueAndValidity();
+
+      });
+
     });
 
     // Crear representante principal
@@ -276,6 +308,44 @@ export class RepresentanteLegalComponent implements OnInit {
       inputChar === 'Tab' || inputChar === 'ArrowLeft' || inputChar === 'ArrowRight') {
       return;
     }
+    if (!pattern.test(inputChar)) {
+      event.preventDefault();
+    }
+  }
+
+  validarDocumento(event: KeyboardEvent, representante: any) {
+
+    const tipoDocumento =
+      representante.get('tipo_documento')?.value;
+
+    const inputChar = event.key;
+
+    // Permitir teclas especiales
+    if (
+      inputChar === 'Backspace' ||
+      inputChar === 'Delete' ||
+      inputChar === 'Tab' ||
+      inputChar === 'ArrowLeft' ||
+      inputChar === 'ArrowRight'
+    ) {
+      return;
+    }
+
+    // PASAPORTE → alfanumérico
+    if (tipoDocumento === 'Pasaporte') {
+
+      const pattern = /^[a-zA-Z0-9]$/;
+
+      if (!pattern.test(inputChar)) {
+        event.preventDefault();
+      }
+
+      return;
+    }
+
+    // RESTO → solo números
+    const pattern = /^[0-9]$/;
+
     if (!pattern.test(inputChar)) {
       event.preventDefault();
     }
