@@ -373,8 +373,6 @@ export class InformacionFinancieraTributariaComponent implements OnInit {
         localStorage.removeItem(
           this.STORAGE_KEY
         );
-
-        alert('Datos guardados correctamente');
         this.nextTab.emit();
 
       },

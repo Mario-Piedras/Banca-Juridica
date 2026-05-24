@@ -2,14 +2,6 @@
   <!--  Navegación -->
   <div class="navbar-items">
 
-    <!--     <div class="coso-navbar">
-      Información general
-    </div>
-
-    <div class="coso-navbar2">
-      Representante legal
-    </div> -->
-
     <button class="px-6 py-3 font-medium text-sm transition-colors relative"
       [class.text-blue-600]="pestanaActiva === 'informacion-general'"
       [class.border-b-2]="pestanaActiva === 'informacion-general'"
@@ -45,7 +37,8 @@
       [class.text-blue-600]="pestanaActiva === 'origenbienes-infosocios'"
       [class.border-b-2]="pestanaActiva === 'origenbienes-infosocios'"
       [class.border-blue-600]="pestanaActiva === 'origenbienes-infosocios'"
-      [class.text-gray-500]="pestanaActiva !== 'origenbienes-infosocios'" (click)="cambiarPestana('origenbienes-infosocios')">
+      [class.text-gray-500]="pestanaActiva !== 'origenbienes-infosocios'"
+      (click)="cambiarPestana('origenbienes-infosocios')">
       Origen de bienes y asociados
     </button>
 
@@ -89,4 +82,11 @@
     </div>
 
   </div>
+
+  <!-- Modal de confirmación -->
+  <app-confirm-modal [visible]="modalVisible" [type]="modalType" [title]="modalTitle" [message]="modalMessage"
+    [confirmText]="modalConfirmText" [cancelText]="modalCancelText" [showCancel]="modalShowCancel"
+    (confirm)="onModalConfirm()" (cancel)="onModalCancel()">
+  </app-confirm-modal>
+
 </div>

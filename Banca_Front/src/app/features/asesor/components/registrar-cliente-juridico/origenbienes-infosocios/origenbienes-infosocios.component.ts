@@ -213,7 +213,7 @@ export class DeclaracionBienesInfoSociosComponent implements OnInit {
 
         console.log('Datos guardados:', res);
 
-        alert('Sección guardada correctamente');
+        
 
         this.formChange.emit(this.form.value);
 

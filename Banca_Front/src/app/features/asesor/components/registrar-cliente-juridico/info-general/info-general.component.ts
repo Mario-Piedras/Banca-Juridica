@@ -154,7 +154,6 @@ export class InformacionGeneralComponent implements OnInit {
               res.id.toString()
             );
             console.log('ID EMPRESA:', localStorage.getItem('id_empresa'));
-            alert('Sección guardada correctamente');
 
             this.formChange.emit(this.form.value);
             this.nextTab.emit();

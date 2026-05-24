@@ -159,7 +159,7 @@ export class NaturalezaEntidadComponent implements OnInit {
         .subscribe({
           next: (res) => {
             console.log('Guardado en BD:', res);
-            alert('Sección guardada correctamente');
+            
 
             this.formChange.emit(this.form.value);
             this.nextTab.emit();
