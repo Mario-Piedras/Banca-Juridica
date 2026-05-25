@@ -1,0 +1,88 @@
+/* Espaciado del formulario */
+.form-spacing {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.form-column-finan {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.info-trib {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    border-top: solid #D1D5DC 2px;
+    padding: 16px 0px 0px 0px;
+}
+
+.filas-horizontales {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.primera-fila-trib {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.segun-fil-trib {
+    display: flex;
+    justify-content: space-between;
+}
+
+.trib-otro {
+    display: flex;
+    gap: 16px;
+}
+
+.pais-trib {
+    display: flex;
+    justify-content: space-between;
+}
+
+.info-extra {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.tablas {
+    margin: 0px 128px 0px 128px;
+    display: flex;
+    justify-content: center;
+}
+
+table,
+th {
+    border: 1px solid black;
+    width: 512px;
+}
+
+td {
+    border: 1px solid black;
+    text-align: center;
+}
+
+.table-btn {
+    padding: 5px;
+    width: 64px;
+    height: 32px;
+    background-color: #2563eb;
+    color: white;
+    font-weight: 500;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.15s ease-in-out;
+    border: none;
+}
+
+.table-btn:hover {
+    background-color: #1d4ed8;
+}

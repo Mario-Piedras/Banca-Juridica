@@ -1,0 +1,54 @@
+/* Espaciado del formulario */
+.form-spacing {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.fila-normal {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.fieldset-display {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.fieldset-display label {
+    width: fit-content;
+}
+
+.declaracion-bienes {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.info-socios {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    border-top: solid #D1D5DC 2px;
+    padding: 16px 0px 0px 0px;
+}
+
+.trib-otro {
+    display: flex;
+    gap: 16px;
+}
+
+.segun-fil-trib {
+    display: flex;
+    justify-content: space-between;
+    gap: 32px
+}
+
+.fila-selects {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 1rem;
+}

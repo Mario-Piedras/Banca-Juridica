@@ -1,0 +1,287 @@
+<div class="form-box">
+  <form [formGroup]="form" class="space-y-4">
+
+    <div formArrayName="representantes">
+
+      <div *ngFor="let representante of representantes.controls; let i = index" [formGroupName]="i"
+        class="form-spacing">
+
+        <h2 *ngIf="i !== 0" class="text-lg font-bold mb-4">
+          Contacto adicional
+        </h2>
+
+        <!-- Primera fila -->
+        <div class="form-column3">
+          <!-- Tipo de documento -->
+          <div class="input-stuff">
+            <label for="tipo-doc" class="block text-sm font-medium text-gray-700 mb-2">Tipo de documento:</label>
+            <select name="tipo-doc" id="tipo-doc" formControlName="tipo_documento" class="input-field">
+              <option value="" disabled>Seleccione el tipo de documento</option>
+              <option value="CC">Cédula de ciudadania</option>
+              <option value="CedulaExtranjeria">Cédula de extranjería</option>
+              <option value="Pasaporte">Pasaporte</option>
+              <option value="CarneDiplomatico">Carne diplomático</option>
+            </select>
+            <div class="text-red-500 text-xs mt-1"
+              *ngIf="representante.get('tipo_documento')?.invalid && representante.get('tipo_documento')?.touched">
+              <span *ngIf="representante.get('tipo_documento')?.errors?.['required']">Campo obligatorio</span>
+            </div>
+          </div>
+
+          <!-- Número de documento -->
+          <div class="input-stuff">
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Número de documento: <span class="text-red-500">*</span>
+            </label>
+            <input id="num_documento" type="text" formControlName="num_documento" maxlength="12"
+              (keypress)="validarDocumento($event, representante)" class="input-field" placeholder="Ej: 1234567890"/>
+            <div class="text-red-500 text-xs mt-1"
+              *ngIf="representante.get('num_documento')?.invalid && representante.get('num_documento')?.touched">
+              <span *ngIf="representante.get('num_documento')?.errors?.['required']">Campo obligatorio (6
+                dígitos)</span>
+              <span *ngIf="representante.get('num_documento')?.errors?.['minlength']">Mínimo 6 dígitos</span>
+            </div>
+          </div>
+
+          <!-- Primer nombre -->
+          <div class="input-stuff">
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Primer nombre <span class="text-red-500">*</span>
+            </label>
+            <input id="primer_nombre" type="text" formControlName="primer_nombre" maxlength="50"
+              (keypress)="soloLetras($event)" class="input-field" placeholder="Ej: Placeholder">
+            <div class="text-red-500 text-xs mt-1"
+              *ngIf="representante.get('primer_nombre')?.invalid && representante.get('primer_nombre')?.touched">
+              <span *ngIf="representante.get('primer_nombre')?.errors?.['required']">Campo obligatorio (5
+                dígitos)</span>
+              <span *ngIf="representante.get('primer_nombre')?.errors?.['minlength']">Mínimo 5 dígitos</span>
+            </div>
+          </div>
+
+          <!-- Segundo nombre -->
+          <div class="input-stuff">
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Segundo nombre (opcional)
+            </label>
+            <input id="segundo_nombre" type="text" formControlName="segundo_nombre" maxlength="50"
+              (keypress)="soloLetras($event)" class="input-field" placeholder="Ej: Placeholder">
+          </div>
+
+          <!-- Primer apellido -->
+          <div class="input-stuff">
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Primer apellido <span class="text-red-500">*</span>
+            </label>
+            <input id="primer_apellido" type="text" formControlName="primer_apellido" maxlength="50"
+              (keypress)="soloLetras($event)" class="input-field" placeholder="Ej: Placeholder">
+            <div class="text-red-500 text-xs mt-1"
+              *ngIf="representante.get('primer_apellido')?.invalid && representante.get('primer_apellido')?.touched">
+              <span *ngIf="representante.get('primer_apellido')?.errors?.['required']">Campo obligatorio (5
+                dígitos)</span>
+              <span *ngIf="representante.get('primer_apellido')?.errors?.['minlength']">Mínimo 5 dígitos</span>
+            </div>
+          </div>
+
+          <!-- Segundo apellido -->
+          <div class="input-stuff">
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Segundo apellido (opcional)
+            </label>
+            <input id="segundo_apellido" type="text" formControlName="segundo_apellido" maxlength="50"
+              (keypress)="soloLetras($event)" class="input-field" placeholder="Ej: Placeholder">
+            <div class="text-red-500 text-xs mt-1"
+              *ngIf="representante.get('segundo_apellido')?.invalid && representante.get('segundo_apellido')?.touched">
+              <span *ngIf="representante.get('segundo_apellido')?.errors?.['minlength']">Mínimo 5 dígitos</span>
+            </div>
+          </div>
+
+          <!-- Cargo -->
+          <div class="input-stuff">
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Cargo <span class="text-red-500">*</span>
+            </label>
+            <input id="cargo" type="text" formControlName="cargo" maxlength="50" (keypress)="soloLetras($event)"
+              class="input-field" placeholder="Ej: Placeholder">
+            <div class="text-red-500 text-xs mt-1"
+              *ngIf="representante.get('cargo')?.invalid && representante.get('cargo')?.touched">
+              <span *ngIf="representante.get('cargo')?.errors?.['required']">Campo obligatorio (5 dígitos)</span>
+              <span *ngIf="representante.get('cargo')?.errors?.['minlength']">Mínimo 5 dígitos</span>
+            </div>
+          </div>
+
+          <!-- Dirección laboral -->
+          <div class="input-stuff">
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Dirección laboral <span class="text-red-500">*</span>
+            </label>
+            <input id="dir_laboral" type="text" formControlName="dir_laboral" maxlength="50" class="input-field"
+              placeholder="Ej: Cl. 40 #30-44">
+            <div class="text-red-500 text-xs mt-1"
+              *ngIf="representante.get('dir_laboral')?.invalid && representante.get('dir_laboral')?.touched">
+              <span *ngIf="representante.get('dir_laboral')?.errors?.['required']">Campo obligatorio (5 dígitos)</span>
+              <span *ngIf="representante.get('dir_laboral')?.errors?.['minlength']">Mínimo 5 dígitos</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Segunda fila -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+          <!-- Barrio -->
+          <div class="input-stuff">
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Barrio <span class="text-red-500">*</span>
+            </label>
+            <input id="barrio" type="text" formControlName="barrio" maxlength="50" (keypress)="soloLetras($event)"
+              class="input-field" placeholder="Ej: Placeholder">
+            <div class="text-red-500 text-xs mt-1"
+              *ngIf="representante.get('barrio')?.invalid && representante.get('barrio')?.touched">
+              <span *ngIf="representante.get('barrio')?.errors?.['required']">Campo obligatorio (5 dígitos)</span>
+              <span *ngIf="representante.get('barrio')?.errors?.['minlength']">Mínimo 5 dígitos</span>
+            </div>
+          </div>
+
+          <!-- Ciudad/Municipio -->
+          <div class="input-stuff">
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Ciudad/Municipio <span class="text-red-500">*</span>
+            </label>
+            <input id="ciudad_municipio" type="text" formControlName="ciudad_municipio" maxlength="50"
+              (keypress)="soloLetras($event)" class="input-field" placeholder="Ej: Palmira">
+            <div class="text-red-500 text-xs mt-1"
+              *ngIf="representante.get('ciudad_municipio')?.invalid && representante.get('ciudad_municipio')?.touched">
+              <span *ngIf="representante.get('ciudad_municipio')?.errors?.['required']">Campo obligatorio (5
+                dígitos)</span>
+              <span *ngIf="representante.get('ciudad_municipio')?.errors?.['minlength']">Mínimo 5 dígitos</span>
+            </div>
+          </div>
+
+          <!-- Departamento -->
+          <div class="input-stuff">
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Departamento <span class="text-red-500">*</span>
+            </label>
+            <input id="departamento" type="text" formControlName="departamento" maxlength="50"
+              (keypress)="soloLetras($event)" class="input-field" placeholder="Ej: Valle del cauca">
+            <div class="text-red-500 text-xs mt-1"
+              *ngIf="representante.get('departamento')?.invalid && representante.get('departamento')?.touched">
+              <span *ngIf="representante.get('departamento')?.errors?.['required']">Campo obligatorio (5 dígitos)</span>
+              <span *ngIf="representante.get('departamento')?.errors?.['minlength']">Mínimo 5 dígitos</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Tercera fila -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+
+          <!-- País -->
+          <div class="input-stuff">
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              País <span class="text-red-500">*</span>
+            </label>
+            <input id="pais" type="text" formControlName="pais" maxlength="50" (keypress)="soloLetras($event)"
+              class="input-field" placeholder="Ej: Colombia">
+            <div class="text-red-500 text-xs mt-1"
+              *ngIf="representante.get('pais')?.invalid && representante.get('pais')?.touched">
+              <span *ngIf="representante.get('pais')?.errors?.['required']">Campo obligatorio (5 dígitos)</span>
+              <span *ngIf="representante.get('pais')?.errors?.['minlength']">Mínimo 5 dígitos</span>
+            </div>
+          </div>
+
+          <!-- Teléfono -->
+          <div class="input-stuff">
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Teléfono <span class="text-red-500">*</span>
+            </label>
+            <input id="telefono" type="tel" formControlName="telefono" maxlength="13" (keypress)="soloNumeros($event)"
+              class="input-field" placeholder="Ej: 1234567890">
+            <div class="text-red-500 text-xs mt-1"
+              *ngIf="representante.get('telefono')?.invalid && representante.get('telefono')?.touched">
+              <span *ngIf="representante.get('telefono')?.errors?.['required']">Campo obligatorio</span>
+              <span *ngIf="representante.get('telefono')?.errors?.['minlength']">Mínimo 10 dígitos</span>
+            </div>
+          </div>
+
+          <!-- Extensión -->
+          <div class="input-stuff">
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Extensión <span class="text-red-500">*</span>
+            </label>
+            <input id="ext" type="text" formControlName="ext" maxlength="5" (keypress)="soloNumeros($event)"
+              class="input-field" placeholder="Ej: 1234567890">
+            <div class="text-red-500 text-xs mt-1"
+              *ngIf="representante.get('ext')?.invalid && representante.get('ext')?.touched">
+              <span *ngIf="representante.get('ext')?.errors?.['required']">Campo obligatorio (5 dígitos)</span>
+              <span *ngIf="representante.get('ext')?.errors?.['minlength']">Mínimo 5 dígitos</span>
+            </div>
+          </div>
+
+          <!-- Celular -->
+          <div class="input-stuff">
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Celular <span class="text-red-500">*</span>
+            </label>
+            <input id="celular" type="tel" formControlName="celular" maxlength="10" (keypress)="soloNumeros($event)"
+              class="input-field" placeholder="Ej: 1234567890">
+            <div class="text-red-500 text-xs mt-1"
+              *ngIf="representante.get('celular')?.invalid && representante.get('celular')?.touched">
+              <span *ngIf="representante.get('celular')?.errors?.['required']">Campo obligatorio (5 dígitos)</span>
+              <span *ngIf="representante.get('celular')?.errors?.['minlength']">Mínimo 5 dígitos</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Correo electrónico laboral -->
+        <div class="input-stuff">
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Correo electrónico laboral <span class="text-red-500">*</span>
+          </label>
+          <input id="correo" type="email" formControlName="correo" maxlength="100" class="input-field"
+            placeholder="Ej: correo@example.com">
+          <div class="text-red-500 text-xs mt-1"
+            *ngIf="representante.get('correo')?.invalid && representante.get('correo')?.touched">
+            <span *ngIf="representante.get('correo')?.errors?.['required']">Campo obligatorio (5 dígitos)</span>
+            <span *ngIf="representante.get('correo')?.errors?.['minlength']">Mínimo 5 dígitos</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Contacto adicional -->
+    <fieldset class="fieldset-display">
+      <label class="text-sm font-medium text-gray-700">
+        Desea agregar un contacto adicional?
+      </label>
+      <div class="radio-spacing">
+        <div class="radio-option">
+          <input type="radio" id="contacto_adicional_si" name="contacto_adicional" value="Sí"
+            formControlName="contacto_adicional" />
+          <label for="contacto_adicional_si">
+            Sí
+          </label>
+        </div>
+        <div class="radio-option">
+          <input type="radio" id="contacto_adicional_no" name="contacto_adicional" value="No"
+            formControlName="contacto_adicional" />
+          <label for="contacto_adicional_no">
+            No
+          </label>
+        </div>
+      </div>
+    </fieldset>
+
+    <!-- Botones -->
+    <div class="form-buttons-display">
+      <button type="button" (click)="volver()" class="form-btn">Volver a la página anterior</button>
+      <button type="button" (click)="guardarSeccion()" [disabled]="form.invalid" class="form-btn">
+        Guardar y continuar
+      </button>
+    </div>
+
+  </form>
+</div>

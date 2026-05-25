@@ -7,33 +7,52 @@
   <!-- Formulario de búsqueda -->
   <div class="mb-6">
     <label class="block text-sm font-semibold text-gray-800 mb-2">
-      ID del asesor <span class="text-red-600">*</span>
+      Cédula o nombre <span class="text-red-600">*</span>
     </label>
-    <div class="flex gap-3">
-      <input
-        type="text"
-        [(ngModel)]="asesorId"
-        placeholder="Ej: 1"
-        [disabled]="cargando"
-        (keyup.enter)="buscarSolicitudes()"
-        class="w-100 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-400 disabled:bg-gray-100"
-      />
-      <button
-        (click)="buscarSolicitudes()"
-        [disabled]="cargando || !asesorId.trim()"
-        class="px-6 py-2 bg-blue-900 text-white rounded-md hover:bg-blue-800 transition-colors font-medium cursor-pointer disabled:bg-gray-400 disabled:cursor-not-allowed"
-      >
-        {{ cargando ? 'Buscando...' : 'Buscar' }}
-      </button>
-      <button
-        *ngIf="busquedaRealizada"
-        (click)="limpiarBusqueda()"
-        class="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors font-medium cursor-pointer"
-      >
-        Limpiar
-      </button>
+    <div class="relative">
+      <div class="flex items-center gap-3">
+        <div class="relative flex-1">
+          <input
+            type="text"
+            [(ngModel)]="cedulaNombre"
+            placeholder="Ej: 1012345678 o Juan"
+            [disabled]="cargando"
+            (keyup.enter)="buscarSolicitudes()"
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-400 disabled:bg-gray-100"
+          />
+
+          <!-- X para limpiar dentro del input -->
+          <button
+            *ngIf="busquedaRealizada && cedulaNombre"
+            type="button"
+            (click)="limpiarBusqueda()"
+            class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer"
+            title="Limpiar"
+            [disabled]="cargando"
+          >
+            ✕
+          </button>
+        </div>
+
+        <button
+          (click)="buscarSolicitudes()"
+          [disabled]="cargando"
+          class="flex items-center gap-2 px-6 py-2 bg-blue-900 text-white rounded-md hover:bg-blue-800 transition-colors font-medium cursor-pointer disabled:bg-gray-400 disabled:cursor-not-allowed"
+        >
+          <span aria-hidden="true">🔎</span>
+          {{ cargando ? 'Buscando...' : 'Buscar' }}
+        </button>
+
+        <!-- Botón filtros (placeholder visual) -->
+        <button
+          type="button"
+          class="p-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors cursor-pointer"
+          title="Abrir filtros"
+        >
+          ⚙️
+        </button>
+      </div>
     </div>
-    <p class="text-xs text-gray-500 mt-1">Ingrese el ID del asesor</p>
 
     <!-- Mensaje de error -->
     <div *ngIf="error" class="mt-2 p-3 bg-red-50 border border-red-200 rounded-md flex items-center gap-2">

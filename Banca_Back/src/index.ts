@@ -10,14 +10,14 @@ import cajeroRoutes from './modules/cajero/cajero.routes';
 import directorRoutes from './modules/director-operativo/director.routes';
 import cajeroPrincipalRoutes from './modules/cajero_principal/cajero_principal.routes';
 import authRoutes from './auth/auth.routes';
-import declaracionBienesRoutes from './modules/cajero/routes/declaracionbienes.routes';
-import infoEmpresasRoutes from './modules/cajero/routes/infoempresas.routes';
-import infoFinancieraRoutes from './modules/cajero/routes/infofinanciera.routes';
-import infoTributariaRoutes from './modules/cajero/routes/infotributaria.routes';
-import infoSociosRoutes from './modules/cajero/routes/infosocios.routes';
-import paisTributarRoutes from './modules/cajero/routes/paistributar.routes';
-import personasAsoRoutes from './modules/cajero/routes/personasaso.routes';
-import tipoEntidadRoutes from './modules/cajero/routes/tipoentidad.routes';
+import declaracionBienesRoutes from './modules/asesor/routes/declaracionbienes.routes';
+import infoEmpresasRoutes from './modules/asesor/routes/infoempresas.routes';
+import infoFinancieraRoutes from './modules/asesor/routes/infofinanciera.routes';
+import infoTributariaRoutes from './modules/asesor/routes/infotributaria.routes';
+import infoSociosRoutes from './modules/asesor/routes/infosocios.routes';
+import paisTributarRoutes from './modules/asesor/routes/paistributar.routes';
+import personasAsoRoutes from './modules/asesor/routes/personasaso.routes';
+import tipoEntidadRoutes from './modules/asesor/routes/tipoentidad.routes';
 
 
 const app = express();

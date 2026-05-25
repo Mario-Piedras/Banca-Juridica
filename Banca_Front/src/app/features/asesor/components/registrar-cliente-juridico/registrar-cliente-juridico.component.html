@@ -1,0 +1,92 @@
+<div class="p-4 max-w-7xl mx-auto">
+  <!--  Navegación -->
+  <div class="navbar-items">
+
+    <button class="px-6 py-3 font-medium text-sm transition-colors relative"
+      [class.text-blue-600]="pestanaActiva === 'informacion-general'"
+      [class.border-b-2]="pestanaActiva === 'informacion-general'"
+      [class.border-blue-600]="pestanaActiva === 'informacion-general'"
+      [class.text-gray-500]="pestanaActiva !== 'informacion-general'" (click)="cambiarPestana('informacion-general')">
+      Información general
+    </button>
+
+    <button class="px-6 py-3 font-medium text-sm transition-colors relative"
+      [class.text-blue-600]="pestanaActiva === 'representante-legal'"
+      [class.border-b-2]="pestanaActiva === 'representante-legal'"
+      [class.border-blue-600]="pestanaActiva === 'representante-legal'"
+      [class.text-gray-500]="pestanaActiva !== 'representante-legal'" (click)="cambiarPestana('representante-legal')">
+      Representante legal
+    </button>
+
+    <button class="px-6 py-3 font-medium text-sm transition-colors relative"
+      [class.text-blue-600]="pestanaActiva === 'naturaleza-tipo'"
+      [class.border-b-2]="pestanaActiva === 'naturaleza-tipo'"
+      [class.border-blue-600]="pestanaActiva === 'naturaleza-tipo'"
+      [class.text-gray-500]="pestanaActiva !== 'naturaleza-tipo'" (click)="cambiarPestana('naturaleza-tipo')">
+      Naturaleza y tipo de entidad
+    </button>
+
+    <button class="px-6 py-3 font-medium text-sm transition-colors relative"
+      [class.text-blue-600]="pestanaActiva === 'info-fintrib'" [class.border-b-2]="pestanaActiva === 'info-fintrib'"
+      [class.border-blue-600]="pestanaActiva === 'info-fintrib'"
+      [class.text-gray-500]="pestanaActiva !== 'info-fintrib'" (click)="cambiarPestana('info-fintrib')">
+      Información financiera y tributaria
+    </button>
+
+    <button class="px-6 py-3 font-medium text-sm transition-colors relative"
+      [class.text-blue-600]="pestanaActiva === 'origenbienes-infosocios'"
+      [class.border-b-2]="pestanaActiva === 'origenbienes-infosocios'"
+      [class.border-blue-600]="pestanaActiva === 'origenbienes-infosocios'"
+      [class.text-gray-500]="pestanaActiva !== 'origenbienes-infosocios'"
+      (click)="cambiarPestana('origenbienes-infosocios')">
+      Origen de bienes y asociados
+    </button>
+
+  </div>
+
+  <!--  Contenido de pestañas -->
+  <div class="space-y-6">
+
+    <!-- Pestaña 1: Información general -->
+    <div *ngIf="pestanaActiva === 'informacion-general'">
+      <app-info-general [datosIniciales]="clienteData.infoGeneral" (formChange)="actualizarDatos('infoGeneral', $event)"
+        (nextTab)="manejarNextTab()"></app-info-general>
+    </div>
+
+    <!-- Pestaña 2: Representante legal -->
+    <div *ngIf="pestanaActiva === 'representante-legal'">
+      <app-representante-legal [datosIniciales]="clienteData.representanteLegal"
+        (formChange)="actualizarDatos('representanteLegal', $event)" (nextTab)="manejarNextTab()"
+        (prevTab)="manejarPrevTab()"></app-representante-legal>
+    </div>
+
+    <!-- Pestaña 3: Naturaleza y tipo de entidad -->
+    <div *ngIf="pestanaActiva === 'naturaleza-tipo'">
+      <app-naturaleza-tipo [datosIniciales]="clienteData.naturalezaEntidad"
+        (formChange)="actualizarDatos('naturalezaEntidad', $event)" (nextTab)="manejarNextTab()"
+        (prevTab)="manejarPrevTab()"></app-naturaleza-tipo>
+    </div>
+
+    <!-- Pestaña 4: Información financiera y tributaria -->
+    <div *ngIf="pestanaActiva === 'info-fintrib'">
+      <app-info-fintrib [datosIniciales]="clienteData.infoFinancieraTributaria"
+        (formChange)="actualizarDatos('infoFinancieraTributaria', $event)" (nextTab)="manejarNextTab()"
+        (prevTab)="manejarPrevTab()"></app-info-fintrib>
+    </div>
+
+    <!-- Pestaña 5: Origen de bienes y asociados -->
+    <div *ngIf="pestanaActiva === 'origenbienes-infosocios'">
+      <app-origenbienes-infosocios [datosIniciales]="clienteData.declaracionBienesInfoSocios"
+        (formChange)="actualizarDatos('declaracionBienesInfoSocios', $event)" (nextTab)="manejarNextTab()"
+        (prevTab)="manejarPrevTab()"></app-origenbienes-infosocios>
+    </div>
+
+  </div>
+
+  <!-- Modal de confirmación -->
+  <app-confirm-modal [visible]="modalVisible" [type]="modalType" [title]="modalTitle" [message]="modalMessage"
+    [confirmText]="modalConfirmText" [cancelText]="modalCancelText" [showCancel]="modalShowCancel"
+    (confirm)="onModalConfirm()" (cancel)="onModalCancel()">
+  </app-confirm-modal>
+
+</div>

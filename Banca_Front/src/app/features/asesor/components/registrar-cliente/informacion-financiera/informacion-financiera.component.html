@@ -9,7 +9,7 @@
         </label>
         <input id="ingresosMensuales" type="number" formControlName="ingresosMensuales"
           (keydown)="onEnterKey($event, 'egresosMensuales')" min="0" max="999999999999"
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Ej: 3000000">
         <div class="text-red-500 text-xs mt-1"
           *ngIf="form.get('ingresosMensuales')?.invalid && form.get('ingresosMensuales')?.touched">
@@ -26,7 +26,7 @@
         </label>
         <input id="egresosMensuales" type="number" formControlName="egresosMensuales"
           (keydown)="onEnterKey($event, 'totalActivos')" min="0" max="999999999999"
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Ej: 1500000">
         <div class="text-red-500 text-xs mt-1"
           *ngIf="form.get('egresosMensuales')?.invalid && form.get('egresosMensuales')?.touched">
@@ -43,7 +43,7 @@
         </label>
         <input id="totalActivos" type="number" formControlName="totalActivos"
           (keydown)="onEnterKey($event, 'totalPasivos')" min="0" max="999999999999"
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Ej: 50000000">
         <div class="text-red-500 text-xs mt-1"
           *ngIf="form.get('totalActivos')?.invalid && form.get('totalActivos')?.touched">
@@ -59,7 +59,7 @@
           Total Pasivos <span class="text-red-500">*</span>
         </label>
         <input id="totalPasivos" type="number" formControlName="totalPasivos" min="0" max="999999999999"
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Ej: 10000000">
         <div class="text-red-500 text-xs mt-1"
           *ngIf="form.get('totalPasivos')?.invalid && form.get('totalPasivos')?.touched">
@@ -73,8 +73,8 @@
 
     <!-- Botón Guardar -->
     <div class="flex justify-end mt-6">
-      <button type="button" (click)="guardarSeccion()" [disabled]="!form.valid" [class]="form.valid 
-          ? 'px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors cursor-pointer' 
+      <button type="button" (click)="guardarSeccion()" [disabled]="!form.valid" [class]="form.valid
+          ? 'px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors cursor-pointer'
           : 'px-6 py-2 bg-gray-300 text-gray-500 font-medium rounded-lg cursor-not-allowed'">
         Guardar y Continuar
       </button>
