@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core'; // ← AÑADIR OnInit
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+//import { HttpClientModule } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AsesorService } from '../../../asesor/services/asesor.service';
 
@@ -19,7 +19,7 @@ import { FactaComponent } from './informacion-factca/informacion-factac.componen
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    HttpClientModule,
+    //HttpClientModule,
     InformacionPersonalComponent,
     ContactoPersonalComponent,
     InformacionLaboralComponent,

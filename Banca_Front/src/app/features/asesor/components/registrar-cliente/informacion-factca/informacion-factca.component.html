@@ -41,7 +41,7 @@
         País de Residencia Fiscal <span class="text-red-500">*</span>
       </label>
       <input id="pais" type="text" formControlName="pais" (keypress)="soloLetras($event)" maxlength="100"
-        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        class="placeholder-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         placeholder="Ej: Estados Unidos">
       <div class="text-red-500 text-xs mt-1" *ngIf="form.get('pais')?.invalid && form.get('pais')?.touched">
         <span *ngIf="form.get('pais')?.errors?.['required']">Campo obligatorio</span>
@@ -63,8 +63,8 @@
 
     <!-- Botón Guardar -->
     <div class="flex justify-end mt-6">
-      <button type="button" (click)="guardarSeccion()" [disabled]="!form.valid" [class]="form.valid 
-          ? 'px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors cursor-pointer' 
+      <button type="button" (click)="guardarSeccion()" [disabled]="!form.valid" [class]="form.valid
+          ? 'px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors cursor-pointer'
           : 'px-6 py-2 bg-gray-300 text-gray-500 font-medium rounded-lg cursor-not-allowed'">
         Guardar y Finalizar
       </button>

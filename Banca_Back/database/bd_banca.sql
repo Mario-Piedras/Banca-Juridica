@@ -643,3 +643,210 @@ INSERT INTO boveda (
   150000000.00,    
   3                -- Usuario "Luis Fernández" (Director operativo)
 );
+
+CREATE TABLE info_socios (
+	id_info_socios INT PRIMARY KEY AUTO_INCREMENT,
+    rnve ENUM('Sí','No') DEFAULT 'No',
+    hay_socios_accionistas ENUM('Sí','No') DEFAULT 'No',
+    personas_control ENUM('Sí','No') DEFAULT 'No',
+    personas_expuestas ENUM('Sí','No') DEFAULT 'No',
+    bolsa_valores ENUM('Sí','No') DEFAULT 'No'
+);
+
+CREATE TABLE tipo_entidad (
+	id_tipo_entidad INT PRIMARY KEY AUTO_INCREMENT,
+    naturaleza ENUM('Privada', 'Pública', 'Mixta') NOT NULL,
+    codigo_ciiu VARCHAR(10) NOT NULL,
+    actividad_economia VARCHAR(200) NOT NULL,
+    num_empleados INT NOT NULL,
+    tipo_sociedad ENUM('Por acciones simplificadas S.A.S', 'Anónima', 'Limitada', 
+		'En comandita simple', 'En comandita por acciones', 'Sin animo de lucro',
+        'Sucursal de sociedad extranjera', 'Empresa unipersonal', 'Asociación civi',
+        'Sociedad de hecho', 'Colectiva', 'Otra') NOT NULL,
+	otra_sociedad VARCHAR(100),
+    tipo_asociacion ENUM('Establecimiento público', 'Empresa industrial y comercial del estado', 'Sociedad de economía mixta', 
+		'Empresa social del estado', 'Empresa servicios públicos domiciliario', 'Entidades financieras', 
+        'Fondos mutuos de inversión', 'Fondos de empleados', 'Cooperativas', 'Precooperativas', 
+        'Copropiedades', 'Personas jurídicas de derecho canónico', 'Entidades religiosas no católicas', 
+        'Sindicatos', 'Fundaciones', 'Corporaciones y asociaciones', 'Partido político', 
+        'Consorcio', 'Unión temporal', 'Otra') NOT NULL,
+	otra_asociacion VARCHAR(100),
+    ent_estatal ENUM('Nación', 'Departamento', 'Municipio', 'Otra'),
+    otra_ent_estatal VARCHAR(100),
+    ent_estatal_descentralizada ENUM('Naciónal', 'Departamental', 'Municipal')
+);
+
+CREATE TABLE declaracion_bienes (
+	id_declaracion INT PRIMARY KEY AUTO_INCREMENT,
+    origen_bienes ENUM('Compraventa', 'Aporte de socios', 'Utilidades', 'Otro') NOT NULL,
+    otro_origen_bienes VARCHAR(100),
+    fuente_recursos ENUM('Capitalización por parte de socios', 'Utilidades del negocio', 'Desarrollo del objeto social', 'Otra') NOT NULL,
+    otra_fuente_recursos VARCHAR(100),
+    pais_origen_bienes VARCHAR(100) NOT NULL,
+    ciudad_origen_bienes VARCHAR(100) NOT NULL,
+    recursos_inembargables ENUM('Sí','No') DEFAULT 'No',
+    op_moneda_extj ENUM('Sí','No') DEFAULT 'No'
+);
+
+CREATE TABLE info_financiera_emp (
+	id_info_financiera INT PRIMARY KEY AUTO_INCREMENT,
+  ingresos_op DECIMAL(15,2) DEFAULT 0.0,
+  ingresos_no_op DECIMAL(15,2) DEFAULT 0.0,
+  detalle_ingresos VARCHAR(100),
+    ventas_anuales DECIMAL(15,2) DEFAULT 0.00,
+    fecha_cierre_ventas DATE NOT NULL,
+    egresos_mensuales DECIMAL(15,2) DEFAULT 0.00,
+    utilidad_neta DECIMAL(15,2) DEFAULT 0.00,
+    total_activos DECIMAL(15,2) DEFAULT 0.00,
+    total_pasivos DECIMAL(15,2) DEFAULT 0.00,
+    total_patrimonio DECIMAL(15,2) DEFAULT 0.00 /* Total activos - total pasivos*/
+);
+
+CREATE TABLE personas_asociadas (
+	id_representante INT PRIMARY KEY AUTO_INCREMENT,
+    tipo_documento ENUM('CC', 'TI', 'R.Civil', 'PPT', 'Pasaporte', 'CarneDiplomatico', 'CedulaExtranjeria') NOT NULL,
+    num_documento VARCHAR(20) NOT NULL,
+    primer_nombre VARCHAR(50) NOT NULL,
+    segundo_nombre VARCHAR(50) DEFAULT '',
+    primer_apellido VARCHAR(50) NOT NULL,
+    segundo_apellido VARCHAR(50) DEFAULT '',
+    cargo VARCHAR(50) NOT NULL,
+    dir_laboral VARCHAR(50) NOT NULL,
+    barrio VARCHAR(50) NOT NULL,
+    ciudad_municipio VARCHAR(50) NOT NULL,
+    departamento VARCHAR(50) NOT NULL,
+    pais VARCHAR(50) NOT NULL,
+    telefono VARCHAR(13),
+    ext VARCHAR(10),
+    celular VARCHAR(10),
+    correo VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE info_tributaria (
+	id_info_tributaria INT PRIMARY KEY AUTO_INCREMENT,
+    tipo_contribuyente ENUM('Personas jurídicas, comerciales y civiles, consorcios y uniones temporales', 
+    'Corporaciones, fundaciones y asociaciones sin ánimo de lucro', 'Entidad pública nacional o territorial', 
+    'Cooperativa', 'No contribuyente') DEFAULT 'No contribuyente',
+    clase_contribuyente ENUM('Gran contribuyente', 'No gran contribuyente') DEFAULT 'No gran contribuyente',
+    responsable_iva ENUM('Sí','No') DEFAULT 'No',
+    autorretenedor ENUM('Sí','No') DEFAULT 'No',
+    intermediario_mercado ENUM('Sí','No') DEFAULT 'No',
+    vigilado_superintendencia ENUM('Sí','No') DEFAULT 'No',
+    tributa_exterior ENUM('Sí','No') DEFAULT 'No'
+);
+
+CREATE TABLE pais_tributar (
+	id_pais_tributar INT PRIMARY KEY AUTO_INCREMENT,
+    pais VARCHAR(50) NOT NULL,
+    tin VARCHAR(20) NOT NULL,
+    id_info_tributaria INT NOT NULL,
+    CONSTRAINT pais_tributar_fk_1 FOREIGN KEY (id_info_tributaria) REFERENCES info_tributaria (id_info_tributaria)
+);
+
+CREATE TABLE info_empresas (
+	id_info_empresas INT PRIMARY KEY AUTO_INCREMENT,
+    nit VARCHAR(20) NOT NULL,
+    razon_social VARCHAR(100) NOT NULL,
+    nombre_corto VARCHAR(20),
+    fecha_constitución DATE NOT NULL,
+    ciudad_constitución VARCHAR(100) NOT NULL,
+    pais_constitucion VARCHAR(100) NOT NULL,
+    dir_sede_principal VARCHAR(100) NOT NULL,
+    barrio VARCHAR(50) NOT NULL,
+    ciudad_municipio VARCHAR(100) NOT NULL,
+    departamento VARCHAR(50) NOT NULL,
+    pais VARCHAR(50) NOT NULL,
+    telefono VARCHAR(13),
+    ext VARCHAR(10),
+    correo VARCHAR(100) NOT NULL,
+    id_info_financiera INT,
+    id_info_repre_legal INT,
+    id_cont_entidad INT,
+    id_info_socios INT,
+    id_tipo_entidad INT,
+    id_declaracion INT,
+    id_info_tributaria INT,
+    CONSTRAINT info_empresas_fk_1 FOREIGN KEY (id_info_financiera) REFERENCES info_financiera_emp (id_info_financiera),
+    CONSTRAINT info_empresas_fk_2 FOREIGN KEY (id_info_repre_legal) REFERENCES personas_asociadas (id_representante),
+    CONSTRAINT info_empresas_fk_3 FOREIGN KEY (id_cont_entidad) REFERENCES personas_asociadas (id_representante),
+    CONSTRAINT info_empresas_fk_4 FOREIGN KEY (id_info_socios) REFERENCES info_socios (id_info_socios),
+    CONSTRAINT info_empresas_fk_5 FOREIGN KEY (id_tipo_entidad) REFERENCES tipo_entidad (id_tipo_entidad),
+    CONSTRAINT info_empresas_fk_6 FOREIGN KEY (id_declaracion) REFERENCES declaracion_bienes (id_declaracion),
+    CONSTRAINT info_empresas_fk_7 FOREIGN KEY (id_info_tributaria) REFERENCES info_tributaria (id_info_tributaria)
+);
+
+INSERT INTO info_socios
+	(rnve, hay_socios_accionistas, personas_control, personas_expuestas, 
+    bolsa_valores) 
+VALUES
+	("Sí", "No", "No", "No","Sí");
+    
+INSERT INTO 
+	tipo_entidad(naturaleza, codigo_ciiu, actividad_economia, num_empleados, 
+    tipo_sociedad, tipo_asociacion, otra_asociacion) 
+VALUES
+	("Privada", "1071", "Comercialización de productos de panadería y repostería al por mayor.",
+    5, "Por acciones simplificadas S.A.S", "Otra", "Empresa privada S.A.S.");
+    
+INSERT INTO declaracion_bienes
+	(origen_bienes, fuente_recursos, pais_origen_bienes, ciudad_origen_bienes) 
+VALUES 
+	("Aporte de socios", "Desarrollo del objeto social", "Colombia", "Palmira");
+    
+INSERT INTO info_financiera_emp
+	(ventas_anuales, fecha_cierre_ventas, egresos_mensuales, utilidad_neta, 
+    total_activos, total_pasivos, total_patrimonio) 
+VALUES 
+	(100000000, "2000-12-31", 5000000, 3333333, 500000000, 150000000, 150000000);
+    /*Mencionar lo de la fecha, que no hay formato con solo mm-dd*/
+    
+INSERT INTO personas_asociadas 
+	(tipo_documento, num_documento, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, cargo, dir_laboral, 
+    barrio, ciudad_municipio, departamento, pais, telefono, ext, celular, correo) 
+VALUES 
+    ("CC","1127055628","Mario","José","Piedras","Lenis","Gerente","Carrera. 16a #37-42","San Pedro","Palmira",
+    "Valle del Cauca", "Colombia", "12345678", "123", "3052959858", "andrea@gmail.com"),
+    ("CC","37293702","Zulay","Andrea","Lenis","Uchima","Panadera","Carrera. 16a #37-42","San Pedro","Palmira",
+    "Valle del Cauca", "Colombia", "12345678", "321", "3158555749", "mario@gmail.com");
+    
+INSERT INTO info_tributaria 
+	(tipo_contribuyente, tributa_exterior) 
+VALUES 
+	("Personas jurídicas, comerciales y civiles, consorcios y uniones temporales", "Sí");
+    
+INSERT INTO pais_tributar 
+	(pais, tin, id_info_tributaria) 
+VALUES 
+	("Venezuela", "123456789", 1);
+    
+INSERT INTO info_empresas 
+	(nit, razon_social, nombre_corto, fecha_constitución, ciudad_constitución, pais_constitucion, dir_sede_principal, barrio, ciudad_municipio, departamento, pais, telefono, ext, correo, id_info_financiera, id_info_repre_legal, id_cont_entidad, id_info_socios, id_tipo_entidad, id_declaracion, id_info_tributaria) 
+VALUES 
+	("123456789", "Panadería y Pastelería Dulce Hogar S.A.S.", "PPDH S.A.S.", "2010-12-20", "Palmira", "Colombia", "Carrera. 16a #37-42","San Pedro","Palmira",
+    "Valle del Cauca", "Colombia", "12345678", "123", "panaderia.dulce@gmail.com", 1, 1, 2, 1, 1, 1, 1);
+
+ALTER TABLE `defaultdb`.`solicitudes_apertura` 
+ADD COLUMN `id_empresa` INT NULL,
+ADD INDEX `solicitudes_apertura_fk_1_idx` (`id_empresa` ASC) VISIBLE;
+;
+ALTER TABLE `defaultdb`.`solicitudes_apertura` 
+ADD CONSTRAINT `solicitudes_apertura_fk_1`
+  FOREIGN KEY (`id_empresa`)
+  REFERENCES `defaultdb`.`info_empresas` (`id_info_empresas`)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE;
+
+ALTER TABLE `defaultdb`.`cuentas_ahorro` 
+ADD COLUMN `id_empresa` INT NULL,
+ADD INDEX `cuentas_ahorro_fk_1_idx` (`id_empresa` ASC) VISIBLE;
+;
+ALTER TABLE `defaultdb`.`cuentas_ahorro` 
+ADD CONSTRAINT `cuentas_ahorro_fk_1`
+  FOREIGN KEY (`id_empresa`)
+  REFERENCES `defaultdb`.`info_empresas` (`id_info_empresas`)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE;
+
+ALTER TABLE defaultdb.solicitudes_apertura 
+ADD COLUMN tipo_cliente ENUM('Natural', 'Jurídica') NOT NULL DEFAULT 'Natural' AFTER id_empresa,
+ADD COLUMN proposito_cuenta ENUM('Ahorrar', 'Invertir', 'Servicios financieros en negocios fiduciarios', 'Realizar transacciones', 'Financiación', 'Recibir servicios especializados Banca de Inversión') NULL DEFAULT NULL;
