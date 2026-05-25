@@ -32,12 +32,18 @@ export const ASESOR_ROUTES: Routes = [
             (m) => m.RegistrarClienteComponent
           ),
       },
-
       {
         path: 'solicitar-producto',
         loadComponent: () =>
           import('./components/solicitar-producto/solicitar-producto.component').then(
             (m) => m.SolicitarProductoComponent
+          ),
+      },
+      {
+        path: 'solicitar-producto-juridico',
+        loadComponent: () =>
+          import('./components/solicitar-producto-juridico/solicitar-producto-juridico.component').then(
+            (m) => m.SolicitarProductoJuridicoComponent
           ),
       },
       {
