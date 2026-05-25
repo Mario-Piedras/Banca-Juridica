@@ -1,0 +1,17 @@
+:host {
+    display: block;
+}
+
+.max-w-4xl {
+    box-shadow: 0 12px 32px rgba(11, 42, 102, 0.08);
+}
+
+select option[disabled] {
+    color: #6b7280;
+}
+
+@media (max-width: 640px) {
+    .flex-col.sm\:flex-row {
+        align-items: stretch;
+    }
+}

@@ -18,18 +18,73 @@ interface Solicitud {
   imports: [FormsModule, CommonModule]
 })
 export class SolicitudesRadicadasComponent {
-  cedula: string = '';
+  tipoCliente: '' | 'Persona Natural' | 'Persona Juridica' = '';
+  identificacion: string = '';
   solicitudes: Solicitud[] = [];
   mostrarModal: boolean = false;
   comentarioActual: string = '';
   cargando: boolean = false;
   mensajeError: string = '';
 
-  constructor(private consultarService: ConsultarService) {}
+  constructor(private consultarService: ConsultarService) { }
+
+  get etiquetaDocumento(): string {
+    return this.tipoCliente === 'Persona Juridica' ? 'NIT de la empresa' : 'Cédula del cliente';
+  }
+
+  get placeholderDocumento(): string {
+    return this.tipoCliente === 'Persona Juridica' ? 'Ej: 900123456' : 'Ej: 0000001';
+  }
+
+  get ayudaDocumento(): string {
+    if (this.tipoCliente === 'Persona Juridica') {
+      return 'Ingresa el NIT de la empresa para consultar sus solicitudes radicadas.';
+    }
+
+    return 'Ingresa la cédula del cliente para consultar sus solicitudes radicadas.';
+  }
+
+  get columnaDocumento(): string {
+    return this.tipoCliente === 'Persona Juridica' ? 'NIT' : 'Cédula';
+  }
+
+  get puedeBuscar(): boolean {
+    return this.tipoCliente !== '' && this.identificacion.trim().length > 0;
+  }
+
+  onTipoClienteChange(): void {
+    this.identificacion = '';
+    this.solicitudes = [];
+    this.mensajeError = '';
+    this.cargando = false;
+  }
+
+  limpiarBusqueda(): void {
+    this.tipoCliente = '';
+    this.identificacion = '';
+    this.solicitudes = [];
+    this.mensajeError = '';
+    this.cargando = false;
+  }
 
   buscarSolicitudes(): void {
-    if (!this.cedula || this.cedula.trim() === '') {
-      this.mensajeError = 'Por favor ingrese un número de cédula';
+    if (!this.tipoCliente) {
+      this.mensajeError = 'Por favor seleccione el tipo de cliente';
+      return;
+    }
+
+    if (!this.identificacion.trim()) {
+      this.mensajeError =
+        this.tipoCliente === 'Persona Juridica'
+          ? 'Por favor ingrese el NIT de la empresa'
+          : 'Por favor ingrese la cédula del cliente';
+      return;
+    }
+
+    if (this.tipoCliente === 'Persona Juridica') {
+      this.mensajeError =
+        'La búsqueda por NIT requiere que el backend exponga el endpoint correspondiente. Mientras tanto, la vista está preparada para el selector y el campo de NIT.';
+      this.solicitudes = [];
       return;
     }
 
@@ -37,10 +92,9 @@ export class SolicitudesRadicadasComponent {
     this.mensajeError = '';
     this.solicitudes = [];
 
-    this.consultarService.buscarPorCedula(this.cedula).subscribe({
+    this.consultarService.buscarPorCedula(this.identificacion).subscribe({
       next: (data) => {
-        // Mapear la respuesta del backend al formato del frontend
-        this.solicitudes = data.map(item => ({
+        this.solicitudes = data.map((item) => ({
           id: item.id_solicitud,
           cedula: item.cedula,
           fecha: this.formatearFecha(item.fecha),
@@ -48,15 +102,14 @@ export class SolicitudesRadicadasComponent {
           producto: item.producto,
           comentario: item.comentario_asesor || ''
         }));
-        
+
         this.cargando = false;
-        
+
         if (this.solicitudes.length === 0) {
           this.mensajeError = 'No se encontraron solicitudes para esta cédula';
         }
       },
-      error: (error) => {
-        console.error('Error al buscar solicitudes:', error);
+      error: () => {
         this.mensajeError = 'Error al buscar las solicitudes. Intente nuevamente.';
         this.cargando = false;
       }
