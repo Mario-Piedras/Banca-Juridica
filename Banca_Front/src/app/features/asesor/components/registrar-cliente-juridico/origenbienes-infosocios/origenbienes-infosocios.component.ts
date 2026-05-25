@@ -19,6 +19,7 @@ export class DeclaracionBienesInfoSociosComponent implements OnInit {
   @Output() formChange = new EventEmitter();
   @Output() prevTab = new EventEmitter<void>();
   @Output() nextTab = new EventEmitter();
+  @Output() saved = new EventEmitter<'final'>();
   @Input() idEmpresa!: number;
 
   form: FormGroup;
@@ -208,29 +209,17 @@ export class DeclaracionBienesInfoSociosComponent implements OnInit {
       })
 
     ).subscribe({
-
       next: (res) => {
-
         console.log('Datos guardados:', res);
-
-        
-
         this.formChange.emit(this.form.value);
-
+        this.saved.emit('final');
         this.nextTab.emit();
-
       },
-
       error: (err) => {
-
         console.error(err);
-
         alert('Error al guardar en la base de datos');
-
       }
-
     });
-
   }
 
   // Botón de volver al formulario anterior

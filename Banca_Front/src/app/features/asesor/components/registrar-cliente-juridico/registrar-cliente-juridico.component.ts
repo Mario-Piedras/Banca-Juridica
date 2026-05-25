@@ -4,14 +4,13 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AsesorService } from '../../services/asesor.service';
 
-import { ConfirmModalComponent, ConfirmModalType } from './shared/confirm-modal/confirm-modal.component';
-
 // Subcomponentes
 import { InformacionGeneralComponent } from './info-general/info-general.component';
 import { RepresentanteLegalComponent } from './representante-legal/representante-legal.component';
 import { NaturalezaEntidadComponent } from './naturaleza-tipo/naturaleza-tipo.component';
 import { InformacionFinancieraTributariaComponent } from './info-fintrib/info-fintrib.component';
 import { DeclaracionBienesInfoSociosComponent } from './origenbienes-infosocios/origenbienes-infosocios.component';
+import { ConfirmModalComponent } from '../../../../shared/components/modals/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-registrar-cliente-juridico',
@@ -19,12 +18,12 @@ import { DeclaracionBienesInfoSociosComponent } from './origenbienes-infosocios/
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    ConfirmModalComponent,
     InformacionGeneralComponent,
     RepresentanteLegalComponent,
     NaturalezaEntidadComponent,
     InformacionFinancieraTributariaComponent,
     DeclaracionBienesInfoSociosComponent,
+    ConfirmModalComponent,
   ],
   templateUrl: './registrar-cliente-juridico.component.html',
   styleUrls: ['./registrar-cliente-juridico.component.css']
@@ -54,6 +53,13 @@ export class RegistrarClienteJuridicoComponent implements OnInit {
     declaracionBienesInfoSocios: null,
   };
 
+  // Estado modal confirmación
+  confirmVisible = false;
+  confirmTitle = '';
+  confirmMessage = '';
+  confirmType: 'success' | 'error' | 'confirm' = 'success';
+  confirmButtonText = 'Aceptar';
+
   // Orden de las pestañas para moverse automáticamente
   ordenPestanas = [ // ← AÑADIR ESTA VARIABLE
     'informacion-general',
@@ -63,24 +69,37 @@ export class RegistrarClienteJuridicoComponent implements OnInit {
     'origenbienes-infosocios',
   ];
 
-  // 🟦 Modal (solo guardar correcto)
-  modalVisible = false;
-  modalType: ConfirmModalType = 'success';
-  modalTitle = '';
-  modalMessage = '';
-  modalConfirmText = 'Continuar';
-  modalCancelText = 'Cancelar';
-  modalShowCancel = false;
+  // Mostrar modal de confirmación (para guardar exitosamente)
+  abrirModalGuardado(modulo: 'parcial' | 'final' | string): void {
+    this.confirmVisible = true;
+    this.confirmType = 'success';
 
-  // 🕒 Control delay de 5s antes de avanzar (solo éxito)
-  private delayTimer: any = null;
+    if (modulo === 'final') {
+      this.confirmTitle = 'Registro finalizado';
+      this.confirmMessage = 'El registro finalizo correctamente.';
+      this.confirmButtonText = 'Aceptar';
+      return;
+    }
+
+    this.confirmTitle = 'Información guardada';
+    this.confirmMessage = 'Los campos se guardaron correctamente.';
+    this.confirmButtonText = 'Aceptar';
+  }
+
+  onModalConfirm(): void {
+    // Cerrar modal y seguir flujo (el siguiente paso ya se maneja por los emits de los subcomponentes)
+    this.confirmVisible = false;
+  }
+
+  onModalClosed(): void {
+    this.confirmVisible = false;
+  }
 
   constructor(
     private asesorService: AsesorService,
     private route: ActivatedRoute,
     private router: Router
   ) { }
-
 
   ngOnInit() {
     // Verificar si estamos en modo edición
@@ -150,45 +169,8 @@ export class RegistrarClienteJuridicoComponent implements OnInit {
 
   // 📩 Escuchar evento de "nextTab" desde los subcomponentes
   manejarNextTab() {
-    // Delay SOLO cuando el subformulario reporta guardado correcto.
-    if (this.delayTimer) {
-      clearTimeout(this.delayTimer);
-      this.delayTimer = null;
-    }
-
-    this.modalType = 'success';
-    this.modalTitle = 'Guardado exitoso';
-    this.modalMessage = 'La información se guardó correctamente.';
-    this.modalConfirmText = 'Continuar';
-    this.modalCancelText = 'Cancelar';
-    this.modalShowCancel = false;
-    this.modalVisible = true;
-
-    this.delayTimer = setTimeout(() => {
-      this.modalVisible = false;
-      this.delayTimer = null;
-      this.irASiguientePestanaActual();
-    }, 5000);
-  }
-
-  onModalConfirm() {
-    // Por diseño, no se usa para avanzar (ya se hace por el timer de 5s), pero si el usuario hace click se respeta.
-    if (this.delayTimer) {
-      clearTimeout(this.delayTimer);
-      this.delayTimer = null;
-    }
-    this.modalVisible = false;
     this.irASiguientePestanaActual();
   }
-
-  onModalCancel() {
-    if (this.delayTimer) {
-      clearTimeout(this.delayTimer);
-      this.delayTimer = null;
-    }
-    this.modalVisible = false;
-  }
-
 
   // 📤 Manejar evento de "prevTab" para volver a la pestaña anterior
   manejarPrevTab() {

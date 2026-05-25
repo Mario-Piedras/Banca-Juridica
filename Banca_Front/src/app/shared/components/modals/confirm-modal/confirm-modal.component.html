@@ -1,0 +1,21 @@
+<div class="bb-modal-backdrop" *ngIf="visible" (click)="onBackdropClick()">
+    <div class="bb-modal" role="dialog" aria-modal="true" *ngIf="visible">
+        <div class="bb-modal-header">
+            <div class="bb-modal-title">
+                <span *ngIf="type === 'success'" class="bb-badge bb-badge-success">✓</span>
+                <span *ngIf="type === 'error'" class="bb-badge bb-badge-error">!</span>
+                <span>{{ title }}</span>
+            </div>
+        </div>
+
+        <div class="bb-modal-body">
+            <p class="bb-modal-message">{{ message }}</p>
+        </div>
+
+        <div class="bb-modal-footer">
+            <button type="button" class="bb-btn bb-btn-primary" (click)="onConfirm()">
+                {{ confirmText }}
+            </button>
+        </div>
+    </div>
+</div>

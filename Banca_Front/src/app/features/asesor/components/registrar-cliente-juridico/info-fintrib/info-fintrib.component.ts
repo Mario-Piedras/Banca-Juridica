@@ -24,6 +24,7 @@ export class InformacionFinancieraTributariaComponent implements OnInit {
   @Output() formChange = new EventEmitter();
   @Output() prevTab = new EventEmitter<void>();
   @Output() nextTab = new EventEmitter();
+  @Output() saved = new EventEmitter<'parcial'>();
 
   form: FormGroup;
   listaPaises: PaisTributar[] = [];
@@ -366,20 +367,16 @@ export class InformacionFinancieraTributariaComponent implements OnInit {
       })
 
     ).subscribe({
-
       next: () => {
-
         // Limpiar storage
         localStorage.removeItem(
           this.STORAGE_KEY
         );
+        this.saved.emit('parcial');
         this.nextTab.emit();
-
       },
-
       error: (err) => {
         console.error(err);
-
         alert('Error al guardar');
       }
     });

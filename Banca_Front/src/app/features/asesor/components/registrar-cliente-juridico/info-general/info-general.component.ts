@@ -17,6 +17,9 @@ export class InformacionGeneralComponent implements OnInit {
   @Input() datosIniciales: any;
   @Output() formChange = new EventEmitter();
   @Output() nextTab = new EventEmitter();
+  @Output() saved = new EventEmitter<'parcial'>();
+
+
 
   form: FormGroup;
   constructor(private fb: FormBuilder, private http: HttpClient) {
@@ -156,7 +159,9 @@ export class InformacionGeneralComponent implements OnInit {
             console.log('ID EMPRESA:', localStorage.getItem('id_empresa'));
 
             this.formChange.emit(this.form.value);
+            this.saved.emit('parcial');
             this.nextTab.emit();
+
           },
           error: (err) => {
             console.error(err);

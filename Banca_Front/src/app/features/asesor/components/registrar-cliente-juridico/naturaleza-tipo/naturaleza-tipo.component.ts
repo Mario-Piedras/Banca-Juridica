@@ -18,6 +18,7 @@ export class NaturalezaEntidadComponent implements OnInit {
   @Output() formChange = new EventEmitter();
   @Output() prevTab = new EventEmitter<void>();
   @Output() nextTab = new EventEmitter();
+  @Output() saved = new EventEmitter<'parcial'>();
 
   form: FormGroup;
   constructor(private fb: FormBuilder, private http: HttpClient) {
@@ -159,9 +160,8 @@ export class NaturalezaEntidadComponent implements OnInit {
         .subscribe({
           next: (res) => {
             console.log('Guardado en BD:', res);
-            
-
             this.formChange.emit(this.form.value);
+            this.saved.emit('parcial');
             this.nextTab.emit();
           },
           error: (err) => {
