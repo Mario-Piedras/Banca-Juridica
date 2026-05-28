@@ -11,17 +11,17 @@
         NIT del titular <span class="text-red-600">*</span>
       </label>
       <div class="flex gap-3">
-        <input type="text" [(ngModel)]="cedula" (input)="onCedulaInput($event)" name="cedula"
+        <input type="text" [(ngModel)]="nit" (input)="onNitInput($event)" name="nit"
           placeholder="Ej: 900123456" maxlength="11"
           class="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-400" />
-        <button type="button" (click)="buscarCliente()"
+        <button type="button" (click)="buscarEmpresa()"
           class="px-6 py-2 bg-blue-900 text-white rounded-md hover:bg-blue-800 transition-colors font-medium cursor-pointer">
-          Buscar cliente
+          Buscar empresa
         </button>
       </div>
 
-      <!-- Mensaje de confirmación - Cliente encontrado -->
-      <div *ngIf="clienteEncontrado"
+      <!-- Mensaje de confirmación - Empresa encontrada -->
+      <div *ngIf="empresaEncontrada"
         class="status-success mt-2 p-3 bg-green-50 border border-green-200 rounded-md flex items-center gap-2">
         <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd"
@@ -29,12 +29,12 @@
             clip-rule="evenodd" />
         </svg>
         <span class="text-sm text-green-800 font-medium">
-          Cliente encontrado: {{ nombreCliente }}
+          Empresa encontrada: {{ nombreEmpresa }}
         </span>
       </div>
 
-      <!-- Mensaje de error - Cliente no encontrado -->
-      <div *ngIf="clienteNoEncontrado"
+      <!-- Mensaje de error - Empresa no encontrada -->
+      <div *ngIf="empresaNoEncontrada"
         class="status-error mt-2 p-3 bg-red-50 border border-red-200 rounded-md flex items-center gap-2">
         <svg class="w-5 h-5 text-red-600" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd"
@@ -42,7 +42,7 @@
             clip-rule="evenodd" />
         </svg>
         <span class="text-sm text-red-800 font-medium">
-          Cliente no registrado
+          Empresa no registrada
         </span>
       </div>
 

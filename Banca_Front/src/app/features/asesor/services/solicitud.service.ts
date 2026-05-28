@@ -24,10 +24,18 @@ export class SolicitudService {
     });
   }
 
+  buscarEmpresa(nit: string): Observable<any> {
+    console.log('SolicitudService: buscando empresa con NIT:', nit);
+    return this.http.get(`${this.apiUrl}/empresas/${nit}`, {
+      headers: this.authService.getAuthHeaders()
+    });
+  }
   
   enviarSolicitud(solicitud: any): Observable<any> {
+    console.log('SolicitudService: enviando solicitud con datos:', solicitud);
     const formData = new FormData();
     formData.append('cedula', solicitud.cedula);
+    formData.append('nit', solicitud.nit);
     formData.append('producto', solicitud.producto);
     formData.append('comentario', solicitud.comentario || '');
     

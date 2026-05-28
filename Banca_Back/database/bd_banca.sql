@@ -661,7 +661,7 @@ CREATE TABLE tipo_entidad (
     num_empleados INT NOT NULL,
     tipo_sociedad ENUM('Por acciones simplificadas S.A.S', 'Anónima', 'Limitada', 
 		'En comandita simple', 'En comandita por acciones', 'Sin animo de lucro',
-        'Sucursal de sociedad extranjera', 'Empresa unipersonal', 'Asociación civi',
+        'Sucursal de sociedad extranjera', 'Empresa unipersonal', 'Asociación civil',
         'Sociedad de hecho', 'Colectiva', 'Otra') NOT NULL,
 	otra_sociedad VARCHAR(100),
     tipo_asociacion ENUM('Establecimiento público', 'Empresa industrial y comercial del estado', 'Sociedad de economía mixta', 
@@ -850,3 +850,12 @@ ADD CONSTRAINT `cuentas_ahorro_fk_1`
 ALTER TABLE defaultdb.solicitudes_apertura 
 ADD COLUMN tipo_cliente ENUM('Natural', 'Jurídica') NOT NULL DEFAULT 'Natural' AFTER id_empresa,
 ADD COLUMN proposito_cuenta ENUM('Ahorrar', 'Invertir', 'Servicios financieros en negocios fiduciarios', 'Realizar transacciones', 'Financiación', 'Recibir servicios especializados Banca de Inversión') NULL DEFAULT NULL;
+
+ALTER TABLE `defaultdb`.`solicitudes_apertura` 
+DROP FOREIGN KEY `solicitudes_apertura_ibfk_1`;
+ALTER TABLE `defaultdb`.`solicitudes_apertura` 
+CHANGE COLUMN `id_cliente` `id_cliente` INT NULL ;
+ALTER TABLE `defaultdb`.`solicitudes_apertura` 
+ADD CONSTRAINT `solicitudes_apertura_ibfk_1`
+  FOREIGN KEY (`id_cliente`)
+  REFERENCES `defaultdb`.`clientes` (`id_cliente`);

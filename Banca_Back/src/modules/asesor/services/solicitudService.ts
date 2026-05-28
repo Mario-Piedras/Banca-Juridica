@@ -33,19 +33,58 @@ export class SolicitudService {
     }
   }
 
+  // Buscar empresa por NIT
+  async buscarEmpresaPorNit(nit: string): Promise<ClienteResponse | null> {
+    try {
+      const [rows] = await pool.query<RowDataPacket[]>(
+        `SELECT 
+          id_info_empresas,
+          nit,
+          razon_social,
+          nombre_corto,
+          fecha_constitución,
+          ciudad_constitución,
+          pais_constitucion,
+          dir_sede_principal,
+          barrio,
+          ciudad_municipio,
+          departamento,
+          pais,
+          telefono,
+          ext,
+          correo
+        FROM info_empresas 
+        WHERE nit= ?`,
+        [nit]
+      );
+
+      if (rows.length === 0) {
+        return null;
+      }
+
+      return rows[0] as ClienteResponse;
+    } catch (error) {
+      console.error('Error al buscar cliente:', error);
+      throw new Error('Error al buscar cliente en la base de datos');
+    }
+  }
+
   // Crear nueva solicitud de apertura
   async crearSolicitud(
-    idCliente: number,
+    idCliente: number | null,
+    idEmpresa: number | null,
     idUsuarioRol: number,
     comentarioAsesor?: string,
     archivo?: Buffer
   ): Promise<number> {
+    console.log('Creando solicitud con:', {
+      idCliente, idEmpresa})
     try {
       const [result] = await pool.query<ResultSetHeader>(
         `INSERT INTO solicitudes_apertura 
-        (id_cliente, id_usuario_rol, tipo_cuenta, estado, comentario_asesor, archivo) 
-        VALUES (?, ?, 'Ahorros', 'Pendiente', ?, ?)`,
-        [idCliente, idUsuarioRol, comentarioAsesor || null, archivo || null]
+        (id_cliente, id_empresa, id_usuario_rol, tipo_cuenta, estado, comentario_asesor, archivo) 
+        VALUES (?, ?, ?, 'Ahorros', 'Pendiente', ?, ?)`,
+        [idCliente, idEmpresa, idUsuarioRol, comentarioAsesor || null, archivo || null]
       );
 
       console.log(` Solicitud creada con ID: ${result.insertId} por usuario_rol: ${idUsuarioRol}`);

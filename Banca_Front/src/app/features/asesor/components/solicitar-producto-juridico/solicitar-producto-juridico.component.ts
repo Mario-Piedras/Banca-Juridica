@@ -12,13 +12,13 @@ import { AuthService } from '../../../../core/services/auth.service';
   styleUrl: './solicitar-producto-juridico.component.css'
 })
 export class SolicitarProductoJuridicoComponent implements OnInit {
-  cedula: string = '';
+  nit: string = '';
   producto: string = 'Cuenta de Ahorros Empresa';
   justificacion: string = '';
   comentario: string = '';
-  clienteEncontrado: boolean = false;
-  clienteNoEncontrado: boolean = false;
-  nombreCliente: string = '';
+  empresaEncontrada: boolean = false;
+  empresaNoEncontrada: boolean = false;
+  nombreEmpresa: string = '';
   isLoading: boolean = false;
 
   // Datos del usuario autenticado
@@ -38,55 +38,55 @@ export class SolicitarProductoJuridicoComponent implements OnInit {
   }
 
   // Validar que solo se ingresen números
-  onCedulaInput(event: Event): void {
+  onNitInput(event: Event): void {
     const input = event.target as HTMLInputElement;
     const value = input.value;
     // Eliminar cualquier caracter que no sea número
-    this.cedula = value.replace(/[^0-9]/g, '');
+    this.nit = value.replace(/[^0-9]/g, '');
     // Actualizar el valor del input
-    input.value = this.cedula;
+    input.value = this.nit;
   }
 
-  buscarCliente(): void {
-    if (!this.cedula.trim()) {
+  buscarEmpresa(): void {
+    if (!this.nit.trim()) {
       alert('Por favor ingrese un NIT');
       return;
     }
 
-    console.log('Buscando cliente con NIT:', this.cedula);
+    console.log('Buscando empresa con NIT:', this.nit);
     this.isLoading = true;
-    this.clienteEncontrado = false;
-    this.clienteNoEncontrado = false;
+    this.empresaEncontrada = false;
+    this.empresaNoEncontrada = false;
 
-    this.solicitudService.buscarCliente(this.cedula).subscribe({
+    this.solicitudService.buscarEmpresa(this.nit).subscribe({
       next: (response) => {
         this.isLoading = false;
         console.log('Respuesta completa:', response);
-        console.log('Cliente encontrado:', response.data);
-        this.clienteEncontrado = true;
-        this.clienteNoEncontrado = false;
-        const cliente = response.data;
-        this.nombreCliente = `${cliente.primer_nombre || ''} ${cliente.segundo_nombre || ''} ${cliente.primer_apellido || ''} ${cliente.segundo_apellido || ''}`.trim() || 'Cliente';
+        console.log('Empresa encontrada:', response.data);
+        this.empresaEncontrada = true;
+        this.empresaNoEncontrada = false;
+        const empresa = response.data;
+        this.nombreEmpresa = `${empresa.razon_social || ''}`.trim() || 'info_empresa';
       },
       error: (error) => {
         this.isLoading = false;
-        console.error('Error al buscar cliente:', error);
-        this.clienteEncontrado = false;
-        this.clienteNoEncontrado = true;
-        this.nombreCliente = '';
+        console.error('Error al buscar empresa:', error);
+        this.empresaEncontrada = false;
+        this.empresaNoEncontrada = true;
+        this.nombreEmpresa = '';
       }
     });
   }
 
   enviarSolicitud(): void {
     // Validaciones
-    if (!this.cedula.trim()) {
+    if (!this.nit.trim()) {
       alert('Por favor ingrese el NIT del titular');
       return;
     }
 
-    if (!this.clienteEncontrado) {
-      alert('Debe buscar y verificar que el cliente existe antes de enviar la solicitud');
+    if (!this.empresaEncontrada) {
+      alert('Debe buscar y verificar que la empresa existe antes de enviar la solicitud');
       return;
     }
 
@@ -97,7 +97,7 @@ export class SolicitarProductoJuridicoComponent implements OnInit {
 
     // Preparar datos de la solicitud
     const solicitud = {
-      cedula: this.cedula,
+      nit: this.nit,
       producto: this.producto,
       comentario: this.comentario
     };
@@ -130,12 +130,12 @@ export class SolicitarProductoJuridicoComponent implements OnInit {
   }
 
   private limpiarFormulario(): void {
-    this.cedula = '';
+    this.nit = '';
     this.producto = 'Cuenta de Ahorros Empresa';
     this.justificacion = '';
     this.comentario = '';
-    this.clienteEncontrado = false;
-    this.clienteNoEncontrado = false;
-    this.nombreCliente = '';
+    this.empresaEncontrada = false;
+    this.empresaNoEncontrada = false;
+    this.nombreEmpresa = '';
   }
 }

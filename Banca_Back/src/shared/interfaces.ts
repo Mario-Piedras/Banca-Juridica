@@ -248,6 +248,7 @@ export interface SolicitudRequest {
 
 export interface ClienteResponse {
   id_cliente: number;
+  id_info_empresas?: number; // ← NUEVO: Para empresas
   numero_documento: string;
   tipo_documento: string;
   primer_nombre: string;

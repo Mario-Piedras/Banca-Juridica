@@ -43,7 +43,7 @@ export class SolicitudController {
   // Crear nueva solicitud
   async crearSolicitud(req: Request, res: Response): Promise<void> {
     try {
-      const { cedula, comentario } = req.body;
+      const { cedula, nit, comentario } = req.body;
       const archivo = req.file?.buffer;
 
       // Verificar que el usuario esté autenticado y tenga id_usuario_rol
@@ -55,31 +55,31 @@ export class SolicitudController {
         return;
       }
 
-      if (!cedula) {
+      if (!cedula && !nit) {
         res.status(400).json({ 
           success: false, 
-          message: 'La cédula es requerida' 
+          message: 'La cédula o el NIT son requeridos' 
         });
         return;
       }
 
       // Buscar cliente por cédula
       const cliente = await solicitudService.buscarClientePorCedula(cedula);
-
-      if (!cliente) {
+      const empresa = await solicitudService.buscarEmpresaPorNit(nit); // Intentar buscar empresa con el mismo valor
+      if (!cliente && !empresa) {
         res.status(404).json({ 
           success: false, 
-          message: 'Cliente no encontrado con la cédula proporcionada' 
+          message: 'Cliente o empresa no encontrado' 
         });
         return;
       }
 
       // Crear solicitud con el id_usuario_rol del usuario autenticado
       const idSolicitud = await solicitudService.crearSolicitud(
-        cliente.id_cliente,
+        cliente?.id_cliente || null,
+        empresa?.id_info_empresas || null,
         req.user.id_usuario_rol,
-        comentario,
-        archivo
+        comentario
       );
 
       res.status(201).json({ 
@@ -87,7 +87,8 @@ export class SolicitudController {
         message: 'Solicitud creada exitosamente',
         data: {
           id_solicitud: idSolicitud,
-          id_cliente: cliente.id_cliente,
+          id_empresa: empresa?.id_info_empresas || null,
+          id_cliente: cliente?.id_cliente || null,
           id_usuario_rol: req.user.id_usuario_rol,
           creado_por: req.user.correo
         }
