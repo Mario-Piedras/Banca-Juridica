@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Output, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -8,7 +8,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './informacion-personal.component.html',
 })
-export class InformacionPersonalComponent implements OnInit {
+export class InformacionPersonalComponent implements OnInit, OnChanges {
   @Input() datosIniciales: any;
   @Output() formChange = new EventEmitter();
   @Output() nextTab = new EventEmitter();
@@ -106,13 +106,29 @@ export class InformacionPersonalComponent implements OnInit {
       this.form.patchValue(this.datosIniciales);
     }
 
- // AUTO-GUARDADO: Emitir datos al padre cada vez que cambie el formulario
-  this.form.valueChanges.subscribe(valores => {
-    const datosTransformados = this.transformarDatos(valores);
-    this.formChange.emit(datosTransformados);
-    console.log('Auto-guardando datos personales...');
-  });
-}
+    // AUTO-GUARDADO: Emitir datos al padre cada vez que cambie el formulario
+    this.form.valueChanges.subscribe(valores => {
+      const datosTransformados = this.transformarDatos(valores);
+      this.formChange.emit(datosTransformados);
+      console.log('Auto-guardando datos personales...');
+    });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (
+      changes['datosIniciales'] &&
+      changes['datosIniciales'].currentValue
+    ) {
+      console.log(
+        '📥 Datos recibidos para edición:',
+        changes['datosIniciales'].currentValue
+      );
+      this.form.patchValue(
+        changes['datosIniciales'].currentValue,
+        { emitEvent: false }
+      );
+    }
+  }
 
 
   // NUEVO: Validar edad mínima
@@ -157,40 +173,40 @@ export class InformacionPersonalComponent implements OnInit {
     };
   }
 
-guardarSeccion() {
-  if (this.form.valid) {
-    // TRANSFORMAR GÉNERO ANTES DE EMITIR
-    const datosTransformados = this.transformarDatos(this.form.value);
-    this.formChange.emit(datosTransformados);
-    this.nextTab.emit();
-    console.log('Datos personales guardados correctamente');
-    alert('Sección de Información Personal guardada correctamente');
-  } else {
-    this.form.markAllAsTouched();
-    const errores = this.obtenerErroresFormulario();
-    if (errores.length > 0) {
-      alert('Por favor corrige los siguientes errores:\n\n' + errores.join('\n'));
+  guardarSeccion() {
+    if (this.form.valid) {
+      // TRANSFORMAR GÉNERO ANTES DE EMITIR
+      const datosTransformados = this.transformarDatos(this.form.value);
+      this.formChange.emit(datosTransformados);
+      this.nextTab.emit();
+      console.log('Datos personales guardados correctamente');
+      alert('Sección de Información Personal guardada correctamente');
     } else {
-      alert('Por favor completa todos los campos obligatorios.');
+      this.form.markAllAsTouched();
+      const errores = this.obtenerErroresFormulario();
+      if (errores.length > 0) {
+        alert('Por favor corrige los siguientes errores:\n\n' + errores.join('\n'));
+      } else {
+        alert('Por favor completa todos los campos obligatorios.');
+      }
     }
   }
-}
 
-// Método para transformar datos antes de enviar
-private transformarDatos(valores: any): any {
-  return {
-    ...valores,
-    // Convertir "Femenino" → "F" y "Masculino" → "M"
-    genero: valores.genero === 'Femenino' ? 'F' : 
-            valores.genero === 'Masculino' ? 'M' : valores.genero,
-    
-    // Convertir "Colombiana" → "Colombiano"
-    nacionalidad: valores.nacionalidad === 'Colombiana' ? 'Colombiano' : valores.nacionalidad,
-    
-    // Convertir "Ninguno" → "Ninguna"
-    grupoEtnico: valores.grupoEtnico === 'Ninguno' ? 'Ninguna' : valores.grupoEtnico
-  };
-}
+  // Método para transformar datos antes de enviar
+  private transformarDatos(valores: any): any {
+    return {
+      ...valores,
+      // Convertir "Femenino" → "F" y "Masculino" → "M"
+      genero: valores.genero === 'Femenino' ? 'F' :
+        valores.genero === 'Masculino' ? 'M' : valores.genero,
+
+      // Convertir "Colombiana" → "Colombiano"
+      nacionalidad: valores.nacionalidad === 'Colombiana' ? 'Colombiano' : valores.nacionalidad,
+
+      // Convertir "Ninguno" → "Ninguna"
+      grupoEtnico: valores.grupoEtnico === 'Ninguno' ? 'Ninguna' : valores.grupoEtnico
+    };
+  }
 
 
 
