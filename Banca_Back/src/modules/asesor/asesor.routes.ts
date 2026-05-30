@@ -63,6 +63,7 @@ router.get(
 
 // ========== RUTAS PARA CLIENTES ==========
 router.get('/clientes/:cedula', solicitudController.buscarCliente);
+router.get('/empresas/:nit', solicitudController.buscarEmpresa);
 
 // ========== RUTAS PARA EDITAR CLIENTES ==========
 // Obtener cliente completo por ID
