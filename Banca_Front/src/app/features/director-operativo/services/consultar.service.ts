@@ -15,6 +15,21 @@ export interface SolicitudConsulta {
   nombre_completo: string;
 }
 
+export interface SolicitudJuridicaConsulta {
+  id_solicitud: number;
+  nit: string;
+  razon_social: string;
+  fecha: string;
+  estado: 'Pendiente' | 'Aprobada' | 'Rechazada' | 'Devuelta';
+  producto: string;
+}
+
+export interface ConsultarJuridicaResponse {
+  success: boolean;
+  message: string;
+  data: SolicitudJuridicaConsulta[];
+}
+
 export interface ConsultarResponse {
   success: boolean;
   message: string;
@@ -49,4 +64,10 @@ export class ConsultarService {
       : `${this.apiUrl}/solicitudes`;
     return this.http.get<ConsultarResponse>(url);
   }
+
+  obtenerSolicitudesJuridicas(): Observable<ConsultarJuridicaResponse> {
+  return this.http.get<ConsultarJuridicaResponse>(
+    `${this.apiUrl}/solicitudes-juridicas`
+  );
+}
 }
