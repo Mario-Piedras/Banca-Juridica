@@ -33,6 +33,16 @@ export const DIRECTOR_OPERATIVO_ROUTES: Routes = [
           )
       }
     ]
+  },
+
+  {
+  path: 'solicitud-juridica/:id',
+  loadComponent: () =>
+    import(
+      './components/solicitudes-radicadas-juridicas/solicitud-empresa/solicitud-empresa.component'
+    ).then(
+      (m) => m.SolicitudEmpresaComponent
+    )
   }
 ];
 

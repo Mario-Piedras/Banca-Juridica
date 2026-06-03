@@ -99,7 +99,8 @@ export class SolicitarProductoJuridicoComponent implements OnInit {
     const solicitud = {
       nit: this.nit,
       producto: this.producto,
-      comentario: this.comentario
+      comentario: this.comentario,
+      tipo_cliente: 'Jurídica'
     };
 
     console.log('Enviando solicitud:', solicitud);

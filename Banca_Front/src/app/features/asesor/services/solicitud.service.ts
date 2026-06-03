@@ -38,6 +38,7 @@ export class SolicitudService {
     formData.append('nit', solicitud.nit);
     formData.append('producto', solicitud.producto);
     formData.append('comentario', solicitud.comentario || '');
+    formData.append('tipo_cliente', solicitud.tipo_cliente || 'Natural');
     
     if (solicitud.archivo) {
       formData.append('archivo', solicitud.archivo, solicitud.archivo.name);

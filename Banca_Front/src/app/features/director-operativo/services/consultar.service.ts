@@ -66,8 +66,10 @@ export class ConsultarService {
   }
 
   obtenerSolicitudesJuridicas(): Observable<ConsultarJuridicaResponse> {
-  return this.http.get<ConsultarJuridicaResponse>(
+    return this.http.get<ConsultarJuridicaResponse>(
     `${this.apiUrl}/solicitudes-juridicas`
-  );
-}
+    );
+  }
+
+  
 }
