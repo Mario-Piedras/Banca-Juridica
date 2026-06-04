@@ -56,6 +56,12 @@ router.get(
 );
 
 router.get(
+  '/solicitudes/nit/:nit',
+  requireRole('Asesor', 'Director-operativo'),
+  consultarController.buscarPorNit
+);
+
+router.get(
   '/solicitudes/:id',
   requireRole('Asesor', 'Director-operativo'),
   consultarController.obtenerPorId

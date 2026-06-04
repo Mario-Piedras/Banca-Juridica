@@ -13,7 +13,8 @@ import { AuthService } from '../../../../core/services/auth.service';
 })
 export class SolicitarProductoJuridicoComponent implements OnInit {
   nit: string = '';
-  producto: string = 'Cuenta de Ahorros Empresa';
+  producto: string = 'Cuenta de Ahorros Empresa (Persona Jurídica)';
+  proposito_cuenta: string = '';
   justificacion: string = '';
   comentario: string = '';
   empresaEncontrada: boolean = false;
@@ -94,11 +95,12 @@ export class SolicitarProductoJuridicoComponent implements OnInit {
       alert('Error: No se pudo obtener la información del usuario. Por favor, inicie sesión nuevamente.');
       return;
     }
-
+    console.log(this.proposito_cuenta);
     // Preparar datos de la solicitud
     const solicitud = {
       nit: this.nit,
       producto: this.producto,
+      proposito_cuenta: this.proposito_cuenta,
       comentario: this.comentario,
       tipo_cliente: 'Jurídica'
     };
