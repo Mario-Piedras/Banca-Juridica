@@ -37,7 +37,9 @@ export class SolicitudService {
     formData.append('cedula', solicitud.cedula);
     formData.append('nit', solicitud.nit);
     formData.append('producto', solicitud.producto);
+    formData.append('proposito_cuenta', solicitud.proposito_cuenta);
     formData.append('comentario', solicitud.comentario || '');
+    formData.append('tipo_cliente', solicitud.tipo_cliente || 'Natural');
     
     if (solicitud.archivo) {
       formData.append('archivo', solicitud.archivo, solicitud.archivo.name);

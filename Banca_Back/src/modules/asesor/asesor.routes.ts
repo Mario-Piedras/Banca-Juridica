@@ -56,6 +56,12 @@ router.get(
 );
 
 router.get(
+  '/solicitudes/nit/:nit',
+  requireRole('Asesor', 'Director-operativo'),
+  consultarController.buscarPorNit
+);
+
+router.get(
   '/solicitudes/:id',
   requireRole('Asesor', 'Director-operativo'),
   consultarController.obtenerPorId
@@ -63,6 +69,7 @@ router.get(
 
 // ========== RUTAS PARA CLIENTES ==========
 router.get('/clientes/:cedula', solicitudController.buscarCliente);
+router.get('/empresas/:nit', solicitudController.buscarEmpresa);
 
 // ========== RUTAS PARA EDITAR CLIENTES ==========
 // Obtener cliente completo por ID

@@ -40,10 +40,46 @@ export class SolicitudController {
     }
   }
 
+  async buscarEmpresa(req: Request, res: Response): Promise<void> {
+    try {
+      const { nit } = req.params;
+
+      if (!nit) {
+        res.status(400).json({ 
+          success: false, 
+          message: 'El NIT es requerido' 
+        });
+        return;
+      }
+
+      const empresa = await solicitudService.buscarEmpresaPorNit(nit);
+
+      if (!empresa) {
+        res.status(404).json({ 
+          success: false, 
+          message: 'Empresa no encontrada' 
+        });
+        return;
+      }
+
+      res.status(200).json({ 
+        success: true, 
+        data: empresa 
+      });
+    } catch (error) {
+      console.error('Error en buscarEmpresa:', error);
+      res.status(500).json({ 
+        success: false, 
+        message: 'Error al buscar la empresa',
+        error: error instanceof Error ? error.message : 'Error desconocido'
+      });
+    }
+  }
+
   // Crear nueva solicitud
   async crearSolicitud(req: Request, res: Response): Promise<void> {
     try {
-      const { cedula, nit, comentario } = req.body;
+      const { cedula, nit, comentario, tipo_cliente, proposito_cuenta } = req.body;
       const archivo = req.file?.buffer;
 
       // Verificar que el usuario esté autenticado y tenga id_usuario_rol
@@ -79,7 +115,9 @@ export class SolicitudController {
         cliente?.id_cliente || null,
         empresa?.id_info_empresas || null,
         req.user.id_usuario_rol,
-        comentario
+        comentario,
+        tipo_cliente,
+        proposito_cuenta
       );
 
       res.status(201).json({ 
