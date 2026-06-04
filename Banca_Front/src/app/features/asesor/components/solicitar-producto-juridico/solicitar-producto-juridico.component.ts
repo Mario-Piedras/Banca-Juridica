@@ -13,7 +13,7 @@ import { AuthService } from '../../../../core/services/auth.service';
 })
 export class SolicitarProductoJuridicoComponent implements OnInit {
   nit: string = '';
-  producto: string = 'Cuenta de Ahorros Empresa (Persona Jurídica)';
+  producto: string = 'Cuenta de Ahorros (Persona Jurídica)';
   proposito_cuenta: string = '';
   justificacion: string = '';
   comentario: string = '';
