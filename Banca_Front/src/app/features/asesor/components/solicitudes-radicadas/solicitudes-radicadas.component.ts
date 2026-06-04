@@ -5,7 +5,8 @@ import { CommonModule } from '@angular/common';
 
 interface Solicitud {
   id: number;
-  cedula: string;
+  cedula?: string;
+  nit?: string;
   fecha: string;
   estado: 'PENDIENTE' | 'APROBADO' | 'RECHAZADO';
   producto: string;
@@ -40,8 +41,7 @@ export class SolicitudesRadicadasComponent {
     if (this.tipoCliente === 'Persona Juridica') {
       return 'Ingresa el NIT de la empresa para consultar sus solicitudes radicadas.';
     }
-
-    return 'Ingresa la cédula del cliente para consultar sus solicitudes radicadas.';
+    return 'Ingresa la cédula del cliente para conceptualizar sus solicitudes radicadas.';
   }
 
   get columnaDocumento(): string {
@@ -81,39 +81,57 @@ export class SolicitudesRadicadasComponent {
       return;
     }
 
-    if (this.tipoCliente === 'Persona Juridica') {
-      this.mensajeError =
-        'La búsqueda por NIT requiere que el backend exponga el endpoint correspondiente. Mientras tanto, la vista está preparada para el selector y el campo de NIT.';
-      this.solicitudes = [];
-      return;
-    }
-
     this.cargando = true;
     this.mensajeError = '';
     this.solicitudes = [];
 
-    this.consultarService.buscarPorCedula(this.identificacion).subscribe({
-      next: (data) => {
-        this.solicitudes = data.map((item) => ({
-          id: item.id_solicitud,
-          cedula: item.cedula,
-          fecha: this.formatearFecha(item.fecha),
-          estado: this.mapearEstado(item.estado),
-          producto: item.producto,
-          comentario: item.comentario_asesor || ''
-        }));
+    if (this.tipoCliente === 'Persona Juridica') {
+      this.consultarService.buscarPorNit(this.identificacion).subscribe({
+        next: (data) => {
+          this.solicitudes = data.map((item) => ({
+            id: item.id_solicitud,
+            nit: item.nit, 
+            fecha: this.formatearFecha(item.fecha),
+            estado: this.mapearEstado(item.estado),
+            producto: item.producto,
+            comentario: item.comentario_asesor || ''
+          }));
 
-        this.cargando = false;
+          this.cargando = false;
 
-        if (this.solicitudes.length === 0) {
-          this.mensajeError = 'No se encontraron solicitudes para esta cédula';
+          if (this.solicitudes.length === 0) {
+            this.mensajeError = 'No se encontraron solicitudes para este NIT';
+          }
+        },
+        error: () => {
+          this.mensajeError = 'Error al buscar las solicitudes por NIT. Intente nuevamente.';
+          this.cargando = false;
         }
-      },
-      error: () => {
-        this.mensajeError = 'Error al buscar las solicitudes. Intente nuevamente.';
-        this.cargando = false;
-      }
-    });
+      });
+    } else {
+      this.consultarService.buscarPorCedula(this.identificacion).subscribe({
+        next: (data) => {
+          this.solicitudes = data.map((item) => ({
+            id: item.id_solicitud,
+            cedula: item.cedula,
+            fecha: this.formatearFecha(item.fecha),
+            estado: this.mapearEstado(item.estado),
+            producto: item.producto,
+            comentario: item.comentario_asesor || ''
+          }));
+
+          this.cargando = false;
+
+          if (this.solicitudes.length === 0) {
+            this.mensajeError = 'No se encontraron solicitudes para esta cédula';
+          }
+        },
+        error: () => {
+          this.mensajeError = 'Error al buscar las solicitudes. Intente nuevamente.';
+          this.cargando = false;
+        }
+      });
+    }
   }
 
   verComentario(solicitud: Solicitud): void {
