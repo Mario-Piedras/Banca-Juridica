@@ -1,0 +1,148 @@
+<div class="max-w-6xl p-6 bg-white rounded-lg">
+  <!-- Header -->
+  <div class="mb-6">
+    <div class="flex items-center gap-3 mb-2">
+      <button 
+        (click)="volver()" 
+        class="px-4 py-2 text-gray-700 rounded-md hover:bg-gray-50 transition-colors font-medium cursor-pointer"
+        title="Volver"
+      >
+         <span class="material-icons">arrow_back</span>
+      </button>
+      <h1 class="text-2xl font-bold text-blue-900 mb-2"  >
+        Solicitud jurídica
+      </h1>
+    </div>
+  </div>
+
+  <!-- Form Container -->
+  <div *ngIf="solicitud && !cargando; else estadoCarga">
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-16">
+
+      <!-- Columna izquierda -->
+      <div class="flex flex-col gap-6">
+
+        <div>
+          <label class="text-sm font-medium">NIT</label>
+          <input readonly
+            class="w-full mt-1 border border-gray-200 rounded-lg p-3 text-gray-500"
+            [value]="solicitud.nit">
+        </div>
+
+        <div>
+          <label class="text-sm font-medium">Razón Social</label>
+          <input readonly
+            class="w-full mt-1 border border-gray-200 rounded-lg p-3 text-gray-500"
+            [value]="solicitud.razon_social">
+        </div>
+
+        <div>
+          <label class="text-sm font-medium">Nombre Corto</label>
+          <input readonly
+            class="w-full mt-1 border border-gray-200 rounded-lg p-3 text-gray-500"
+            [value]="solicitud.nombre_corto || 'No registrado'">
+        </div>
+
+        <div>
+          <label class="text-sm font-medium">Fecha Constitución</label>
+          <input readonly
+            class="w-full mt-1 border border-gray-200 rounded-lg p-3 text-gray-500"
+            [value]="solicitud.fecha_constitucion">
+        </div>
+
+        <div>
+          <label class="text-sm font-medium">Ciudad Constitución</label>
+          <input readonly
+            class="w-full mt-1 border border-gray-200 rounded-lg p-3 text-gray-500"
+            [value]="solicitud.ciudad_constitucion">
+        </div>
+
+        <div>
+          <label class="text-sm font-medium">País Constitución</label>
+          <input readonly
+            class="w-full mt-1 border border-gray-200 rounded-lg p-3 text-gray-500"
+            [value]="solicitud.pais_constitucion">
+        </div>
+
+      </div>
+
+      <!-- Columna derecha -->
+      <div class="flex flex-col gap-6">
+
+        <div>
+          <label class="text-sm font-medium">Dirección Sede Principal</label>
+          <input readonly
+            class="w-full mt-1 border border-gray-200 rounded-lg p-3 text-gray-500"
+            [value]="solicitud.dir_sede_principal">
+        </div>
+
+        <div>
+          <label class="text-sm font-medium">Barrio</label>
+          <input readonly
+            class="w-full mt-1 border border-gray-200 rounded-lg p-3 text-gray-500"
+            [value]="solicitud.barrio">
+        </div>
+
+        <div>
+          <label class="text-sm font-medium">Ciudad / Municipio</label>
+          <input readonly
+            class="w-full mt-1 border border-gray-200 rounded-lg p-3 text-gray-500"
+            [value]="solicitud.ciudad_municipio">
+        </div>
+
+        <div>
+          <label class="text-sm font-medium">Departamento</label>
+          <input readonly
+            class="w-full mt-1 border border-gray-200 rounded-lg p-3 text-gray-500"
+            [value]="solicitud.departamento">
+        </div>
+
+        <div>
+          <label class="text-sm font-medium">País</label>
+          <input readonly
+            class="w-full mt-1 border border-gray-200 rounded-lg p-3 text-gray-500"
+            [value]="solicitud.pais">
+        </div>
+
+        <div>
+          <label class="text-sm font-medium">Correo</label>
+          <input readonly
+            class="w-full mt-1 border border-gray-200 rounded-lg p-3 text-gray-500"
+            [value]="solicitud.correo">
+        </div>
+
+        <div>
+          <label class="text-sm font-medium">Teléfono</label>
+          <input readonly
+            class="w-full mt-1 border border-gray-200 rounded-lg p-3 text-gray-500"
+            [value]="solicitud.telefono || 'No registrado'">
+        </div>
+
+        <div>
+          <label class="text-sm font-medium">Extensión</label>
+          <input readonly
+            class="w-full mt-1 border border-gray-200 rounded-lg p-3 text-gray-500"
+            [value]="solicitud.ext || 'No registrada'">
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Estado de carga / error -->
+  <ng-template #estadoCarga>
+    <div class="bg-white mt-6 p-10 rounded-xl shadow-sm text-center" *ngIf="cargando">
+      <p class="text-gray-600">Cargando solicitud...</p>
+    </div>
+    <div class="bg-white mt-6 p-10 rounded-xl shadow-sm text-center" *ngIf="!cargando && error">
+      <p class="text-red-600">{{ error }}</p>
+      <button class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700" (click)="volver()">
+        Volver
+      </button>
+    </div>
+  </ng-template>
+
+</div>

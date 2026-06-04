@@ -5,6 +5,7 @@ import {
   ConsultarService,
   SolicitudJuridicaConsulta
 } from '../../services/consultar.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-consultar-solicitudes-juridicas',
@@ -22,7 +23,7 @@ export class ConsultarSolicitudesJuridicasComponent implements OnInit {
   error: string = '';
   busquedaRealizada: boolean = false;
 
-  constructor(private consultarService: ConsultarService) {}
+  constructor(private consultarService: ConsultarService, private router: Router) {}
 
   ngOnInit(): void {
     this.cargarTodas();
@@ -93,6 +94,13 @@ export class ConsultarSolicitudesJuridicasComponent implements OnInit {
       this.error = 'No se encontraron solicitudes';
     }
   }
+
+  verDetalle(solicitud: SolicitudJuridicaConsulta): void {
+  this.router.navigate([
+    '/director-operativo/solicitud-juridica',
+    solicitud.id_solicitud
+  ]);
+}
 
   limpiarBusqueda(): void {
     this.nitRazonSocial = '';
