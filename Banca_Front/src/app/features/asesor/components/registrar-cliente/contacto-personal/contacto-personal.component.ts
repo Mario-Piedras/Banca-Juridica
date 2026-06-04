@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Output, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -10,7 +10,7 @@ import { HttpClient } from '@angular/common/http';
   imports: [CommonModule, ReactiveFormsModule, NgSelectModule],
   templateUrl: './contacto-personal.component.html',
 })
-export class ContactoPersonalComponent implements OnInit {
+export class ContactoPersonalComponent implements OnInit, OnChanges {
   form: FormGroup;
   @Input() datosIniciales: any;
   @Output() formChange = new EventEmitter();
@@ -96,6 +96,42 @@ export class ContactoPersonalComponent implements OnInit {
     });
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (
+      changes['datosIniciales'] &&
+      changes['datosIniciales'].currentValue
+    ) {
+
+      const datos = changes['datosIniciales'].currentValue;
+
+      console.log('📥 Contacto recibido:', datos);
+
+      this.form.patchValue(datos, {
+        emitEvent: false
+      });
+
+      if (datos.pais === 'Colombia') {
+
+        this.form.get('tipoPais')?.setValue('Colombia', {
+          emitEvent: false
+        });
+
+        if (datos.departamento) {
+          this.actualizarCiudades(datos.departamento);
+        }
+
+        this.form.get('ciudad')?.enable();
+
+      } else {
+
+        this.form.get('tipoPais')?.setValue('Otro', {
+          emitEvent: false
+        });
+
+      }
+    }
+  }
+
   cargarDepartamentosColombia() {
     console.log('📡 Cargando archivo...');
     // Cambiar la ruta - SIN el prefijo /assets/
@@ -176,4 +212,5 @@ export class ContactoPersonalComponent implements OnInit {
       }
     }
   }
+
 }

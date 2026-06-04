@@ -83,7 +83,7 @@ export class RegistrarClienteService {
         ]
       );
       // como la base de datos usa 'Sí'/'No' en vez de booleanos esta linea hace la conversion
-      const factaCrsEconomica = data.actividad.factaCrs ? 'Sí' : 'No';
+      const factaCrsEconomica = (data.actividad?.factaCrs ?? false) ? 'Sí' : 'No';
        // === ⚠️ 3. Insertar actividad económica (faltante totalmente) ===
       await connection.execute(
         `
@@ -143,7 +143,7 @@ export class RegistrarClienteService {
         ]
       );
   
-      const esResidente = data.facta.esResidenteExtranjero ? 'Sí' : 'No';
+      const esResidente = (data.facta?.esResidenteExtranjero ?? false) ? 'Sí' : 'No';
       // === 4. Insertar FACTA/CRS ===
       await connection.execute(
         `

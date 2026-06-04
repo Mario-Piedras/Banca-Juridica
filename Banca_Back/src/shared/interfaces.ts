@@ -219,11 +219,11 @@ export interface Cliente {
   segundo_nombre?: string;
   primer_apellido: string;
   segundo_apellido?: string;
-  genero: 'M' | 'F';
+  genero: 'Masculino' | 'Femenino';
   nacionalidad: 'Colombiano' | 'Estadounidense' | 'Otra';
   otra_nacionalidad?: string;
   estado_civil: 'Soltero' | 'Casado' | 'Unión Libre';
-  grupo_etnico: 'Indígena' | 'Gitano' | 'Raizal' | 'Palenquero' | 'Afrocolombiano' | 'Ninguna';
+  grupo_etnico: 'Indígena' | 'Gitano' | 'Raizal' | 'Palenquero' | 'Afrocolombiano' | 'Ninguno';
   fecha_registro?: Date;
 }
 

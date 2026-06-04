@@ -165,11 +165,11 @@ CREATE TABLE `clientes` (
   `segundo_nombre` varchar(50) DEFAULT NULL,
   `primer_apellido` varchar(50) NOT NULL,
   `segundo_apellido` varchar(50) DEFAULT NULL,
-  `genero` enum('M','F') NOT NULL,
+  `genero` enum('Masculino','Femenino') NOT NULL,
   `nacionalidad` enum('Colombiano','Estadounidense','Otra') NOT NULL,
   `otra_nacionalidad` varchar(100) DEFAULT NULL,
   `estado_civil` enum('Soltero','Casado','Unión Libre') NOT NULL,
-  `grupo_etnico` enum('Indígena','Gitano','Raizal','Palenquero','Afrocolombiano','Ninguna') NOT NULL,
+  `grupo_etnico` enum('Indígena','Gitano','Raizal','Palenquero','Afrocolombiano','Ninguno') NOT NULL,
   `fecha_registro` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id_cliente`),
   UNIQUE KEY `numero_documento` (`numero_documento`),
@@ -183,7 +183,7 @@ CREATE TABLE `clientes` (
 
 LOCK TABLES `clientes` WRITE;
 /*!40000 ALTER TABLE `clientes` DISABLE KEYS */;
-INSERT INTO `clientes` VALUES (1,'1012345678','CC','Bogotá','Bogotá','1990-05-15','2008-05-15','Juan','Carlos','Pérez','Gómez','M','Colombiano',NULL,'Soltero','Ninguna','2025-11-24 01:40:49'),(2,'1023456789','CC','Medellín','Medellín','1985-08-22','2003-08-22','Laura','Marcela','Ramírez','López','F','Colombiano',NULL,'Casado','Ninguna','2025-11-24 01:40:49'),(3,'1034567890','CC','Cali','Cali','1995-03-30','2013-03-30','Andrea','Carolina','Martínez','Vargas','F','Colombiano',NULL,'Unión Libre','Ninguna','2025-11-24 01:40:49'),(4,'1045678901','CC','Bogotá','Bogotá','1992-07-18','2010-07-18','Carlos','Alberto','Rodríguez','Torres','M','Colombiano',NULL,'Soltero','Ninguna','2025-11-24 01:40:49'),(5,'1056789012','CC','Bogotá','Bogotá','1998-11-25','2016-11-25','María','José','García','Hernández','F','Colombiano',NULL,'Soltero','Ninguna','2025-11-24 01:40:49'),(8,'123123123','CC','adasdasd','adasd','2025-11-25','2025-11-01','adsasd','asdasd','asdasd','asdads','M','Colombiano','asdasdsa','Soltero','Indígena','2025-11-25 04:15:21'),(12,'114567896','CC','asdasas','adsasdasd','2025-11-01','2025-11-26','Santiago ','','Pacheco','','M','Colombiano','','Soltero','Ninguna','2025-11-27 01:34:15');
+INSERT INTO `clientes` VALUES (1,'1012345678','CC','Bogotá','Bogotá','1990-05-15','2008-05-15','Juan','Carlos','Pérez','Gómez','Masculino','Colombiano',NULL,'Soltero','Ninguno','2025-11-24 01:40:49'),(2,'1023456789','CC','Medellín','Medellín','1985-08-22','2003-08-22','Laura','Marcela','Ramírez','López','Femenino','Colombiano',NULL,'Casado','Ninguno','2025-11-24 01:40:49'),(3,'1034567890','CC','Cali','Cali','1995-03-30','2013-03-30','Andrea','Carolina','Martínez','Vargas','Femenino','Colombiano',NULL,'Unión Libre','Ninguno','2025-11-24 01:40:49'),(4,'1045678901','CC','Bogotá','Bogotá','1992-07-18','2010-07-18','Carlos','Alberto','Rodríguez','Torres','Masculino','Colombiano',NULL,'Soltero','Ninguno','2025-11-24 01:40:49'),(5,'1056789012','CC','Bogotá','Bogotá','1998-11-25','2016-11-25','María','José','García','Hernández','Femenino','Colombiano',NULL,'Soltero','Ninguno','2025-11-24 01:40:49'),(8,'123123123','CC','adasdasd','adasd','2025-11-25','2025-11-01','adsasd','asdasd','asdasd','asdads','Masculino','Colombiano','asdasdsa','Soltero','Indígena','2025-11-25 04:15:21'),(12,'114567896','CC','asdasas','adsasdasd','2025-11-01','2025-11-26','Santiago ','','Pacheco','','Masculino','Colombiano','','Soltero','Ninguno','2025-11-27 01:34:15');
 /*!40000 ALTER TABLE `clientes` ENABLE KEYS */;
 UNLOCK TABLES;
 

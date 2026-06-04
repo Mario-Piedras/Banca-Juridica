@@ -108,8 +108,7 @@ export class InformacionPersonalComponent implements OnInit, OnChanges {
 
     // AUTO-GUARDADO: Emitir datos al padre cada vez que cambie el formulario
     this.form.valueChanges.subscribe(valores => {
-      const datosTransformados = this.transformarDatos(valores);
-      this.formChange.emit(datosTransformados);
+      this.formChange.emit(valores);
       console.log('Auto-guardando datos personales...');
     });
   }
@@ -125,11 +124,10 @@ export class InformacionPersonalComponent implements OnInit, OnChanges {
       );
       this.form.patchValue(
         changes['datosIniciales'].currentValue,
-        { emitEvent: false }
+        { emitEvent: true }
       );
     }
   }
-
 
   // NUEVO: Validar edad mínima
   validarEdadMinima(edadMinima: number) {
@@ -175,9 +173,8 @@ export class InformacionPersonalComponent implements OnInit, OnChanges {
 
   guardarSeccion() {
     if (this.form.valid) {
-      // TRANSFORMAR GÉNERO ANTES DE EMITIR
-      const datosTransformados = this.transformarDatos(this.form.value);
-      this.formChange.emit(datosTransformados);
+      // Emitir datos del formulario
+      this.formChange.emit(this.form.value);
       this.nextTab.emit();
       console.log('Datos personales guardados correctamente');
       alert('Sección de Información Personal guardada correctamente');
@@ -191,24 +188,6 @@ export class InformacionPersonalComponent implements OnInit, OnChanges {
       }
     }
   }
-
-  // Método para transformar datos antes de enviar
-  private transformarDatos(valores: any): any {
-    return {
-      ...valores,
-      // Convertir "Femenino" → "F" y "Masculino" → "M"
-      genero: valores.genero === 'Femenino' ? 'F' :
-        valores.genero === 'Masculino' ? 'M' : valores.genero,
-
-      // Convertir "Colombiana" → "Colombiano"
-      nacionalidad: valores.nacionalidad === 'Colombiana' ? 'Colombiano' : valores.nacionalidad,
-
-      // Convertir "Ninguno" → "Ninguna"
-      grupoEtnico: valores.grupoEtnico === 'Ninguno' ? 'Ninguna' : valores.grupoEtnico
-    };
-  }
-
-
 
   // NUEVO: Obtener lista de errores del formulario
   obtenerErroresFormulario(): string[] {
@@ -295,4 +274,5 @@ export class InformacionPersonalComponent implements OnInit, OnChanges {
       }
     }
   }
+
 }
