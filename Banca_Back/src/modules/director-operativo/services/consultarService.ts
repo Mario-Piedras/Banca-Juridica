@@ -212,7 +212,8 @@ export class ConsultarService {
         razon_social: row.razon_social,
         fecha: this.formatearFecha(row.fecha),
         estado: row.estado,
-        producto: row.producto
+        producto: row.producto,
+        comentario_asesor: row.comentario_asesor
       }));
 
       return solicitudes;
@@ -234,6 +235,8 @@ export class ConsultarService {
 
       const query = `
         SELECT
+          sa.id_solicitud,
+          sa.comentario_asesor,
           ie.nit,
           ie.razon_social,
           ie.nombre_corto,
@@ -267,6 +270,8 @@ export class ConsultarService {
       const row = rows[0];
 
       return {
+        id_solicitud: row.id_solicitud,
+        comentario_asesor: row.comentario_asesor,
         nit: row.nit,
         razon_social: row.razon_social,
         nombre_corto: row.nombre_corto,

@@ -31,18 +31,17 @@ export const DIRECTOR_OPERATIVO_ROUTES: Routes = [
           import('./components/solicitudes-radicadas/solicitud-cliente/solicitud-cliente.component').then(
             (m) => m.SolicitudClienteComponent
           )
+      },
+      {
+        path: 'solicitud-juridica/:id',
+        loadComponent: () =>
+          import(
+            './components/solicitudes-radicadas-juridicas/solicitud-juridica/solicitud-juridica.component'
+          ).then(
+            (m) => m.SolicitudJuridicaComponent
+          )
       }
     ]
   },
-
-  {
-  path: 'solicitud-juridica/:id',
-  loadComponent: () =>
-    import(
-      './components/solicitudes-radicadas-juridicas/solicitud-juridica/solicitud-juridica.component'
-    ).then(
-      (m) => m.SolicitudJuridicaComponent
-    )
-  }
 ];
 

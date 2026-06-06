@@ -50,6 +50,7 @@ export class SolicitudJuridicaComponent  implements OnInit {
     this.cargando = true;
     this.solicitudService.obtenerDetalleSolicitud(id).subscribe({
       next: (resp: SolicitudJuridicaDetalleResponse) => {
+        console.log('RESPUESTA:', resp);
         if (resp.success) {
           this.solicitud = resp.data;
         } else {
@@ -66,7 +67,7 @@ export class SolicitudJuridicaComponent  implements OnInit {
   }
 
   volver(): void {
-    this.router.navigate(['/director-operativo/consultar-solicitudes']);
+    this.router.navigate(['/director-operativo/consultar-solicitudes-juridicas']);
   }
 
   abrirModalRechazo(): void {
@@ -79,7 +80,7 @@ export class SolicitudJuridicaComponent  implements OnInit {
     this.motivoRechazo = '';
   }
 
-  /* confirmarRechazo(): void {
+  confirmarRechazo(): void {
     if (!this.motivoRechazo.trim()) {
       alert('Por favor ingrese el motivo del rechazo');
       return;
@@ -105,7 +106,7 @@ export class SolicitudJuridicaComponent  implements OnInit {
         this.procesando = false;
       }
     });
-  } */
+  }
 
   abrirModalAprobacion(): void {
     this.mostrarModalAprobacion = true;
@@ -115,7 +116,7 @@ export class SolicitudJuridicaComponent  implements OnInit {
     this.mostrarModalAprobacion = false;
   }
 
-  /* confirmarAprobacion(): void {
+  confirmarAprobacion(): void {
     if (!this.solicitud) return;
 
     this.procesando = true;
@@ -136,6 +137,6 @@ export class SolicitudJuridicaComponent  implements OnInit {
         this.procesando = false;
       }
     });
-  } */
+  }
 
 }

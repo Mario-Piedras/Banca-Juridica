@@ -228,6 +228,7 @@ export interface Cliente {
 }
 
 export interface SolicitudJuridicaDetalleResponse {
+  id_solicitud: number;
   nit: string;
   razon_social: string;
   nombre_corto?: string;
@@ -245,6 +246,7 @@ export interface SolicitudJuridicaDetalleResponse {
   telefono?: string;
   ext?: string;
   correo: string;
+  comentario_asesor?: string;
 }
 
 export interface SolicitudApertura {
