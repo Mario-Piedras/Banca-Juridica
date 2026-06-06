@@ -39,7 +39,7 @@ export class ConsultarSolicitudService {
 
     try {
       const [rows] = await pool.query<RowDataPacket[]>(query, [cedula]);
-      
+
       return rows.map(row => ({
         id_solicitud: row.id_solicitud,
         id_asesor: row.id_asesor,
@@ -61,6 +61,36 @@ export class ConsultarSolicitudService {
     } catch (error) {
       console.error('Error al buscar solicitudes por cédula:', error);
       throw new Error('Error al buscar solicitudes');
+    }
+  }
+
+  async buscarPorNit(nit: string): Promise<any[]> {
+    const connection = await pool.getConnection();
+
+    try {
+      // La consulta busca en la tabla solicitudes filtrando por el campo nit
+      // Se seleccionan los nombres de campos que espera tu interfaz del Frontend
+      const [solicitudes]: any = await connection.query(
+        `SELECT id_solicitud,
+          nit,
+          razon_social,
+          fecha_solicitud as fecha, 
+          estado, 
+          tipo_cuenta as producto, 
+          comentario_asesor
+        FROM solicitudes_apertura s INNER JOIN info_empresas e 
+        ON s.id_empresa = e.id_info_empresas
+        where nit = ?
+        ORDER BY fecha_solicitud DESC`,
+        [nit]
+      );
+
+      return solicitudes;
+    } catch (error) {
+      console.error('Error en ConsultarSolicitudService.buscarPorNit:', error);
+      throw new Error('Error al consultar las solicitudes por NIT.');
+    } finally {
+      connection.release();
     }
   }
 
@@ -98,7 +128,7 @@ export class ConsultarSolicitudService {
 
     try {
       const [rows] = await pool.query<RowDataPacket[]>(query, [idSolicitud]);
-      
+
       if (rows.length === 0) {
         return null;
       }

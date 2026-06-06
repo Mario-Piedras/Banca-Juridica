@@ -6,7 +6,8 @@ import { environment } from '../../../../environments/environment';
 
 interface SolicitudBackend {
   id_solicitud: number;
-  cedula: string;
+  cedula?: string;
+  nit?: string;
   fecha: string;
   estado: string;
   producto: string;
@@ -29,6 +30,14 @@ export class ConsultarService {
 
   buscarPorCedula(cedula: string): Observable<SolicitudBackend[]> {
     const url = `${this.apiUrl}/cedula/${cedula}`;
+    
+    return this.http.get<ApiResponse>(url).pipe(
+      map(response => response.data || []),
+      catchError(this.handleError)
+    );
+  }
+  buscarPorNit(nit: string): Observable<SolicitudBackend[]> {
+    const url = `${this.apiUrl}/nit/${nit}`;
     
     return this.http.get<ApiResponse>(url).pipe(
       map(response => response.data || []),

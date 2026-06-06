@@ -44,6 +44,46 @@ export class ConsultarSolicitudController {
     }
   }
 
+  async buscarPorNit(req: Request, res: Response): Promise<void> {
+    try {
+      const { nit } = req.params;
+
+      if (!nit || nit.trim() === '') {
+        res.status(400).json({
+          success: false,
+          message: 'El NIT es requerido'
+        });
+        return;
+      }
+
+      // Llama al método del servicio (lo implementaremos en el siguiente paso)
+      const solicitudes = await consultarService.buscarPorNit(nit);
+
+      if (solicitudes.length === 0) {
+        res.status(404).json({
+          success: false,
+          message: 'No se encontraron solicitudes para este NIT',
+          data: []
+        });
+        return;
+      }
+
+      res.status(200).json({
+        success: true,
+        message: `Se encontraron ${solicitudes.length} solicitud(es) para la empresa`,
+        data: solicitudes
+      });
+
+    } catch (error) {
+      console.error('Error en buscarPorNit:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Error al buscar solicitudes de la empresa',
+        error: error instanceof Error ? error.message : 'Error desconocido'
+      });
+    }
+  }
+
   async obtenerPorId(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
