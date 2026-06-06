@@ -1,6 +1,10 @@
 import pool from '../../../config/database';
 import { RowDataPacket } from 'mysql2';
-import { SolicitudConsultaResponse } from '../../../shared/interfaces';
+import {
+  SolicitudConsultaResponse,
+  SolicitudJuridicaConsultaResponse,
+  SolicitudJuridicaDetalleResponse
+} from '../../../shared/interfaces';
 
 export class ConsultarService {
 
@@ -178,6 +182,120 @@ export class ConsultarService {
     } catch (error) {
       console.error('Error en obtenerTodasSolicitudes:', error);
       throw new Error('Error al consultar todas las solicitudes');
+    }
+  }
+
+  // Obtener todas las solicitudes jurídicas
+  async obtenerTodasSolicitudesJuridicas(): Promise<SolicitudJuridicaConsultaResponse[]> {
+    try {
+
+      const query = `
+        SELECT
+          sa.id_solicitud,
+          sa.tipo_cuenta AS producto,
+          sa.estado,
+          sa.fecha_solicitud AS fecha,
+          ie.nit,
+          ie.razon_social
+        FROM solicitudes_apertura sa
+        INNER JOIN info_empresas ie
+          ON sa.id_empresa = ie.id_info_empresas
+        WHERE sa.tipo_cliente = 'Jurídica'
+        ORDER BY sa.fecha_solicitud DESC
+      `;
+
+      const [rows] = await pool.query<RowDataPacket[]>(query);
+
+      const solicitudes: SolicitudJuridicaConsultaResponse[] = rows.map(row => ({
+        id_solicitud: row.id_solicitud,
+        nit: row.nit,
+        razon_social: row.razon_social,
+        fecha: this.formatearFecha(row.fecha),
+        estado: row.estado,
+        producto: row.producto
+      }));
+
+      return solicitudes;
+
+    } catch (error) {
+
+      console.error('Error en obtenerTodasSolicitudesJuridicas:', error);
+
+      throw new Error('Error al consultar las solicitudes jurídicas');
+    }
+  }
+
+  // Obtener detalle de una solicitud jurídica
+  async obtenerDetalleSolicitudJuridica(
+    id_solicitud: number
+  ): Promise<SolicitudJuridicaDetalleResponse | null> {
+
+    try {
+
+      const query = `
+        SELECT
+          ie.nit,
+          ie.razon_social,
+          ie.nombre_corto,
+          ie.fecha_constitución AS fecha_constitucion,
+          ie.ciudad_constitución AS ciudad_constitucion,
+          ie.pais_constitucion,
+          ie.dir_sede_principal,
+          ie.barrio,
+          ie.ciudad_municipio,
+          ie.departamento,
+          ie.pais,
+          ie.telefono,
+          ie.ext,
+          ie.correo
+        FROM solicitudes_apertura sa
+        INNER JOIN info_empresas ie
+          ON sa.id_empresa = ie.id_info_empresas
+        WHERE sa.id_solicitud = ?
+        LIMIT 1
+      `;
+
+      const [rows] = await pool.query<RowDataPacket[]>(
+        query,
+        [id_solicitud]
+      );
+
+      if (rows.length === 0) {
+        return null;
+      }
+
+      const row = rows[0];
+
+      return {
+        nit: row.nit,
+        razon_social: row.razon_social,
+        nombre_corto: row.nombre_corto,
+
+        fecha_constitucion: this.formatearFecha(row.fecha_constitucion),
+        ciudad_constitucion: row.ciudad_constitucion,
+        pais_constitucion: row.pais_constitucion,
+
+        dir_sede_principal: row.dir_sede_principal,
+        barrio: row.barrio,
+        ciudad_municipio: row.ciudad_municipio,
+        departamento: row.departamento,
+        pais: row.pais,
+
+        telefono: row.telefono,
+        ext: row.ext,
+        correo: row.correo
+      };
+
+    } catch (error) {
+
+      console.error(
+        'Error en obtenerDetalleSolicitudJuridica:',
+        error
+      );
+
+      throw new Error(
+        'Error al consultar el detalle de la solicitud jurídica'
+      );
     }
   }
 

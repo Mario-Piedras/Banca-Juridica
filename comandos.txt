@@ -1,0 +1,96 @@
+git status -m "npm crate vite@latest
+
+REPOSITORIO GITHUB
+	git init
+
+Cambiar el nombre de maste a main:
+	git branch -M main
+
+Eliminar Credenciales de otros usuarios:
+	windows + S
+	administrador de credenciales
+Credenciales de windows
+	elimina las credenciales de windows que no sean suyas
+
+Configurar usuario local de Git:
+	git config user.email "mariopiedras0@gmail.com"
+	git config user.name "Mario-Piedras"
+
+Ahora agregar todos los archivos del proyecto:
+	git add .
+
+Realizar un commit descritivo de la versión a subir:
+	git commit -m "Primera Subida"
+
+Enlazar la dirección del repositorio en la nube con el local:
+	git remote add origin "URL del repositorio"
+	git push -u origin main
+
+Luego saldrá que debe iniciar sesión con el navegador:
+Inicie sesión con sus credenciales del GitHub.
+Actualiza el repositorio de la nube.
+
+Comprobar el estado del proyecto:
+	git status
+
+(Si aparece en algo en rojo significia que el archivo es nuevo o se ha modificado).
+
+comando para actualizar el repositorio con la versión local:
+	git status
+	git add .
+	git commit -m "nombre de la versión o descripción del commit"
+	git push
+
+Crear Ramas:
+Ambas son para crear la rama de manera local, debes elegir solo una
+	git checkout -b nombre_de_la_rama
+	git switch -c nombre_de_la_rama
+
+Crear la rama en el repositorio en la nube
+	git push origin nombre_de_la_rama
+
+Añadir colaboradores al repositorio:
+	si eres el dueño del repositorio, te saldrá la opción de settings, dale click
+	ahora vas a la parte izquierda y le das a colaborators y añadir persona.
+	ingresas el correo de la persona
+
+para ingresar a un repositorio de alguien, necesitas acceder y clonarlo
+
+para subir el primer commit a un repositorio externo es necesario asignar la dirección, esto sea hace asi:
+	git push origin -u origin nombre_de_la_rama
+
+ahora tienes que ir al git y darle a la parte que dice request, y aceptar, te saldra si no hay errores y lo subes al repositorio
+
+apartir de aqui se podra seguir haciendo los commit con solo el:
+	git push
+
+Crear proyecto react:
+	npm create vite@latest
+
+Escoger react
+escojer JavaScript + SWC
+le das que no a las 2 cosas siguientes y listo
+
+para inicializar el projecto, entras al visual, abres la terminal e instalas las dependencias
+	npm i
+
+para añadir colaboradores y crear ramas en git
+primero te vas a settings, le das a colaborators, y colocas el correo del mienbro que quieras añadir
+
+git pull 	//Se debe usar para traer todos los cambios del main, antes de hacer cualcuerl push
+
+clonas el repositorio donde se va a trabajar
+debes entrar a la carpeta del proyecto 
+git switch -c feature/nombre-rama  //crea y entra en la rama
+git switch feature/nombre-rama	   //Solo entra a la rama si ya está creada
+git branch es para ver todas las ramas de manera local
+git status
+git add .
+git commit -m "descripción commit"
+git push -u origin feature/nombre-rama //crea la rama en el repositorio y se sube, usarlo solo la primer commit
+git push	//a partir de ahi, usar solo este
+
+ir al github y dar cick en pull request
+dar en el boton view pull request
+verificar si github detecto conflictos a la hora de subir el cambio, de no ser asi, dar a merge pull request
+y lo creas y esto se actualiza en el main.
