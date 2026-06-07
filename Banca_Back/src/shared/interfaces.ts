@@ -227,6 +227,28 @@ export interface Cliente {
   fecha_registro?: Date;
 }
 
+export interface SolicitudJuridicaDetalleResponse {
+  id_solicitud: number;
+  nit: string;
+  razon_social: string;
+  nombre_corto?: string;
+
+  fecha_constitucion: string;
+  ciudad_constitucion: string;
+  pais_constitucion: string;
+
+  dir_sede_principal: string;
+  barrio: string;
+  ciudad_municipio: string;
+  departamento: string;
+  pais: string;
+
+  telefono?: string;
+  ext?: string;
+  correo: string;
+  comentario_asesor?: string;
+}
+
 export interface SolicitudApertura {
   id_solicitud?: number;
   id_cliente: number;
@@ -526,6 +548,17 @@ export interface SolicitudConsultaResponse {
   fecha_nacimiento?: string;
   nombre_asesor?: string;
   correo_asesor?: string;
+}
+
+
+// ===== INTERFACE PARA LA CONSULTA DE SOLICITUDES JURÍDICAS =====
+export interface SolicitudJuridicaConsultaResponse {
+  id_solicitud: number;
+  nit: string;
+  razon_social: string;
+  fecha: string;
+  estado: 'Pendiente' | 'Aprobada' | 'Rechazada' | 'Devuelta' | 'Aperturada';
+  producto: string;
 }
 
 // ===== RESPUESTAS DE LA API PARA CONSULTAS =====

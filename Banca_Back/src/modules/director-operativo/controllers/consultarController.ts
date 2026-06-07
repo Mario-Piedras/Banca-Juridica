@@ -94,4 +94,67 @@ export class ConsultarController {
       });
     }
   }
+
+  // Obtener todas las solicitudes jurídicas
+  async obtenerTodasSolicitudesJuridicas(req: Request, res: Response): Promise<void> {
+    try {
+
+      const solicitudes = await consultarService.obtenerTodasSolicitudesJuridicas();
+
+      res.status(200).json({
+        success: true,
+        message: 'Solicitudes jurídicas encontradas',
+        data: solicitudes
+      });
+
+    } catch (error) {
+
+      console.error('Error al obtener solicitudes jurídicas:', error);
+
+      res.status(500).json({
+        success: false,
+        message: 'Error al obtener las solicitudes jurídicas',
+        error: error instanceof Error ? error.message : 'Error desconocido'
+      });
+
+    }
+  }
+
+  // Obtener detalle de una solicitud jurídica específica
+  async obtenerDetalleSolicitudJuridica(
+  req: Request,
+  res: Response
+): Promise<void> {
+  try {
+
+    const { id_solicitud } = req.params;
+
+    const solicitud =
+      await consultarService.obtenerDetalleSolicitudJuridica(
+        Number(id_solicitud)
+      );
+
+    if (!solicitud) {
+      res.status(404).json({
+        success: false,
+        message: 'Solicitud jurídica no encontrada'
+      });
+      return;
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Detalle encontrado',
+      data: solicitud
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      success: false,
+      message: 'Error al obtener el detalle'
+    });
+
+  }
+}
 }

@@ -32,7 +32,8 @@ export class DirectorOperativoLayoutComponent {
     {
       titulo: 'Menu Director Operativo',
       items: [
-        { label: 'Solicitudes Radicadas', ruta: 'consultar-solicitudes' },
+        { label: 'Solicitudes Naturales', ruta: 'consultar-solicitudes' },
+        { label: 'Solicitudes Jurídicas', ruta: 'consultar-solicitudes-juridicas' },
       ],
     },
   ];

@@ -64,4 +64,15 @@ router.get(
   (req, res) => solicitudClienteController.descargarArchivo(req, res)
 );
 
+router.get(
+  '/solicitudes-juridicas',
+  (req, res) => consultarController.obtenerTodasSolicitudesJuridicas(req, res)
+);
+
+router.get(
+  '/solicitudes-juridicas/:id_solicitud',
+  (req, res) =>
+    consultarController.obtenerDetalleSolicitudJuridica(req, res)
+);
+
 export default router;

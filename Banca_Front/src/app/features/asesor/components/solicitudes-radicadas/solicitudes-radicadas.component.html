@@ -105,14 +105,19 @@
     <div
       class="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto transform transition-all duration-200 scale-100">
       <div class="bg-[#0b2a66] text-white px-6 py-4 rounded-t-xl flex justify-between items-center">
-        <h3 class="text-xl font-semibold">Comentario del Asesor</h3>
+        <h3 class="text-xl font-semibold">Comentarios</h3>
         <button (click)="cerrarModal()"
           class="text-white hover:text-gray-300 transition-colors text-2xl leading-none">&times;</button>
       </div>
 
       <div class="p-6">
+        <p>Asesor</p>
         <div class="bg-gray-50 rounded-lg p-4 min-h-[150px]">
-          <p class="text-gray-700 whitespace-pre-wrap">{{ comentarioActual }}</p>
+          <p class="text-gray-700 whitespace-pre-wrap">{{ comentarioAsesorActual }}</p>
+        </div>
+        <p>Director</p>
+        <div class="bg-gray-50 rounded-lg p-4 min-h-[150px]">
+          <p class="text-gray-700 whitespace-pre-wrap">{{ comentarioDirectorActual }}</p>
         </div>
       </div>
 

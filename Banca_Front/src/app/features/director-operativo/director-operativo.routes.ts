@@ -17,16 +17,31 @@ export const DIRECTOR_OPERATIVO_ROUTES: Routes = [
           import('./components/solicitudes-radicadas/consultar-solicitudes.component').then(
             (m) => m.ConsultarSolicitudesComponent
           ),
-      }
-      ,
+      },
+      {
+        path: 'consultar-solicitudes-juridicas',
+        loadComponent: () =>
+          import('./components/solicitudes-radicadas-juridicas/consultar-solicitudes-juridicas.component').then(
+            (m) => m.ConsultarSolicitudesJuridicasComponent
+          ),
+      },
       {
         path: 'solicitud/:id',
         loadComponent: () =>
           import('./components/solicitudes-radicadas/solicitud-cliente/solicitud-cliente.component').then(
             (m) => m.SolicitudClienteComponent
           )
+      },
+      {
+        path: 'solicitud-juridica/:id',
+        loadComponent: () =>
+          import(
+            './components/solicitudes-radicadas-juridicas/solicitud-juridica/solicitud-juridica.component'
+          ).then(
+            (m) => m.SolicitudJuridicaComponent
+          )
       }
     ]
-  }
+  },
 ];
 
