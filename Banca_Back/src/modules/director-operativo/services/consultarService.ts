@@ -213,7 +213,8 @@ export class ConsultarService {
         fecha: this.formatearFecha(row.fecha),
         estado: row.estado,
         producto: row.producto,
-        comentario_asesor: row.comentario_asesor
+        comentario_asesor: row.comentario_asesor,
+        comentario_director: row.comentario_director
       }));
 
       return solicitudes;

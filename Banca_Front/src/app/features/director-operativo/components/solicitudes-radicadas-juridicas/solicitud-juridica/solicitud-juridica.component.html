@@ -65,6 +65,12 @@
             [value]="solicitud.pais_constitucion">
         </div>
 
+        <div>
+          <label class="text-sm font-medium">Comentario Asesor</label>
+          <textarea readonly class="w-full mt-1 border border-gray-200 rounded-lg p-3 h-28 resize-none text-gray-600"
+            [value]="solicitud.comentario_asesor || 'Sin comentario'"></textarea>
+        </div>
+
       </div>
 
       <!-- Columna derecha -->

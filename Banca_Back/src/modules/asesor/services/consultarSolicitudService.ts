@@ -77,7 +77,8 @@ export class ConsultarSolicitudService {
           fecha_solicitud as fecha, 
           estado, 
           tipo_cuenta as producto, 
-          comentario_asesor
+          comentario_asesor,
+          comentario_director
         FROM solicitudes_apertura s INNER JOIN info_empresas e 
         ON s.id_empresa = e.id_info_empresas
         where nit = ?

@@ -12,6 +12,7 @@ interface SolicitudBackend {
   estado: string;
   producto: string;
   comentario_asesor?: string;
+  comentario_director?: string;
 }
 
 interface ApiResponse {
