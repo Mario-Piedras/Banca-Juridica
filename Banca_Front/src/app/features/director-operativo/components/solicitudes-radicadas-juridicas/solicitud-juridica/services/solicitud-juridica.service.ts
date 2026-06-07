@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../../../../../environments/environment';
 
 export interface SolicitudJuridicaDetalle {
+  id_solicitud: number;
   nit: string;
   razon_social: string;
   nombre_corto?: string | null;
@@ -21,6 +22,7 @@ export interface SolicitudJuridicaDetalle {
   telefono?: string | null;
   ext?: string | null;
   correo: string;
+  comentario_asesor?: string;
 }
 
 export interface SolicitudJuridicaDetalleResponse {

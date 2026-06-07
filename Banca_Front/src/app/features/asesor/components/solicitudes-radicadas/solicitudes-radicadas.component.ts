@@ -10,7 +10,8 @@ interface Solicitud {
   fecha: string;
   estado: 'PENDIENTE' | 'APROBADO' | 'RECHAZADO';
   producto: string;
-  comentario?: string;
+  comentario_asesor?: string;
+  comentario_director?: string;
 }
 
 @Component({
@@ -23,7 +24,8 @@ export class SolicitudesRadicadasComponent {
   identificacion: string = '';
   solicitudes: Solicitud[] = [];
   mostrarModal: boolean = false;
-  comentarioActual: string = '';
+  comentarioAsesorActual: string = '';
+  comentarioDirectorActual: string = '';
   cargando: boolean = false;
   mensajeError: string = '';
 
@@ -88,13 +90,15 @@ export class SolicitudesRadicadasComponent {
     if (this.tipoCliente === 'Persona Juridica') {
       this.consultarService.buscarPorNit(this.identificacion).subscribe({
         next: (data) => {
+          console.log('RESPUESTA NIT:', data);
           this.solicitudes = data.map((item) => ({
             id: item.id_solicitud,
             nit: item.nit, 
             fecha: this.formatearFecha(item.fecha),
             estado: this.mapearEstado(item.estado),
             producto: item.producto,
-            comentario: item.comentario_asesor || ''
+            comentario_asesor: item.comentario_asesor || '',
+            comentario_director: item.comentario_director || ''
           }));
 
           this.cargando = false;
@@ -117,7 +121,8 @@ export class SolicitudesRadicadasComponent {
             fecha: this.formatearFecha(item.fecha),
             estado: this.mapearEstado(item.estado),
             producto: item.producto,
-            comentario: item.comentario_asesor || ''
+            comentario_asesor: item.comentario_asesor || '',
+            comentario_director: item.comentario_director || ''
           }));
 
           this.cargando = false;
@@ -135,13 +140,15 @@ export class SolicitudesRadicadasComponent {
   }
 
   verComentario(solicitud: Solicitud): void {
-    this.comentarioActual = solicitud.comentario || 'No hay comentario disponible para esta solicitud.';
+    this.comentarioAsesorActual = solicitud.comentario_asesor || 'No hay comentario disponible para esta solicitud.';
+    this.comentarioDirectorActual = solicitud.comentario_director || 'No hay comentario disponible para esta solicitud.';
     this.mostrarModal = true;
   }
 
   cerrarModal(): void {
     this.mostrarModal = false;
-    this.comentarioActual = '';
+    this.comentarioAsesorActual = '';
+    this.comentarioDirectorActual = '';
   }
 
   cerrarModalFondo(event: MouseEvent): void {

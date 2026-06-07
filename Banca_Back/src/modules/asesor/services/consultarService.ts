@@ -68,35 +68,6 @@ export class ClienteService {
     }
   }
 
-  async buscarPorNit(nit: string): Promise<any[]> {
-    const connection = await pool.getConnection();
-
-    try {
-      // La consulta busca en la tabla solicitudes filtrando por el campo nit
-      // Se seleccionan los nombres de campos que espera tu interfaz del Frontend
-      const [solicitudes]: any = await connection.query(
-        `SELECT 
-          s.id_solicitud, 
-          s.nit, 
-          s.fecha_creacion as fecha, 
-          s.estado, 
-          s.producto, 
-          s.comentario_asesor
-        FROM solicitudes s
-        WHERE s.nit = ?
-        ORDER BY s.fecha_creacion DESC`,
-        [nit]
-      );
-
-      return solicitudes;
-    } catch (error) {
-      console.error('Error en ConsultarSolicitudService.buscarPorNit:', error);
-      throw new Error('Error al consultar las solicitudes por NIT.');
-    } finally {
-      connection.release();
-    }
-  }
-
   /**
    * Obtiene una solicitud específica por su ID
    */
