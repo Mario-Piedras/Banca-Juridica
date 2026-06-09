@@ -61,7 +61,7 @@ app.use(express.urlencoded({ extended: true }));
 app.get('/health', (req, res) => {
   res.status(200).json({ 
     status: 'ok',
-    message: 'API Banca Uno funcionando correctamente',
+    message: 'API BankDash funcionando correctamente',
     timestamp: new Date().toISOString(),
     environment: process.env.NODE_ENV || 'development',
     version: '1.0.0'
@@ -96,7 +96,7 @@ app.use('/api/tipoentidad', tipoEntidadRoutes);
 // ============================================
 app.get('/', (req, res) => {
   res.json({ 
-    message: ' API Banca Uno - Sistema Bancario',
+    message: ' API BankDash - Sistema Bancario',
     version: '1.0.0',
     status: 'online',
     environment: process.env.NODE_ENV || 'development',
@@ -205,7 +205,7 @@ app.use((err: Error, req: express.Request, res: express.Response, next: express.
 // ============================================
 const server = app.listen(PORT, () => {
   console.log('\n' + '='.repeat(70));
-  console.log('  SERVIDOR BANCA UNO INICIADO EXITOSAMENTE');
+  console.log('  SERVIDOR BANKDASH INICIADO EXITOSAMENTE');
   console.log('='.repeat(70));
   console.log(`  URL Local:        http://localhost:${PORT}`);
   console.log(`  Entorno:          ${process.env.NODE_ENV || 'development'}`);

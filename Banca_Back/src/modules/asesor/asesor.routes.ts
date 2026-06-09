@@ -46,6 +46,10 @@ router.get('/cliente/:numeroDocumento', (req, res) =>
   clienteController.buscarCliente(req, res)
 );
 
+router.get('/empresa/:nit', (req, res) =>
+  clienteController.buscarEmpresa(req, res)
+);
+
 // Registrar cliente completo
 router.post('/registrar-cliente', (req, res) => registrarCLienteController.registrar(req, res));
 

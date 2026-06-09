@@ -68,6 +68,52 @@ export class ClienteService {
     }
   }
 
+  async buscarPorNit(nit: string) {
+    const connection = await pool.getConnection();
+
+    try {
+      const [empresas]: any = await connection.query(
+        `SELECT
+        ie.id_info_empresas,
+        ie.nit,
+        ie.razon_social,
+        ie.nombre_corto,
+        ie.correo,
+        ie.telefono,
+        ie.ciudad_municipio,
+        ie.departamento,
+        ie.barrio,
+        ie.dir_sede_principal,
+        te.naturaleza
+      FROM info_empresas ie
+      LEFT JOIN tipo_entidad te
+        ON ie.id_tipo_entidad = te.id_tipo_entidad
+      WHERE ie.nit = ?`,
+        [nit]
+      );
+
+      console.log('Resultado consulta empresa:', empresas);
+
+      if (empresas.length === 0) {
+        return {
+          existe: false,
+          mensaje: 'Empresa no encontrada'
+        };
+      }
+
+      return {
+        existe: true,
+        empresa: empresas[0]
+      };
+
+    } catch (error) {
+      console.error('Error en ClienteService.buscarPorNit:', error);
+      throw new Error('Error al consultar la empresa.');
+    } finally {
+      connection.release();
+    }
+  }
+
   /**
    * Obtiene una solicitud específica por su ID
    */

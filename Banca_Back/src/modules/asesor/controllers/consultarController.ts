@@ -47,36 +47,72 @@ export class ClienteController {
     }
   }
 
+  async buscarEmpresa(req: Request, res: Response) {
+    try {
+      const { nit } = req.params;
+
+      if (!nit) {
+        return res.status(400).json({
+          mensaje: 'El NIT es requerido',
+          existe: false
+        });
+      }
+
+      const resultado = await clienteService.buscarPorNit(nit);
+
+      if (!resultado.existe) {
+        return res.status(404).json({
+          mensaje: 'Empresa no encontrada',
+          existe: false
+        });
+      }
+
+      return res.json({
+        mensaje: 'Empresa encontrada correctamente',
+        existe: true,
+        empresa: resultado.empresa
+      });
+
+    } catch (error) {
+      console.error('Error en ClienteController.buscarEmpresa:', error);
+
+      return res.status(500).json({
+        mensaje: 'Error interno del servidor',
+        existe: false
+      });
+    }
+  }
+
   async obtenerClientePorId(req: Request, res: Response) {
     try {
       const { id } = req.params;
       const idCliente = parseInt(id);
 
       if (isNaN(idCliente)) {
-        return res.status(400).json({ 
-          success: false, 
-          message: 'ID de cliente inválido' 
+        return res.status(400).json({
+          success: false,
+          message: 'ID de cliente inválido'
         } as ObtenerClienteResponse);
       }
 
       const cliente = await registrarClienteService.obtenerClienteCompletoPorId(idCliente);
-      
+
       return res.json({ // ← AGREGAR 'return'
         success: true,
         data: cliente
       } as ObtenerClienteResponse);
-      
+
     } catch (error: any) {
       console.error('Error en obtenerClientePorId:', error);
       if (error.message === 'Cliente no encontrado') {
-        return res.status(404).json({ 
-          success: false, 
-          message: error.message 
+        return res.status(404).json({
+          success: false,
+          message: error.message
         } as ObtenerClienteResponse);
       }
       return res.status(500).json({ // ← AGREGAR 'return'
-        success: false, 
-        message: 'Error interno del servidor' 
+        success: false,
+        message: 'Error interno del servidor'
       } as ObtenerClienteResponse);
     }
   }
@@ -88,25 +124,25 @@ export class ClienteController {
       const datosActualizados: ClienteCompleto = req.body;
 
       if (isNaN(idCliente)) {
-        return res.status(400).json({ 
-          success: false, 
-          message: 'ID de cliente inválido' 
+        return res.status(400).json({
+          success: false,
+          message: 'ID de cliente inválido'
         } as ActualizarClienteResponse);
       }
 
       const result = await registrarClienteService.actualizarClienteCompleto(idCliente, datosActualizados);
-      
+
       return res.json({ // ← AGREGAR 'return'
         success: true,
         message: result.message,
         idCliente: result.idCliente
       } as ActualizarClienteResponse);
-      
+
     } catch (error: any) {
       console.error('Error en actualizarCliente:', error);
       return res.status(500).json({ // ← AGREGAR 'return'
-        success: false, 
-        message: error.message || 'Error interno del servidor' 
+        success: false,
+        message: error.message || 'Error interno del servidor'
       } as ActualizarClienteResponse);
     }
   }

@@ -53,6 +53,11 @@ export class AsesorService {
     return this.http.get(`${this.apiUrl}/asesor/cliente/${numeroDocumento}`);
   }
 
+  // Buscar empresa por NIT
+  buscarEmpresa(nit: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/asesor/empresa/${nit}`);
+  }
+
   // Registrar cliente nuevo
   registrarCliente(payload: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/asesor/registrar-cliente`, payload);

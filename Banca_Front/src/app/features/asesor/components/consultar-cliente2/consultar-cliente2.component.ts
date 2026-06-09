@@ -1,4 +1,3 @@
-// src/app/features/asesor/components/consultar-cliente/consultar-cliente.component.ts
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -13,22 +12,20 @@ import { RouterModule } from '@angular/router';
   styleUrls: ['./consultar-cliente2.component.css'],
 })
 export class ConsultarCliente2Component {
-  tipoCliente: string = '';
-  numeroDocumento: string = '';
+  tipoCliente: '' | 'Persona Natural' | 'Persona Juridica' = '';
+  identificacion: string = '';
   mensaje: string = '';
   cliente: any = null;
   buscando: boolean = false;
 
   constructor(private asesorService: AsesorService) { }
 
+  // Busca el cliente o empresa según el tipo seleccionado
   buscarCliente() {
-    if (this.tipoCliente === 'Persona Juridica') {
-      this.mensaje = 'La consulta de personas jurídicas está en desarrollo.';
-      this.cliente = null;
-      return;
-    }
-    if (!this.numeroDocumento) {
-      this.mensaje = 'Por favor ingrese un número de documento.';
+    if (!this.identificacion.trim()) {
+      this.mensaje = this.tipoCliente === 'Persona Natural'
+        ? 'Por favor ingrese un número de documento.'
+        : 'Por favor ingrese un NIT.';
       return;
     }
 
@@ -36,31 +33,76 @@ export class ConsultarCliente2Component {
     this.mensaje = '';
     this.cliente = null;
 
-    this.asesorService.buscarCliente(this.numeroDocumento).subscribe({
-      next: (resp) => {
-        console.log('Respuesta del backend:', resp);
-        this.buscando = false;
-        this.mensaje = resp.mensaje;
+    // PERSONA NATURAL
+    if (this.tipoCliente === 'Persona Natural') {
+      this.asesorService.buscarCliente(this.identificacion).subscribe({
+        next: (resp) => {
+          console.log('Respuesta cliente:', resp);
+          this.buscando = false;
+          this.mensaje = resp.mensaje;
 
-        if (resp.existe) {
-          this.cliente = resp.cliente;
-        } else {
+          if (resp.existe) {
+            this.cliente = resp.cliente;
+          } else {
+            this.cliente = null;
+          }
+        },
+        error: (err) => {
+          console.error('Error al buscar cliente:', err);
+
+          this.buscando = false;
+          this.mensaje = 'Error al consultar el cliente.';
           this.cliente = null;
         }
-      },
-      error: (err) => {
-        console.error('Error al buscar cliente:', err);
-        this.buscando = false;
-        this.mensaje = 'Error al consultar el cliente.';
-      },
-    });
-  }
-  limpiar(): void {
-    this.numeroDocumento = '';
-    this.mensaje = '';
-    this.cliente = null;
+      });
+
+      return;
+    }
+
+    // PERSONA JURÍDICA
+    if (this.tipoCliente === 'Persona Juridica') {
+      this.asesorService.buscarEmpresa(this.identificacion).subscribe({
+        next: (resp) => {
+
+          console.log('Respuesta empresa:', resp);
+          this.buscando = false;
+          this.mensaje = resp.mensaje;
+
+          if (resp.existe) {
+
+            // El backend devuelve "empresa"
+            this.cliente = resp.empresa;
+
+          } else {
+            this.cliente = null;
+          }
+        },
+        error: (err) => {
+          console.error('Error al buscar empresa:', err);
+
+          this.buscando = false;
+          this.mensaje = 'Error al consultar la empresa.';
+          this.cliente = null;
+        }
+      });
+
+      return;
+    }
   }
 
+  limpiar(): void {
+    this.identificacion = '';
+    this.mensaje = '';
+    this.cliente = null;
+    this.buscando = false;
+  }
+
+  cambiarTipoCliente(): void {
+    this.limpiar();
+    this.buscando = false;
+  }
+
+  // Permite solamente caracteres numéricos
   soloNumeros(event: KeyboardEvent): void {
     const pattern = /^[0-9]$/;
     const inputChar = event.key;
@@ -68,4 +110,5 @@ export class ConsultarCliente2Component {
       event.preventDefault();
     }
   }
+
 }
