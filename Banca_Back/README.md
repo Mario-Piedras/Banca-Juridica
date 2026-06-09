@@ -1,5 +1,5 @@
 [README.md](https://github.com/user-attachments/files/23968964/README.md)
-#  Sistema Bancario -  (Backend)
+#  Sistema Bancario - BankDash (Backend)
 
 API REST para la gestión integral de operaciones bancarias desarrollada con Node.js, TypeScript y Express.  Sistema modular que permite gestionar solicitudes de crédito, apertura de cuentas, transacciones bancarias y control de saldos.
 
@@ -7,7 +7,7 @@ API REST para la gestión integral de operaciones bancarias desarrollada con Nod
 
 ##  Descripción General
 
-** Backend** es una API REST diseñada para gestionar las operaciones core de una entidad bancaria. El sistema está diseñado con arquitectura modular, permitiendo la gestión de múltiples roles (Asesores, Directores, Cajeros) y operaciones bancarias esenciales.
+**BankDash Backend** es una API REST diseñada para gestionar las operaciones core de una entidad bancaria. El sistema está diseñado con arquitectura modular, permitiendo la gestión de múltiples roles (Asesores, Directores, Cajeros) y operaciones bancarias esenciales.
 
 ### Características Principales
 
@@ -152,7 +152,7 @@ Respuesta esperada:
 ```json
 {
   "status": "ok",
-  "message": "API  funcionando correctamente",
+  "message": "API BankDash funcionando correctamente",
   "timestamp": "2025-12-05T10:30:00. 000Z",
   "environment": "development",
   "version": "1.0.0"
@@ -286,7 +286,7 @@ Si deseas contribuir al proyecto:
 **Julian Suarez** 
 **Jeison Valor** 
 
-Desarrolladores del Sistema Bancario 
+Desarrolladores del Sistema Bancario BankDash
 
 ---
 
