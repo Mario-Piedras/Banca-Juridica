@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Output, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -8,7 +8,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './actividad-economica.component.html',
 })
-export class ActividadEconomicaComponent implements OnInit {
+export class ActividadEconomicaComponent implements OnInit, OnChanges {
   form: FormGroup;
   @Output() formChange = new EventEmitter();
   @Input() datosIniciales: any;
@@ -58,6 +58,24 @@ export class ActividadEconomicaComponent implements OnInit {
       this.formChange.emit(valores);
       console.log('💾 Auto-guardando actividad económica...');
     });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (
+      changes['datosIniciales'] &&
+      changes['datosIniciales'].currentValue
+    ) {
+
+      console.log(
+        '📥 Actividad económica recibida:',
+        changes['datosIniciales'].currentValue
+      );
+
+      this.form.patchValue(
+        changes['datosIniciales'].currentValue,
+        { emitEvent: true }
+      );
+    }
   }
 
 
@@ -151,4 +169,5 @@ export class ActividadEconomicaComponent implements OnInit {
       }
     }
   }
+
 }

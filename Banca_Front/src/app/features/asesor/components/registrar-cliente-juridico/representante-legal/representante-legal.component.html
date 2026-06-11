@@ -20,7 +20,7 @@
               <option value="CC">Cédula de ciudadania</option>
               <option value="CedulaExtranjeria">Cédula de extranjería</option>
               <option value="Pasaporte">Pasaporte</option>
-              <option value="CarneDiplomatico">Carne diplomático</option>
+              <option value="CarnetDiplomatico">Carnet diplomático</option>
             </select>
             <div class="text-red-500 text-xs mt-1"
               *ngIf="representante.get('tipo_documento')?.invalid && representante.get('tipo_documento')?.touched">
@@ -52,9 +52,8 @@
               (keypress)="soloLetras($event)" class="input-field" placeholder="Ej: Placeholder">
             <div class="text-red-500 text-xs mt-1"
               *ngIf="representante.get('primer_nombre')?.invalid && representante.get('primer_nombre')?.touched">
-              <span *ngIf="representante.get('primer_nombre')?.errors?.['required']">Campo obligatorio (5
-                dígitos)</span>
-              <span *ngIf="representante.get('primer_nombre')?.errors?.['minlength']">Mínimo 5 dígitos</span>
+              <span *ngIf="representante.get('primer_nombre')?.errors?.['required']">Campo obligatorio</span>
+              <span *ngIf="representante.get('primer_nombre')?.errors?.['minlength']">Mínimo 2 dígitos</span>
             </div>
           </div>
 
@@ -65,6 +64,10 @@
             </label>
             <input id="segundo_nombre" type="text" formControlName="segundo_nombre" maxlength="50"
               (keypress)="soloLetras($event)" class="input-field" placeholder="Ej: Placeholder">
+            <div class="text-red-500 text-xs mt-1"
+              *ngIf="representante.get('segundo_nombre')?.invalid && representante.get('segundo_nombre')?.touched">
+              <span *ngIf="representante.get('segundo_nombre')?.errors?.['minlength']">Mínimo 2 dígitos</span>
+            </div>
           </div>
 
           <!-- Primer apellido -->
@@ -76,9 +79,8 @@
               (keypress)="soloLetras($event)" class="input-field" placeholder="Ej: Placeholder">
             <div class="text-red-500 text-xs mt-1"
               *ngIf="representante.get('primer_apellido')?.invalid && representante.get('primer_apellido')?.touched">
-              <span *ngIf="representante.get('primer_apellido')?.errors?.['required']">Campo obligatorio (5
-                dígitos)</span>
-              <span *ngIf="representante.get('primer_apellido')?.errors?.['minlength']">Mínimo 5 dígitos</span>
+              <span *ngIf="representante.get('primer_apellido')?.errors?.['required']">Campo obligatorio</span>
+              <span *ngIf="representante.get('primer_apellido')?.errors?.['minlength']">Mínimo 2 dígitos</span>
             </div>
           </div>
 
@@ -91,7 +93,7 @@
               (keypress)="soloLetras($event)" class="input-field" placeholder="Ej: Placeholder">
             <div class="text-red-500 text-xs mt-1"
               *ngIf="representante.get('segundo_apellido')?.invalid && representante.get('segundo_apellido')?.touched">
-              <span *ngIf="representante.get('segundo_apellido')?.errors?.['minlength']">Mínimo 5 dígitos</span>
+              <span *ngIf="representante.get('segundo_apellido')?.errors?.['minlength']">Mínimo 2 dígitos</span>
             </div>
           </div>
 
@@ -104,7 +106,7 @@
               class="input-field" placeholder="Ej: Placeholder">
             <div class="text-red-500 text-xs mt-1"
               *ngIf="representante.get('cargo')?.invalid && representante.get('cargo')?.touched">
-              <span *ngIf="representante.get('cargo')?.errors?.['required']">Campo obligatorio (5 dígitos)</span>
+              <span *ngIf="representante.get('cargo')?.errors?.['required']">Campo obligatorio</span>
               <span *ngIf="representante.get('cargo')?.errors?.['minlength']">Mínimo 5 dígitos</span>
             </div>
           </div>
@@ -118,7 +120,7 @@
               placeholder="Ej: Cl. 40 #30-44">
             <div class="text-red-500 text-xs mt-1"
               *ngIf="representante.get('dir_laboral')?.invalid && representante.get('dir_laboral')?.touched">
-              <span *ngIf="representante.get('dir_laboral')?.errors?.['required']">Campo obligatorio (5 dígitos)</span>
+              <span *ngIf="representante.get('dir_laboral')?.errors?.['required']">Campo obligatorio</span>
               <span *ngIf="representante.get('dir_laboral')?.errors?.['minlength']">Mínimo 5 dígitos</span>
             </div>
           </div>
@@ -137,7 +139,7 @@
               class="input-field" placeholder="Ej: Placeholder">
             <div class="text-red-500 text-xs mt-1"
               *ngIf="representante.get('barrio')?.invalid && representante.get('barrio')?.touched">
-              <span *ngIf="representante.get('barrio')?.errors?.['required']">Campo obligatorio (5 dígitos)</span>
+              <span *ngIf="representante.get('barrio')?.errors?.['required']">Campo obligatorio</span>
               <span *ngIf="representante.get('barrio')?.errors?.['minlength']">Mínimo 5 dígitos</span>
             </div>
           </div>
@@ -151,8 +153,7 @@
               (keypress)="soloLetras($event)" class="input-field" placeholder="Ej: Palmira">
             <div class="text-red-500 text-xs mt-1"
               *ngIf="representante.get('ciudad_municipio')?.invalid && representante.get('ciudad_municipio')?.touched">
-              <span *ngIf="representante.get('ciudad_municipio')?.errors?.['required']">Campo obligatorio (5
-                dígitos)</span>
+              <span *ngIf="representante.get('ciudad_municipio')?.errors?.['required']">Campo obligatorio</span>
               <span *ngIf="representante.get('ciudad_municipio')?.errors?.['minlength']">Mínimo 5 dígitos</span>
             </div>
           </div>
@@ -166,7 +167,7 @@
               (keypress)="soloLetras($event)" class="input-field" placeholder="Ej: Valle del cauca">
             <div class="text-red-500 text-xs mt-1"
               *ngIf="representante.get('departamento')?.invalid && representante.get('departamento')?.touched">
-              <span *ngIf="representante.get('departamento')?.errors?.['required']">Campo obligatorio (5 dígitos)</span>
+              <span *ngIf="representante.get('departamento')?.errors?.['required']">Campo obligatorio</span>
               <span *ngIf="representante.get('departamento')?.errors?.['minlength']">Mínimo 5 dígitos</span>
             </div>
           </div>
@@ -213,8 +214,8 @@
               class="input-field" placeholder="Ej: 1234567890">
             <div class="text-red-500 text-xs mt-1"
               *ngIf="representante.get('ext')?.invalid && representante.get('ext')?.touched">
-              <span *ngIf="representante.get('ext')?.errors?.['required']">Campo obligatorio (5 dígitos)</span>
-              <span *ngIf="representante.get('ext')?.errors?.['minlength']">Mínimo 5 dígitos</span>
+              <span *ngIf="representante.get('ext')?.errors?.['required']">Campo obligatorio</span>
+              <span *ngIf="representante.get('ext')?.errors?.['minlength']">Mínimo 1 dígito</span>
             </div>
           </div>
 
@@ -227,8 +228,8 @@
               class="input-field" placeholder="Ej: 1234567890">
             <div class="text-red-500 text-xs mt-1"
               *ngIf="representante.get('celular')?.invalid && representante.get('celular')?.touched">
-              <span *ngIf="representante.get('celular')?.errors?.['required']">Campo obligatorio (5 dígitos)</span>
-              <span *ngIf="representante.get('celular')?.errors?.['minlength']">Mínimo 5 dígitos</span>
+              <span *ngIf="representante.get('celular')?.errors?.['required']">Campo obligatorio</span>
+              <span *ngIf="representante.get('celular')?.errors?.['minlength']">Mínimo 10 dígitos</span>
             </div>
           </div>
 

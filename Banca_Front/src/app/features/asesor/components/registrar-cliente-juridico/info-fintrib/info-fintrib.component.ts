@@ -159,14 +159,24 @@ export class InformacionFinancieraTributariaComponent implements OnInit {
     );
   }
 
+  // 
+  private parseValor(valor: any): number {
+    if (valor == null) return 0;
+    return Number(
+      valor.toString().replace(/[^\d]/g, '')
+    );
+  }
+
+  // Hace un calculo automatico del total de patrimonio
   calcularPatrimonio(): void {
-    const activos = Number(this.form.get('total_activos')?.value) || 0;
-    const pasivos = Number(this.form.get('total_pasivos')?.value) || 0;
+    const activos = this.parseValor(this.form.get('total_activos')?.value);
+    const pasivos = this.parseValor(this.form.get('total_pasivos')?.value);
+    console.log({ activos, pasivos });
     const patrimonio = activos - pasivos;
 
     // Guardar valor numérico real
     this.form.get('total_patrimonio')?.setValue(
-      patrimonio > 0 ? patrimonio : 0,
+      Math.max(0, patrimonio),
       { emitEvent: false }
     );
 
@@ -180,6 +190,27 @@ export class InformacionFinancieraTributariaComponent implements OnInit {
     }
   }
 
+  // Fija el año de cierre de ventas a 2000
+  fijarAnio2000(): void {
+    const control = this.form.get('fecha_cierre_ventas');
+
+    if (!control?.value) return;
+
+    const fecha = new Date(control.value);
+
+    const mes = fecha.getMonth();
+    const dia = fecha.getDate();
+
+    const fechaFija = new Date(2000, mes, dia);
+
+    const yyyy = fechaFija.getFullYear();
+    const mm = String(fechaFija.getMonth() + 1).padStart(2, '0');
+    const dd = String(fechaFija.getDate()).padStart(2, '0');
+
+    control.setValue(`${yyyy}-${mm}-${dd}`);
+  }
+
+  // Funcion para agregar país de una tabla
   agregarPais(): void {
 
     const paisControl = this.form.get('pais');
@@ -256,6 +287,7 @@ export class InformacionFinancieraTributariaComponent implements OnInit {
 
   }
 
+  // Funcion para eliminar país de una tabla
   eliminarPais(
     index: number
   ): void {

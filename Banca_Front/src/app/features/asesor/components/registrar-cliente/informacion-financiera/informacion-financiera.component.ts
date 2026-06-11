@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Output, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -8,7 +8,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './informacion-financiera.component.html',
 })
-export class InformacionFinancieraComponent implements OnInit {
+export class InformacionFinancieraComponent implements OnInit, OnChanges {
   form: FormGroup;
   @Input() datosIniciales: any;
   @Output() formChange = new EventEmitter();
@@ -54,6 +54,24 @@ export class InformacionFinancieraComponent implements OnInit {
       this.formChange.emit(valores);
       console.log('Auto-guardando información financiera...');
     });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (
+      changes['datosIniciales'] &&
+      changes['datosIniciales'].currentValue
+    ) {
+
+      console.log(
+        '📥 Información financiera recibida:',
+        changes['datosIniciales'].currentValue
+      );
+
+      this.form.patchValue(
+        changes['datosIniciales'].currentValue,
+        { emitEvent: false }
+      );
+    }
   }
 
 
@@ -123,4 +141,5 @@ export class InformacionFinancieraComponent implements OnInit {
       }
     }
   }
+
 }

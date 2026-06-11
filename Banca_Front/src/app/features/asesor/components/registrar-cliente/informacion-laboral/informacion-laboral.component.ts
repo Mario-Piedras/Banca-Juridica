@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Output, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -11,7 +11,7 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './informacion-laboral.component.html',
   styleUrl: './informacion-laboral.component.css'
 })
-export class InformacionLaboralComponent implements OnInit {
+export class InformacionLaboralComponent implements OnInit, OnChanges {
   form: FormGroup;
   @Input() datosIniciales: any;
   @Output() formChange = new EventEmitter();
@@ -98,6 +98,46 @@ export class InformacionLaboralComponent implements OnInit {
     });
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (
+      changes['datosIniciales'] &&
+      changes['datosIniciales'].currentValue
+    ) {
+
+      const datos = changes['datosIniciales'].currentValue;
+
+      console.log('📥 Información laboral recibida:', datos);
+
+      this.form.patchValue(datos, {
+        emitEvent: false
+      });
+
+      if (datos.paisEmpresa === 'Colombia') {
+
+        this.form.get('tipoPaisEmpresa')?.setValue(
+          'Colombia',
+          { emitEvent: false }
+        );
+
+        if (datos.departamentoEmpresa) {
+          this.actualizarCiudades(datos.departamentoEmpresa);
+        }
+
+        this.form.get('ciudadEmpresa')?.enable();
+
+      } else if (datos.paisEmpresa) {
+
+        this.form.get('tipoPaisEmpresa')?.setValue(
+          'Otro',
+          { emitEvent: false }
+        );
+
+        this.form.get('ciudadEmpresa')?.enable();
+
+      }
+    }
+  }
+
   // Cargar desde colombia-data.json (igual que contacto-personal)
   cargarDepartamentosColombia() {
     console.log('📡 Cargando archivo colombia-data.json para empresa...');
@@ -165,4 +205,5 @@ export class InformacionLaboralComponent implements OnInit {
       if (siguienteCampo) siguienteCampo.focus();
     }
   }
+
 }

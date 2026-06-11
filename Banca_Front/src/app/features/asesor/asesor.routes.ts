@@ -11,7 +11,7 @@ export const ASESOR_ROUTES: Routes = [
         redirectTo: 'consultar-cliente',
         pathMatch: 'full'
       },
-        {
+      {
         path: 'consultar-cliente',
         loadComponent: () =>
           import('./components/consultar-cliente/consultar-cliente.component').then(
@@ -32,12 +32,18 @@ export const ASESOR_ROUTES: Routes = [
             (m) => m.RegistrarClienteJuridicoComponent
           ),
       },
-
       {
-        path: 'editar-cliente/:id', // ← NUEVA RUTA PARA EDICIÓN
+        path: 'editar-cliente/:id', // ← EDICIÓN PERSONA NATURAL
         loadComponent: () =>
           import('./components/registrar-cliente/registrar-cliente.component').then(
             (m) => m.RegistrarClienteComponent
+          ),
+      },
+      {
+        path: 'editar-cliente-juridico/:id', // ← EDICIÓN EMPRESA / CLIENTE JURÍDICO
+        loadComponent: () =>
+          import('./components/registrar-cliente-juridico/registrar-cliente-juridico.component').then(
+            (m) => m.RegistrarClienteJuridicoComponent
           ),
       },
       {

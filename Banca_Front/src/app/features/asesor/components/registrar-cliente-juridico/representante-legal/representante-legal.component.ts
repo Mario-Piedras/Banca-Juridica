@@ -64,6 +64,7 @@ export class RepresentanteLegalComponent implements OnInit {
         Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
       ]],
       segundo_apellido: ['', [
+        Validators.minLength(2),
         Validators.maxLength(50),
         Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]*$/)
       ]],
@@ -314,6 +315,7 @@ export class RepresentanteLegalComponent implements OnInit {
     }
   }
 
+  // Valida el tipo de documento
   validarDocumento(event: KeyboardEvent, representante: any) {
 
     const tipoDocumento =

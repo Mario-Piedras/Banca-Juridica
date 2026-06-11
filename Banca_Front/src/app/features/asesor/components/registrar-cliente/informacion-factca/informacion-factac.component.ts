@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Output, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -8,7 +8,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './informacion-factca.component.html',
 })
-export class FactaComponent implements OnInit {
+export class FactaComponent implements OnInit, OnChanges {
   form: FormGroup;
   @Input() datosIniciales: any;
   @Output() formChange = new EventEmitter();
@@ -51,6 +51,44 @@ export class FactaComponent implements OnInit {
     });
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (
+      changes['datosIniciales'] &&
+      changes['datosIniciales'].currentValue
+    ) {
+
+      const datos = changes['datosIniciales'].currentValue;
+
+      console.log('📥 FACTA/CRS recibido:', datos);
+
+      this.form.patchValue(
+        datos,
+        { emitEvent: true }
+      );
+
+      // Aplicar validaciones correctamente al cargar
+      const paisControl = this.form.get('pais');
+
+      if (datos.esResidenteExtranjero === true) {
+
+        paisControl?.setValidators([
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(100),
+          Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
+        ]);
+
+      } else {
+
+        paisControl?.clearValidators();
+
+      }
+
+      paisControl?.updateValueAndValidity({
+        emitEvent: false
+      });
+    }
+  }
 
   guardarSeccion() {
     if (this.form.valid) {
@@ -111,4 +149,5 @@ export class FactaComponent implements OnInit {
       }
     }
   }
+
 }

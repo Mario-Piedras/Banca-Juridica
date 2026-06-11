@@ -14,7 +14,7 @@ import { SidebarComponent } from '../../../shared/components/sidebar/sidebar.com
       <main class="flex-1 flex flex-col min-w-0 overflow-hidden">
         <app-header
           [titulo]="'Panel de Cajero Principal'"
-          [subtitulo]="'Sistema de Simulación Bancaria - Banca Uno'">
+          [subtitulo]="'Sistema de Simulación Bancaria - BankDash'">
         </app-header>
 
         <div class="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">

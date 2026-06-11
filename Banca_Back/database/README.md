@@ -1,4 +1,4 @@
-# Base de Datos - Sistema Bancario Banca Uno
+# Base de Datos - Sistema Bancario BankDash
 
 ## 📋 Descripción
 Base de datos para el sistema de apertura de cuentas de ahorro.

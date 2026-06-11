@@ -2,6 +2,7 @@ import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { switchMap } from 'rxjs';
 
 @Component({
@@ -23,7 +24,8 @@ export class DeclaracionBienesInfoSociosComponent implements OnInit {
   @Input() idEmpresa!: number;
 
   form: FormGroup;
-  constructor(private fb: FormBuilder, private http: HttpClient) {
+  constructor(private fb: FormBuilder, private http: HttpClient, private router: Router) {
+
     this.form = this.fb.group({
       // Declaración de origen de bienes y/o fondos
       origen_bienes: ['', Validators.required],
@@ -214,7 +216,10 @@ export class DeclaracionBienesInfoSociosComponent implements OnInit {
         this.formChange.emit(this.form.value);
         this.saved.emit('final');
         this.nextTab.emit();
+
+        // No navegar aquí: el padre controla el modal "Guardar y finalizar" y la navegación tras Aceptar.
       },
+
       error: (err) => {
         console.error(err);
         alert('Error al guardar en la base de datos');
