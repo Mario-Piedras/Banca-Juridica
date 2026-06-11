@@ -19,8 +19,6 @@ export class InformacionGeneralComponent implements OnInit {
   @Output() nextTab = new EventEmitter();
   @Output() saved = new EventEmitter<'parcial'>();
 
-
-
   form: FormGroup;
   constructor(private fb: FormBuilder, private http: HttpClient) {
     this.form = this.fb.group({
@@ -131,6 +129,7 @@ export class InformacionGeneralComponent implements OnInit {
     });
   }
 
+  // Restringir fechas posteriores a hoy
   validarFechaNoFutura() {
     return (control: any) => {
       if (!control.value) return null;
@@ -141,6 +140,7 @@ export class InformacionGeneralComponent implements OnInit {
       return fecha <= hoy ? null : { fechaFutura: true };
     };
   }
+  fechaMaxima = new Date().toISOString().split('T')[0];
 
   // Botón de guardar formulario
   guardarSeccion() {

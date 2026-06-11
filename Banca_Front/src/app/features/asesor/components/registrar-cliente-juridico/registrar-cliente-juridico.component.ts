@@ -87,9 +87,14 @@ export class RegistrarClienteJuridicoComponent implements OnInit {
   }
 
   onModalConfirm(): void {
-    // Cerrar modal y seguir flujo (el siguiente paso ya se maneja por los emits de los subcomponentes)
+    // Cerrar modal y en caso de "final" redirigir a consultar-cliente
     this.confirmVisible = false;
+
+    if (this.confirmType === 'success' && this.confirmTitle === 'Registro finalizado') {
+      this.router.navigate(['/asesor/consultar-cliente']);
+    }
   }
+
 
   onModalClosed(): void {
     this.confirmVisible = false;

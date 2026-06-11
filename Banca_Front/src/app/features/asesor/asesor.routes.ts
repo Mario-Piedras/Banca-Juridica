@@ -11,18 +11,11 @@ export const ASESOR_ROUTES: Routes = [
         redirectTo: 'consultar-cliente',
         pathMatch: 'full'
       },
-        {
+      {
         path: 'consultar-cliente',
         loadComponent: () =>
           import('./components/consultar-cliente/consultar-cliente.component').then(
             (m) => m.ConsultarClienteComponent
-          ),
-      },
-        {
-        path: 'consultar-cliente2',
-        loadComponent: () =>
-          import('./components/consultar-cliente2/consultar-cliente2.component').then(
-            (m) => m.ConsultarCliente2Component
           ),
       },
       {

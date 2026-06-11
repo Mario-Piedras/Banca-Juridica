@@ -33,7 +33,6 @@ export class AsesorLayoutComponent {
       titulo: 'Menu asesor',
       items: [
         { label: 'Consultar Cliente', ruta: '/asesor/consultar-cliente' },
-        { label: 'Consultar Cliente2', ruta: '/asesor/consultar-cliente2' },
         { label: 'Registrar Cliente Natural', ruta: '/asesor/registrar-cliente' },
         { label: 'Registrar Cliente Jurídico', ruta: '/asesor/registrar-cliente-juridico' },
         { label: 'Solicitar Producto Natural', ruta: '/asesor/solicitar-producto' },

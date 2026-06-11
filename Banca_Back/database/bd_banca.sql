@@ -704,7 +704,7 @@ CREATE TABLE info_financiera_emp (
 
 CREATE TABLE personas_asociadas (
 	id_representante INT PRIMARY KEY AUTO_INCREMENT,
-    tipo_documento ENUM('CC', 'TI', 'R.Civil', 'PPT', 'Pasaporte', 'CarneDiplomatico', 'CedulaExtranjeria') NOT NULL,
+    tipo_documento ENUM('CC', 'Pasaporte', 'CarnetDiplomatico', 'CedulaExtranjeria') NOT NULL,
     num_documento VARCHAR(20) NOT NULL,
     primer_nombre VARCHAR(50) NOT NULL,
     segundo_nombre VARCHAR(50) DEFAULT '',
@@ -859,3 +859,7 @@ ALTER TABLE `defaultdb`.`solicitudes_apertura`
 ADD CONSTRAINT `solicitudes_apertura_ibfk_1`
   FOREIGN KEY (`id_cliente`)
   REFERENCES `defaultdb`.`clientes` (`id_cliente`);
+  
+ALTER TABLE `defaultdb`.`info_empresas` 
+ADD UNIQUE INDEX `nit_UNIQUE` (`nit` ASC) VISIBLE;
+;
