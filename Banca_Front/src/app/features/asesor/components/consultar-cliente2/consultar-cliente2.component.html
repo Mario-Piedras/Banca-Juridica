@@ -1,6 +1,6 @@
 <div class="max-w-4xl p-6 bg-white rounded-lg">
   <h1 class="text-2xl font-bold text-blue-900 mb-2">Consultar Cliente</h1>
-  <p class="text-sm text-gray-600 mb-6">Ingresa la cédula y presiona buscar</p>
+  <p class="text-sm text-gray-600 mb-6">Selecciona el tipo de cliente y realize la búsqueda correspondiente.</p>
 
   <!-- Tipo de cliente -->
   <div class="mb-6">
@@ -15,6 +15,7 @@
       <option value="Persona Natural">Persona Natural</option>
       <option value="Persona Juridica"> Persona Jurídica</option>
     </select>
+    <p class="text-xs text-gray-500 mt-1">La selección determina si se busca por cédula o por NIT.</p>
   </div>
 
   <!-- Formulario de búsqueda -->
@@ -63,7 +64,7 @@
   </div>
 
   <!-- Resultado del cliente -->
-  <div>
+  <div class="mb-6" *ngIf="tipoCliente">
     <h2 class="text-xl font-bold text-blue-900 mb-6">Información del Cliente</h2>
 
     <!-- Mensaje cuando no hay cliente -->

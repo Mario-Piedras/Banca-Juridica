@@ -1,7 +1,7 @@
 <div class="max-w-4xl p-6 bg-white rounded-lg">
   <h1 class="text-2xl font-bold text-blue-900 mb-2">Consultar solicitudes radicadas</h1>
   <p class="text-sm text-gray-600 mb-6">
-    Ingrese el ID del asesor y presione buscar
+    Ingrese la cedula o nombre del cliente y presione buscar
   </p>
 
   <!-- Formulario de búsqueda -->
@@ -41,15 +41,6 @@
         >
           <span aria-hidden="true">🔎</span>
           {{ cargando ? 'Buscando...' : 'Buscar' }}
-        </button>
-
-        <!-- Botón filtros (placeholder visual) -->
-        <button
-          type="button"
-          class="p-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors cursor-pointer"
-          title="Abrir filtros"
-        >
-          ⚙️
         </button>
       </div>
     </div>
