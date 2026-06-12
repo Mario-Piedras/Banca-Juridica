@@ -26,7 +26,7 @@
       : 'NIT de la empresa' }} <span class="text-red-600">*</span></label>
 
     <div class="flex gap-3">
-      <input type="text" [(ngModel)]="identificacion" placeholder="Ej: 12345678" [disabled]="buscando" maxlength="11"
+      <input type="text" [(ngModel)]="identificacion" placeholder="Ej: 1234567890" [disabled]="buscando" maxlength="11"
         (keypress)="soloNumeros($event)" (keyup.enter)="buscarCliente()"
         class="w-100 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-400 disabled:bg-gray-100" />
 
@@ -267,9 +267,9 @@
 
 
       <!-- Botón de editar solo se muestra para persona natural por ahora -->
-      <div *ngIf="tipoCliente === 'Persona Natural'"
+      <div *ngIf="tipoCliente === 'Persona Natural' || tipoCliente === 'Persona Juridica'"
         class="mt-6 pt-6 border-t border-gray-200 flex justify-end space-x-4">
-        <button [routerLink]="['/asesor/editar-cliente', cliente.id_cliente]"
+        <button [routerLink]="rutaEditar"
           class="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium cursor-pointer">
           ✏️ Editar Cliente
         </button>

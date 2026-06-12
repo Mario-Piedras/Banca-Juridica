@@ -8,7 +8,7 @@ interface Solicitud {
   cedula?: string;
   nit?: string;
   fecha: string;
-  estado: 'PENDIENTE' | 'APROBADO' | 'RECHAZADO';
+  estado: 'PENDIENTE' | 'APROBADO' | 'RECHAZADO' | 'APERTURADA';
   producto: string;
   comentario_asesor?: string;
   comentario_director?: string;
@@ -168,11 +168,12 @@ export class SolicitudesRadicadasComponent {
     });
   }
 
-  private mapearEstado(estado: string): 'PENDIENTE' | 'APROBADO' | 'RECHAZADO' {
+  private mapearEstado(estado: string): 'PENDIENTE' | 'APROBADO' | 'RECHAZADO' | 'APERTURADA' {
     const estadoUpper = estado.toUpperCase();
     if (estadoUpper === 'PENDIENTE') return 'PENDIENTE';
     if (estadoUpper === 'APROBADA' || estadoUpper === 'APROBADO') return 'APROBADO';
     if (estadoUpper === 'RECHAZADA' || estadoUpper === 'RECHAZADO') return 'RECHAZADO';
+    if (estadoUpper === 'APERTURADA' || estadoUpper === 'APERTURADA') return 'APERTURADA';
     return 'PENDIENTE';
   }
 
