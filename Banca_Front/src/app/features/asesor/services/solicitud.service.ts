@@ -13,7 +13,7 @@ export class SolicitudService {
   constructor(
     private http: HttpClient,
     private authService: AuthService
-  ) {}
+  ) { }
 
   /**
    * Buscar cliente por cédula
@@ -30,20 +30,32 @@ export class SolicitudService {
       headers: this.authService.getAuthHeaders()
     });
   }
-  
+
   enviarSolicitud(solicitud: any): Observable<any> {
     console.log('SolicitudService: enviando solicitud con datos:', solicitud);
     const formData = new FormData();
-    formData.append('cedula', solicitud.cedula);
-    formData.append('nit', solicitud.nit);
+
+    // Cedula/NIT según corresponda (evita mandar undefined)
+    if (solicitud.cedula !== undefined && solicitud.cedula !== null) {
+      formData.append('cedula', solicitud.cedula);
+    }
+    if (solicitud.nit !== undefined && solicitud.nit !== null) {
+      formData.append('nit', solicitud.nit);
+    }
+
     formData.append('producto', solicitud.producto);
-    formData.append('proposito_cuenta', solicitud.proposito_cuenta);
+    if (solicitud.proposito_cuenta !== undefined && solicitud.proposito_cuenta !== null) {
+      formData.append('proposito_cuenta', solicitud.proposito_cuenta);
+    }
+
     formData.append('comentario', solicitud.comentario || '');
     formData.append('tipo_cliente', solicitud.tipo_cliente || 'Natural');
-    
+
+    // Archivo: el componente natural usa archivo (File), así que mantenemos esa convención
     if (solicitud.archivo) {
       formData.append('archivo', solicitud.archivo, solicitud.archivo.name);
     }
+
 
     // Enviar con headers de autenticación
     const token = this.authService.getToken();
