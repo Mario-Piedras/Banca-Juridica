@@ -9,9 +9,9 @@ export class SolicitudController {
       const { cedula } = req.params;
 
       if (!cedula) {
-        res.status(400).json({ 
-          success: false, 
-          message: 'La cédula es requerida' 
+        res.status(400).json({
+          success: false,
+          message: 'La cédula es requerida'
         });
         return;
       }
@@ -19,21 +19,21 @@ export class SolicitudController {
       const cliente = await solicitudService.buscarClientePorCedula(cedula);
 
       if (!cliente) {
-        res.status(404).json({ 
-          success: false, 
-          message: 'Cliente no encontrado' 
+        res.status(404).json({
+          success: false,
+          message: 'Cliente no encontrado'
         });
         return;
       }
 
-      res.status(200).json({ 
-        success: true, 
-        data: cliente 
+      res.status(200).json({
+        success: true,
+        data: cliente
       });
     } catch (error) {
       console.error('Error en buscarCliente:', error);
-      res.status(500).json({ 
-        success: false, 
+      res.status(500).json({
+        success: false,
         message: 'Error al buscar el cliente',
         error: error instanceof Error ? error.message : 'Error desconocido'
       });
@@ -45,9 +45,9 @@ export class SolicitudController {
       const { nit } = req.params;
 
       if (!nit) {
-        res.status(400).json({ 
-          success: false, 
-          message: 'El NIT es requerido' 
+        res.status(400).json({
+          success: false,
+          message: 'El NIT es requerido'
         });
         return;
       }
@@ -55,21 +55,21 @@ export class SolicitudController {
       const empresa = await solicitudService.buscarEmpresaPorNit(nit);
 
       if (!empresa) {
-        res.status(404).json({ 
-          success: false, 
-          message: 'Empresa no encontrada' 
+        res.status(404).json({
+          success: false,
+          message: 'Empresa no encontrada'
         });
         return;
       }
 
-      res.status(200).json({ 
-        success: true, 
-        data: empresa 
+      res.status(200).json({
+        success: true,
+        data: empresa
       });
     } catch (error) {
       console.error('Error en buscarEmpresa:', error);
-      res.status(500).json({ 
-        success: false, 
+      res.status(500).json({
+        success: false,
         message: 'Error al buscar la empresa',
         error: error instanceof Error ? error.message : 'Error desconocido'
       });
@@ -84,28 +84,37 @@ export class SolicitudController {
 
       // Verificar que el usuario esté autenticado y tenga id_usuario_rol
       if (!req.user || !req.user.id_usuario_rol) {
-        res.status(401).json({ 
-          success: false, 
-          message: 'Usuario no autenticado o sin rol asignado' 
+        res.status(401).json({
+          success: false,
+          message: 'Usuario no autenticado o sin rol asignado'
         });
         return;
       }
 
       if (!cedula && !nit) {
-        res.status(400).json({ 
-          success: false, 
-          message: 'La cédula o el NIT son requeridos' 
+        res.status(400).json({
+          success: false,
+          message: 'La cédula o el NIT son requeridos'
         });
         return;
       }
 
-      // Buscar cliente por cédula
-      const cliente = await solicitudService.buscarClientePorCedula(cedula);
-      const empresa = await solicitudService.buscarEmpresaPorNit(nit); // Intentar buscar empresa con el mismo valor
+      // Buscar según el tipo de cliente enviado
+      let cliente: any = null;
+      let empresa: any = null;
+
+      if (cedula) {
+        cliente = await solicitudService.buscarClientePorCedula(cedula);
+      }
+
+      if (nit) {
+        empresa = await solicitudService.buscarEmpresaPorNit(nit);
+      }
+
       if (!cliente && !empresa) {
-        res.status(404).json({ 
-          success: false, 
-          message: 'Cliente o empresa no encontrado' 
+        res.status(404).json({
+          success: false,
+          message: 'Cliente o empresa no encontrado'
         });
         return;
       }
@@ -120,8 +129,8 @@ export class SolicitudController {
         proposito_cuenta
       );
 
-      res.status(201).json({ 
-        success: true, 
+      res.status(201).json({
+        success: true,
         message: 'Solicitud creada exitosamente',
         data: {
           id_solicitud: idSolicitud,
@@ -133,8 +142,8 @@ export class SolicitudController {
       });
     } catch (error) {
       console.error('Error en crearSolicitud:', error);
-      res.status(500).json({ 
-        success: false, 
+      res.status(500).json({
+        success: false,
         message: 'Error al crear la solicitud',
         error: error instanceof Error ? error.message : 'Error desconocido'
       });
@@ -146,14 +155,14 @@ export class SolicitudController {
     try {
       const solicitudes = await solicitudService.obtenerSolicitudes();
 
-      res.status(200).json({ 
-        success: true, 
-        data: solicitudes 
+      res.status(200).json({
+        success: true,
+        data: solicitudes
       });
     } catch (error) {
       console.error('Error en obtenerSolicitudes:', error);
-      res.status(500).json({ 
-        success: false, 
+      res.status(500).json({
+        success: false,
         message: 'Error al obtener las solicitudes',
         error: error instanceof Error ? error.message : 'Error desconocido'
       });
@@ -167,9 +176,9 @@ export class SolicitudController {
       const idSolicitud = parseInt(id);
 
       if (isNaN(idSolicitud)) {
-        res.status(400).json({ 
-          success: false, 
-          message: 'ID de solicitud inválido' 
+        res.status(400).json({
+          success: false,
+          message: 'ID de solicitud inválido'
         });
         return;
       }
@@ -177,21 +186,21 @@ export class SolicitudController {
       const solicitud = await solicitudService.obtenerSolicitudPorId(idSolicitud);
 
       if (!solicitud) {
-        res.status(404).json({ 
-          success: false, 
-          message: 'Solicitud no encontrada' 
+        res.status(404).json({
+          success: false,
+          message: 'Solicitud no encontrada'
         });
         return;
       }
 
-      res.status(200).json({ 
-        success: true, 
-        data: solicitud 
+      res.status(200).json({
+        success: true,
+        data: solicitud
       });
     } catch (error) {
       console.error('Error en obtenerSolicitudPorId:', error);
-      res.status(500).json({ 
-        success: false, 
+      res.status(500).json({
+        success: false,
         message: 'Error al obtener la solicitud',
         error: error instanceof Error ? error.message : 'Error desconocido'
       });
@@ -206,17 +215,17 @@ export class SolicitudController {
       const idSolicitud = parseInt(id);
 
       if (isNaN(idSolicitud)) {
-        res.status(400).json({ 
-          success: false, 
-          message: 'ID de solicitud inválido' 
+        res.status(400).json({
+          success: false,
+          message: 'ID de solicitud inválido'
         });
         return;
       }
 
       if (!estado || !['Pendiente', 'Aprobada', 'Rechazada', 'Devuelta'].includes(estado)) {
-        res.status(400).json({ 
-          success: false, 
-          message: 'Estado inválido' 
+        res.status(400).json({
+          success: false,
+          message: 'Estado inválido'
         });
         return;
       }
@@ -228,21 +237,21 @@ export class SolicitudController {
       );
 
       if (!actualizado) {
-        res.status(404).json({ 
-          success: false, 
-          message: 'Solicitud no encontrada' 
+        res.status(404).json({
+          success: false,
+          message: 'Solicitud no encontrada'
         });
         return;
       }
 
-      res.status(200).json({ 
-        success: true, 
-        message: 'Estado actualizado exitosamente' 
+      res.status(200).json({
+        success: true,
+        message: 'Estado actualizado exitosamente'
       });
     } catch (error) {
       console.error('Error en actualizarEstado:', error);
-      res.status(500).json({ 
-        success: false, 
+      res.status(500).json({
+        success: false,
         message: 'Error al actualizar el estado',
         error: error instanceof Error ? error.message : 'Error desconocido'
       });
@@ -256,9 +265,9 @@ export class SolicitudController {
       const idSolicitud = parseInt(id);
 
       if (isNaN(idSolicitud)) {
-        res.status(400).json({ 
-          success: false, 
-          message: 'ID de solicitud inválido' 
+        res.status(400).json({
+          success: false,
+          message: 'ID de solicitud inválido'
         });
         return;
       }
@@ -266,21 +275,21 @@ export class SolicitudController {
       const eliminado = await solicitudService.eliminarSolicitud(idSolicitud);
 
       if (!eliminado) {
-        res.status(404).json({ 
-          success: false, 
-          message: 'Solicitud no encontrada' 
+        res.status(404).json({
+          success: false,
+          message: 'Solicitud no encontrada'
         });
         return;
       }
 
-      res.status(200).json({ 
-        success: true, 
-        message: 'Solicitud eliminada exitosamente' 
+      res.status(200).json({
+        success: true,
+        message: 'Solicitud eliminada exitosamente'
       });
     } catch (error) {
       console.error('Error en eliminarSolicitud:', error);
-      res.status(500).json({ 
-        success: false, 
+      res.status(500).json({
+        success: false,
         message: 'Error al eliminar la solicitud',
         error: error instanceof Error ? error.message : 'Error desconocido'
       });
@@ -294,9 +303,9 @@ export class SolicitudController {
       const idSolicitud = parseInt(id);
 
       if (isNaN(idSolicitud)) {
-        res.status(400).json({ 
-          success: false, 
-          message: 'ID de solicitud inválido' 
+        res.status(400).json({
+          success: false,
+          message: 'ID de solicitud inválido'
         });
         return;
       }
@@ -304,9 +313,9 @@ export class SolicitudController {
       const archivo = await solicitudService.obtenerArchivo(idSolicitud);
 
       if (!archivo) {
-        res.status(404).json({ 
-          success: false, 
-          message: 'Archivo no encontrado' 
+        res.status(404).json({
+          success: false,
+          message: 'Archivo no encontrado'
         });
         return;
       }
@@ -316,8 +325,8 @@ export class SolicitudController {
       res.send(archivo);
     } catch (error) {
       console.error('Error en descargarArchivo:', error);
-      res.status(500).json({ 
-        success: false, 
+      res.status(500).json({
+        success: false,
         message: 'Error al descargar el archivo',
         error: error instanceof Error ? error.message : 'Error desconocido'
       });

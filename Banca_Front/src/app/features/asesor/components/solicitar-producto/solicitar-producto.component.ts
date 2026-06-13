@@ -28,7 +28,7 @@ export class SolicitarProductoComponent implements OnInit {
   constructor(
     private solicitudService: SolicitudService,
     private authService: AuthService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     // Obtener datos del usuario autenticado
@@ -135,7 +135,9 @@ export class SolicitarProductoComponent implements OnInit {
       cedula: this.cedula,
       producto: this.producto,
       comentario: this.comentario,
-      archivo: this.archivoFile
+      archivo: this.archivoFile,
+      tipo_cliente: 'Natural',
+      proposito_cuenta: ''
     };
 
     console.log('Enviando solicitud:', solicitud);
