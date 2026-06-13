@@ -49,46 +49,40 @@
 
     <!-- Pestaña 1: Información general -->
     <div *ngIf="pestanaActiva === 'informacion-general'">
-      <app-info-general [datosIniciales]="clienteData.infoGeneral" (formChange)="actualizarDatos('infoGeneral', $event)"
-      (nextTab)="manejarNextTab()" (saved)="abrirModalGuardado($event)"></app-info-general>
+      <app-info-general [datosIniciales]="empresaData.infoGeneral" (formChange)="actualizarDatos('infoGeneral', $event)"
+        (nextTab)="manejarNextTab()" (saved)="abrirModalGuardado($event)"></app-info-general>
     </div>
 
     <!-- Pestaña 2: Representante legal -->
     <div *ngIf="pestanaActiva === 'representante-legal'">
-      <app-representante-legal [datosIniciales]="clienteData.representanteLegal"
-        (formChange)="actualizarDatos('representanteLegal', $event)" (nextTab)="manejarNextTab()" (saved)="abrirModalGuardado($event)"
-        (prevTab)="manejarPrevTab()"></app-representante-legal>
+      <app-representante-legal [datosIniciales]="empresaData.representanteLegal"
+        (formChange)="actualizarDatos('representanteLegal', $event)" (nextTab)="manejarNextTab()"
+        (saved)="abrirModalGuardado($event)" (prevTab)="manejarPrevTab()"></app-representante-legal>
     </div>
 
     <!-- Pestaña 3: Naturaleza y tipo de entidad -->
     <div *ngIf="pestanaActiva === 'naturaleza-tipo'">
-      <app-naturaleza-tipo [datosIniciales]="clienteData.naturalezaEntidad"
-        (formChange)="actualizarDatos('naturalezaEntidad', $event)" (nextTab)="manejarNextTab()" (saved)="abrirModalGuardado($event)"
-        (prevTab)="manejarPrevTab()"></app-naturaleza-tipo>
+      <app-naturaleza-tipo [datosIniciales]="empresaData.naturalezaEntidad"
+        (formChange)="actualizarDatos('naturalezaEntidad', $event)" (nextTab)="manejarNextTab()"
+        (saved)="abrirModalGuardado($event)" (prevTab)="manejarPrevTab()"></app-naturaleza-tipo>
     </div>
 
     <!-- Pestaña 4: Información financiera y tributaria -->
     <div *ngIf="pestanaActiva === 'info-fintrib'">
-      <app-info-fintrib [datosIniciales]="clienteData.infoFinancieraTributaria"
-        (formChange)="actualizarDatos('infoFinancieraTributaria', $event)" (nextTab)="manejarNextTab()" (saved)="abrirModalGuardado($event)"
-        (prevTab)="manejarPrevTab()"></app-info-fintrib>
+      <app-info-fintrib [datosIniciales]="empresaData.infoFinancieraTributaria"
+        (formChange)="actualizarDatos('infoFinancieraTributaria', $event)" (nextTab)="manejarNextTab()"
+        (saved)="abrirModalGuardado($event)" (prevTab)="manejarPrevTab()"></app-info-fintrib>
     </div>
 
     <!-- Pestaña 5: Origen de bienes y asociados -->
     <div *ngIf="pestanaActiva === 'origenbienes-infosocios'">
-      <app-origenbienes-infosocios [datosIniciales]="clienteData.declaracionBienesInfoSocios"
-        (formChange)="actualizarDatos('declaracionBienesInfoSocios', $event)" (nextTab)="manejarNextTab()" (saved)="abrirModalGuardado($event)"
-        (prevTab)="manejarPrevTab()"></app-origenbienes-infosocios>
+      <app-origenbienes-infosocios [datosIniciales]="empresaData.declaracionBienesInfoSocios"
+        (formChange)="actualizarDatos('declaracionBienesInfoSocios', $event)" (nextTab)="manejarNextTab()"
+        (saved)="abrirModalGuardado($event)" (prevTab)="manejarPrevTab()"></app-origenbienes-infosocios>
     </div>
 
-    <app-confirm-modal
-      [visible]="confirmVisible"
-      [title]="confirmTitle"
-      [message]="confirmMessage"
-      [type]="confirmType"
-      [confirmText]="confirmButtonText"
-      (confirm)="onModalConfirm()"
-      (closed)="onModalClosed()">
+    <app-confirm-modal [visible]="confirmVisible" [title]="confirmTitle" [message]="confirmMessage" [type]="confirmType"
+      [confirmText]="confirmButtonText" (confirm)="onModalConfirm()" (closed)="onModalClosed()">
     </app-confirm-modal>
 
   </div>

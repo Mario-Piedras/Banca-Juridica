@@ -19,7 +19,7 @@ export class AsesorService {
     facta: null,
   });
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   /** ================================
    * 🔹 Sincronización local de datos
@@ -76,4 +76,15 @@ export class AsesorService {
   obtenerClienteBasico(idCliente: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/asesor/cliente-basico/${idCliente}`);
   }
+
+  // 🔹 Obtener empresa completo por ID (para edición)
+  obtenerEmpresaPorId(idEmpresa: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/asesor/empresa-id/${idEmpresa}`);
+  }
+
+  // 🔹 Actualizar empresa existente
+  actualizarEmpresa(idEmpresa: number, payload: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/asesor/actualizar-empresa/${idEmpresa}`, payload);
+  }
+
 }

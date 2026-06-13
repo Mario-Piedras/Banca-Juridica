@@ -28,7 +28,7 @@ const upload = multer({
       'application/msword',
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
     ];
-    
+
     if (allowedTypes.includes(file.mimetype)) {
       cb(null, true);
     } else {
@@ -86,35 +86,44 @@ router.put('/actualizar-cliente/:id', (req, res) =>
   clienteController.actualizarCliente(req, res)
 );
 
+router.get('/empresa-id/:id', (req, res) =>
+  clienteController.obtenerEmpresaPorId(req, res)
+);
+
+// Actualizar cliente existente
+router.put('/actualizar-empresa/:id', (req, res) =>
+  clienteController.actualizarEmpresa(req, res)
+);
+
 // ========== RUTAS PARA SOLICITUDES ==========
 router.post(
-  '/solicitudes', 
-  requireRole('Asesor'), 
-  upload.single('archivo'), 
+  '/solicitudes',
+  requireRole('Asesor'),
+  upload.single('archivo'),
   solicitudController.crearSolicitud
 );
 
 router.get(
-  '/solicitudes', 
-  requireRole('Asesor', 'Director-operativo'), 
+  '/solicitudes',
+  requireRole('Asesor', 'Director-operativo'),
   solicitudController.obtenerSolicitudes
 );
 
 router.put(
-  '/solicitudes/:id/estado', 
-  requireRole('Director-operativo'), 
+  '/solicitudes/:id/estado',
+  requireRole('Director-operativo'),
   solicitudController.actualizarEstado
 );
 
 router.delete(
-  '/solicitudes/:id', 
-  requireRole('Asesor', 'Administrador'), 
+  '/solicitudes/:id',
+  requireRole('Asesor', 'Administrador'),
   solicitudController.eliminarSolicitud
 );
 
 router.get(
-  '/solicitudes/:id/archivo', 
-  requireRole('Asesor', 'Director-operativo'), 
+  '/solicitudes/:id/archivo',
+  requireRole('Asesor', 'Director-operativo'),
   solicitudController.descargarArchivo
 );
 

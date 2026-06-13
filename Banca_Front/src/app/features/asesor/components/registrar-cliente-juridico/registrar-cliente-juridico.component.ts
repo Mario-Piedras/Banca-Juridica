@@ -32,11 +32,11 @@ export class RegistrarClienteJuridicoComponent implements OnInit {
   // 🌐 Control de pestañas
   pestanaActiva: string = 'informacion-general';
   modo: 'nuevo' | 'editar' = 'nuevo';
-  idCliente: number | null = null;
+  idEmpresa: number | null = null;
   cargando: boolean = false;
 
   // 🧠 Datos temporales de todos los subformularios
-  clienteData: any = {
+  empresaData: any = {
     infoGeneral: null,
     representanteLegal: null,
     naturalezaEntidad: null,
@@ -111,31 +111,31 @@ export class RegistrarClienteJuridicoComponent implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
     if (id && !isNaN(Number(id))) {
       this.modo = 'editar';
-      this.idCliente = parseInt(id, 10);
-      this.cargarClienteExistente(this.idCliente);
+      this.idEmpresa = parseInt(id, 10);
+      this.cargarEmpresaExistente(this.idEmpresa);
     }
   }
 
-  cargarClienteExistente(idCliente: number) {
+  cargarEmpresaExistente(idEmpresa: number) {
     this.cargando = true;
     // Primero necesitas agregar este método al AsesorService
     // Voy a mostrarte cómo modificarlo después
-    this.asesorService.obtenerClientePorId(idCliente).subscribe({
+    this.asesorService.obtenerEmpresaPorId(idEmpresa).subscribe({
       next: (respuesta) => {
         if (respuesta.success && respuesta.data) {
-          const cliente = respuesta.data;
+          const empresa = respuesta.data;
 
           // Organizar datos en la estructura esperada por los subcomponentes
           this.datosIniciales = {
-            infoGeneral: {},
-            representanteLegal: cliente.representanteLegal || {},
-            naturalezaEntidad: cliente.naturalezaEntidad || {},
-            infoFinancieraTributaria: cliente.infoFinancieraTributaria || {},
-            declaracionBienesInfoSocios: cliente.declaracionBienesInfoSocios || {}
+            infoGeneral: empresa.infoGeneral || {},
+            representanteLegal: empresa.representanteLegal || {},
+            naturalezaEntidad: empresa.naturalezaEntidad || {},
+            infoFinancieraTributaria: empresa.infoFinancieraTributaria || {},
+            declaracionBienesInfoSocios: empresa.declaracionBienesInfoSocios || {}
           };
 
-          // También actualizar clienteData para validaciones
-          this.clienteData = { ...this.datosIniciales };
+          // También actualizar empresaData para validaciones
+          this.empresaData = { ...this.datosIniciales };
         }
         this.cargando = false;
       },
@@ -168,7 +168,7 @@ export class RegistrarClienteJuridicoComponent implements OnInit {
 
   // 📥 Recibir datos desde los subcomponentes
   actualizarDatos(nombre: string, data: any) {
-    this.clienteData[nombre] = data;
+    this.empresaData[nombre] = data;
     console.log(`✅ Datos actualizados (${nombre}):`, data);
   }
 
@@ -192,7 +192,7 @@ export class RegistrarClienteJuridicoComponent implements OnInit {
 
   // ✅ Validar que todo esté diligenciado antes de registrar
   datosCompletos(): boolean {
-    return Object.values(this.clienteData).every((seccion) =>
+    return Object.values(this.empresaData).every((seccion) =>
       seccion && Object.keys(seccion).length > 0
     );
   }
@@ -206,11 +206,11 @@ export class RegistrarClienteJuridicoComponent implements OnInit {
     }
 
     const payload = {
-      ...this.clienteData.infoGeneral,
-      representanteLegal: this.clienteData.representanteLegal,
-      naturalezaEntidad: this.clienteData.naturalezaEntidad,
-      infoFinancieraTributaria: this.clienteData.infoFinancieraTributaria,
-      declaracionBienesInfoSocios: this.clienteData.declaracionBienesInfoSocios
+      ...this.empresaData.infoGeneral,
+      representanteLegal: this.empresaData.representanteLegal,
+      naturalezaEntidad: this.empresaData.naturalezaEntidad,
+      infoFinancieraTributaria: this.empresaData.infoFinancieraTributaria,
+      declaracionBienesInfoSocios: this.empresaData.declaracionBienesInfoSocios
     };
 
     if (this.modo === 'nuevo') {
@@ -225,11 +225,11 @@ export class RegistrarClienteJuridicoComponent implements OnInit {
           alert('Error al registrar el cliente: ' + (err.error?.message || err.message));
         },
       });
-    } else if (this.modo === 'editar' && this.idCliente) {
-      this.asesorService.actualizarCliente(this.idCliente, payload).subscribe({
+    } else if (this.modo === 'editar' && this.idEmpresa) {
+      this.asesorService.actualizarEmpresa(this.idEmpresa, payload).subscribe({
         next: (res) => {
-          console.log('✅ Cliente actualizado con éxito:', res);
-          alert('Cliente actualizado correctamente');
+          console.log('✅ Empresa actualizada con éxito:', res);
+          alert('Empresa actualizada correctamente');
           this.router.navigate(['/asesor/consultar-cliente']);
         },
         error: (err) => {
