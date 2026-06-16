@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Output, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -13,7 +13,7 @@ import { HttpClient } from '@angular/common/http';
     './info-general.component.css'
   ]
 })
-export class InformacionGeneralComponent implements OnInit {
+export class InformacionGeneralComponent implements OnInit, OnChanges {
   @Input() datosIniciales: any;
   @Output() formChange = new EventEmitter();
   @Output() nextTab = new EventEmitter();
@@ -102,6 +102,22 @@ export class InformacionGeneralComponent implements OnInit {
         Validators.email
       ]]
     });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (
+      changes['datosIniciales'] &&
+      changes['datosIniciales'].currentValue
+    ) {
+      console.log(
+        '📥 Datos recibidos para edición:',
+        changes['datosIniciales'].currentValue
+      );
+      this.form.patchValue(
+        changes['datosIniciales'].currentValue,
+        { emitEvent: true }
+      );
+    }
   }
 
   ngOnInit() {

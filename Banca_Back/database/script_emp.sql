@@ -100,14 +100,7 @@ VALUES
 	(178000000.00,11000000.00,'Consultoría empresarial',980000000.00,'2000-09-30',
     9800000.00,58000000.00,720000000.00,250000000.00,470000000.00);
     
-INSERT INTO personas_asociadas 
-	(tipo_documento, num_documento, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, cargo, dir_laboral, 
-    barrio, ciudad_municipio, departamento, pais, telefono, ext, celular, correo) 
-VALUES 
-    ("CC","1127055628","Mario","José","Piedras","Lenis","Gerente","Carrera. 16a #37-42","San Pedro","Palmira",
-    "Valle del Cauca", "Colombia", "12345678", "123", "3052959858", "andrea@gmail.com"),
-    ("CC","37293702","Zulay","Andrea","Lenis","Uchima","Panadera","Carrera. 16a #37-42","San Pedro","Palmira",
-    "Valle del Cauca", "Colombia", "12345678", "321", "3158555749", "mario@gmail.com");
+
     
 INSERT INTO personas_asociadas (
     tipo_documento,num_documento,primer_nombre,segundo_nombre,primer_apellido,segundo_apellido,cargo,dir_laboral,
@@ -188,12 +181,6 @@ VALUES
 -- Para ID 9 (2 registros)
 	('Alemania','TIN-DE-336985',9),
 	('Francia','TIN-FR-845217',9);
-    
-INSERT INTO info_empresas 
-	(nit, razon_social, nombre_corto, fecha_constitución, ciudad_constitución, pais_constitucion, dir_sede_principal, barrio, ciudad_municipio, departamento, pais, telefono, ext, correo, id_info_financiera, id_info_repre_legal, id_cont_entidad, id_info_socios, id_tipo_entidad, id_declaracion, id_info_tributaria) 
-VALUES 
-	("123456789", "Panadería y Pastelería Dulce Hogar S.A.S.", "PPDH S.A.S.", "2010-12-20", "Palmira", "Colombia", "Carrera. 16a #37-42","San Pedro","Palmira",
-    "Valle del Cauca", "Colombia", "12345678", "123", "panaderia.dulce@gmail.com", 1, 1, 2, 1, 1, 1, 1);
     
 INSERT INTO info_empresas (
     nit,razon_social,nombre_corto,fecha_constitución,ciudad_constitución,pais_constitucion,dir_sede_principal,

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Output, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -13,7 +13,7 @@ import { HttpClient } from '@angular/common/http';
     './representante-legal.component.css'
   ]
 })
-export class RepresentanteLegalComponent implements OnInit {
+export class RepresentanteLegalComponent implements OnInit, OnChanges {
   @Input() datosIniciales: any;
   @Output() formChange = new EventEmitter();
   @Output() prevTab = new EventEmitter<void>();
@@ -123,6 +123,22 @@ export class RepresentanteLegalComponent implements OnInit {
         Validators.maxLength(100)
       ]]
     });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (
+      changes['datosIniciales'] &&
+      changes['datosIniciales'].currentValue
+    ) {
+      console.log(
+        '📥 Datos recibidos para edición:',
+        changes['datosIniciales'].currentValue
+      );
+      this.form.patchValue(
+        changes['datosIniciales'].currentValue,
+        { emitEvent: true }
+      );
+    }
   }
 
   ngOnInit(): void {

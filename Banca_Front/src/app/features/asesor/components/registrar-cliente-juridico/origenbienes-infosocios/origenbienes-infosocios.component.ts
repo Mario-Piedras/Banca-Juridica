@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Output, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -15,7 +15,7 @@ import { switchMap } from 'rxjs';
     './origenbienes-infosocios.component.css'
   ]
 })
-export class DeclaracionBienesInfoSociosComponent implements OnInit {
+export class DeclaracionBienesInfoSociosComponent implements OnInit, OnChanges {
   @Input() datosIniciales: any;
   @Output() formChange = new EventEmitter();
   @Output() prevTab = new EventEmitter<void>();
@@ -63,6 +63,22 @@ export class DeclaracionBienesInfoSociosComponent implements OnInit {
       personas_expuestas: ['', Validators.required],
       bolsa_valores: ['', Validators.required]
     });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (
+      changes['datosIniciales'] &&
+      changes['datosIniciales'].currentValue
+    ) {
+      console.log(
+        '📥 Datos recibidos para edición:',
+        changes['datosIniciales'].currentValue
+      );
+      this.form.patchValue(
+        changes['datosIniciales'].currentValue,
+        { emitEvent: true }
+      );
+    }
   }
 
   ngOnInit() {
