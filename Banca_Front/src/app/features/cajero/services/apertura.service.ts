@@ -5,8 +5,12 @@ import { AuthService } from '../../../core/services/auth.service';
 import { environment } from '../../../../environments/environment';
 
 export interface VerificarClienteRequest {
-  tipoDocumento: string;
-  numeroDocumento: string;
+  tipoCliente: string;
+
+  tipoDocumento?: string;
+  numeroDocumento?: string;
+
+  nit?: string;
 }
 
 export interface VerificarClienteResponse {

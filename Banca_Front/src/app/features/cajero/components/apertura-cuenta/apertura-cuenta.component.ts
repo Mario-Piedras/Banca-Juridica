@@ -29,9 +29,12 @@ export class AperturaCuentaComponent {
   };
 
   // Datos del formulario
+  tipoCliente: string = '';
   tipoDocumento: string = '';
   numeroDocumento: string = '';
   nombreCompleto: string = '';
+  nit: string = '';
+  razonSocial: string = '';
   depositoInicial: string = '';
   valorDeposito: number = 0;
   codigoCheque: string = '';
@@ -82,21 +85,77 @@ export class AperturaCuentaComponent {
     this.numeroDocumento = '';
   }
 
+  onTipoClienteChange() {
+    this.limpiarFormulario();
+
+    // Mantener seleccionado el tipo
+    const tipo = this.tipoCliente;
+
+    this.tipoCliente = tipo;
+  }
+
   buscarCliente() {
-    if (!this.tipoDocumento || !this.numeroDocumento) {
-      alert('Por favor ingrese el tipo y número de documento');
+    if (
+      this.tipoCliente === 'Natural'
+      &&
+      (!this.tipoDocumento || !this.numeroDocumento)
+    ) {
+
+      alert(
+        'Por favor ingrese tipo y número de documento'
+      );
+
       return;
+
+    }
+
+    if (
+      this.tipoCliente === 'Juridica'
+      &&
+      !this.nit
+    ) {
+
+      alert(
+        'Por favor ingrese el NIT'
+      );
+
+      return;
+
     }
 
     // Validación adicional antes de enviar
-    if (!this.validarDocumento()) {
+    if (
+      this.tipoCliente === 'Natural'
+      &&
+      !this.validarDocumento()
+    ) {
       return;
     }
 
-    this.aperturaService.verificarCliente({
-      tipoDocumento: this.tipoDocumento,
-      numeroDocumento: this.numeroDocumento
-    }).subscribe({
+    let datosBusqueda: any;
+
+    if (this.tipoCliente === 'Natural') {
+
+      datosBusqueda = {
+        tipoCliente: 'Natural',
+        tipoDocumento: this.tipoDocumento,
+        numeroDocumento: this.numeroDocumento
+      };
+
+    }
+
+    else {
+
+      datosBusqueda = {
+        tipoCliente: 'Juridica',
+        nit: this.nit
+      };
+
+    }
+
+    this.aperturaService
+    .verificarCliente(datosBusqueda)
+    .subscribe({
       next: (respuesta: VerificarClienteResponse) => {
         this.clienteVerificado = true;
         this.estadoSolicitud = respuesta.estado;
@@ -284,6 +343,8 @@ onInputMonto(event: Event) {
   limpiarFormulario() {
     this.tipoDocumento = '';
     this.numeroDocumento = '';
+    this.nit = '';
+    this.razonSocial = ''; 
     this.nombreCompleto = '';
     this.depositoInicial = '';
     this.valorDeposito = 0;

@@ -55,19 +55,19 @@ router.post('/registrar-cliente', (req, res) => registrarCLienteController.regis
 
 router.get(
   '/solicitudes/cedula/:cedula',
-  requireRole('Asesor', 'Director-operativo'),
+  requireRole('Asesor', 'Director-operativo', 'Cajero'),
   consultarController.buscarPorCedula
 );
 
 router.get(
   '/solicitudes/nit/:nit',
-  requireRole('Asesor', 'Director-operativo'),
+  requireRole('Asesor', 'Director-operativo', 'Cajero'),
   consultarController.buscarPorNit
 );
 
 router.get(
   '/solicitudes/:id',
-  requireRole('Asesor', 'Director-operativo'),
+  requireRole('Asesor', 'Director-operativo', 'Cajero'),
   consultarController.obtenerPorId
 );
 
