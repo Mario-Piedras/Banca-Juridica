@@ -80,12 +80,12 @@ export class RepresentanteLegalComponent implements OnInit, OnChanges {
         Validators.maxLength(50)
       ]],
       barrio: ['', [
-        Validators.minLength(5),
+        Validators.minLength(3),
         Validators.maxLength(50),
         Validators.required
       ]],
       ciudad_municipio: ['', [
-        Validators.minLength(5),
+        Validators.minLength(3),
         Validators.maxLength(50),
         Validators.required
       ]],
@@ -125,18 +125,47 @@ export class RepresentanteLegalComponent implements OnInit, OnChanges {
     });
   }
 
+  private cargandoEdicion = false;
+
+  private cargarRepresentantes(data: any) {
+    this.cargandoEdicion = true;
+    this.representantes.clear();
+    if (data.representantes) {
+      data.representantes.forEach((rep: any) => {
+        const grupo = this.crearRepresentante();
+        grupo.patchValue(rep, {
+          emitEvent: false
+        });
+        this.representantes.push(grupo);
+      });
+    }
+
+    this.form.patchValue(
+      {
+        contacto_adicional: data.contacto_adicional
+      },
+      {
+        emitEvent: false
+      }
+    );
+
+    this.cargandoEdicion = false;
+    console.log(
+      'Representantes:',
+      this.representantes.length
+    );
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (
-      changes['datosIniciales'] &&
-      changes['datosIniciales'].currentValue
+      changes['datosIniciales']?.currentValue
     ) {
       console.log(
         '📥 Datos recibidos para edición:',
         changes['datosIniciales'].currentValue
       );
-      this.form.patchValue(
-        changes['datosIniciales'].currentValue,
-        { emitEvent: true }
+      this.cargarRepresentantes(
+        changes['datosIniciales'].currentValue
       );
     }
   }
@@ -149,7 +178,13 @@ export class RepresentanteLegalComponent implements OnInit, OnChanges {
 
     // Emitir cambios del formulario
     this.form.valueChanges.subscribe(valores => {
+
+      if (this.cargandoEdicion) {
+        return;
+      }
+
       this.formChange.emit(valores);
+
     });
 
     // Informa los cambios del formulario en la consola
@@ -199,12 +234,17 @@ export class RepresentanteLegalComponent implements OnInit, OnChanges {
     });
 
     // Crear representante principal
-    this.representantes.push(
-      this.crearRepresentante()
-    );
+    if (this.representantes.length === 0) {
+      this.representantes.push(
+        this.crearRepresentante()
+      );
+    }
 
     // Escuchar si desea contacto adicional
     this.form.get('contacto_adicional')?.valueChanges.subscribe(valor => {
+      if (this.cargandoEdicion) {
+        return;
+      }
 
       if (
         valor === 'Sí' &&

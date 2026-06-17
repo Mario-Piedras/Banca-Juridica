@@ -19,7 +19,7 @@ INSERT INTO tipo_entidad (
 VALUES
 -- Registro 1
 	('Privada','6201','Desarrollo de software',120,'Por acciones simplificadas S.A.S',
-	NULL,'Corporaciones y asociaciones',NULL,'Nación',NULL,'Naciónal'),
+	NULL,'Corporaciones y asociaciones',NULL,'Nación',NULL,'Nacional'),
 -- Registro 2
 	('Pública','8411','Administración pública',350,'Anónima',NULL,'Establecimiento público',
 	NULL,'Departamento',NULL,'Departamental'),
@@ -28,7 +28,7 @@ VALUES
 	'Sociedad de economía mixta',NULL,'Municipio',NULL,'Municipal'),
 -- Registro 4 (usa otra_sociedad)
 	('Privada','4711','Comercio al por menor',45,'Otra','Sociedad tecnológica emergente',
-	'Fundaciones',NULL,'Nación',NULL,'Naciónal'),
+	'Fundaciones',NULL,'Nación',NULL,'Nacional'),
 -- Registro 5
 	('Privada','6920','Servicios contables',18,'Empresa unipersonal',NULL,
 	'Entidades financieras',NULL,'Departamento',NULL,'Departamental'),
@@ -40,7 +40,7 @@ VALUES
 	'Consorcio',NULL,'Otra','Entidad regional autónoma','Departamental'),
 -- Registro 8
 	('Privada','7310','Publicidad y mercadeo',65,'Asociación civil',NULL,
-	'Cooperativas',NULL,'Nación',NULL,'Naciónal'),
+	'Cooperativas',NULL,'Nación',NULL,'Nacional'),
 -- Registro 9 (usa otra_sociedad y otra_asociacion)
 	('Mixta','5820','Edición de programas informáticos',95,'Otra','Sociedad de innovación digital',
     'Otra','Asociación empresarial especializada','Departamento',NULL,'Departamental');
@@ -163,24 +163,24 @@ VALUES
 INSERT INTO pais_tributar (pais,tin,id_info_tributaria)
 VALUES
 -- Para ID 1 (3 registros)
-	('Estados Unidos','TIN-US-458712',1),
-	('México','RFC-MX-985421',1),
-	('España','NIF-ES-332145',1),
+	('Estados Unidos','TIN-US-458712',2),
+	('México','RFC-MX-985421',2),
+	('España','NIF-ES-332145',2),
 -- Para ID 4 (2 registros)
-	('Chile','TIN-CL-754896',4),
-	('Perú','RUC-PE-412578',4),
+	('Chile','TIN-CL-754896',5),
+	('Perú','RUC-PE-412578',5),
 
 -- Para ID 5 (3 registros)
-	('Canadá','TIN-CA-896532',5),
-	('Panamá','RUC-PA-225478',5),
-	('Argentina','CUIT-AR-774125',5),
+	('Canadá','TIN-CA-896532',6),
+	('Panamá','RUC-PA-225478',6),
+	('Argentina','CUIT-AR-774125',6),
 
 -- Para ID 7 (1 registro)
-	('Brasil','CPF-BR-663214',7),
+	('Brasil','CPF-BR-663214',8),
 
 -- Para ID 9 (2 registros)
-	('Alemania','TIN-DE-336985',9),
-	('Francia','TIN-FR-845217',9);
+	('Alemania','TIN-DE-336985',10),
+	('Francia','TIN-FR-845217',10);
     
 INSERT INTO info_empresas (
     nit,razon_social,nombre_corto,fecha_constitución,ciudad_constitución,pais_constitucion,dir_sede_principal,

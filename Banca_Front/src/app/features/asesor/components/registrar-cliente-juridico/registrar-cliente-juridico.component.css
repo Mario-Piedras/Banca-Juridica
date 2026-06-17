@@ -94,6 +94,7 @@
 .form-btn:disabled {
   background-color: #d1d5dc;
   color: #6a7282;
+  cursor: not-allowed;
 }
 
 /* Display de los botones del formulario */

@@ -28,7 +28,15 @@ export class SolicitarProductoJuridicoComponent implements OnInit {
   constructor(
     private solicitudService: SolicitudService,
     private authService: AuthService
-  ) {}
+  ) { }
+
+  get formularioValido(): boolean {
+    return (
+      this.nit.trim().length > 0 &&
+      this.proposito_cuenta.trim().length > 0 &&
+      this.empresaEncontrada
+    );
+  }
 
   ngOnInit(): void {
     // Obtener datos del usuario autenticado
@@ -134,7 +142,6 @@ export class SolicitarProductoJuridicoComponent implements OnInit {
 
   private limpiarFormulario(): void {
     this.nit = '';
-    this.producto = 'Cuenta de Ahorros Empresa';
     this.justificacion = '';
     this.comentario = '';
     this.empresaEncontrada = false;

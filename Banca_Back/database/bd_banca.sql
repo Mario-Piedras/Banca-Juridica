@@ -673,7 +673,7 @@ CREATE TABLE tipo_entidad (
 	otra_asociacion VARCHAR(100),
     ent_estatal ENUM('Nación', 'Departamento', 'Municipio', 'Otra'),
     otra_ent_estatal VARCHAR(100),
-    ent_estatal_descentralizada ENUM('Naciónal', 'Departamental', 'Municipal')
+    ent_estatal_descentralizada ENUM('Nacional', 'Departamental', 'Municipal')
 );
 
 CREATE TABLE declaracion_bienes (

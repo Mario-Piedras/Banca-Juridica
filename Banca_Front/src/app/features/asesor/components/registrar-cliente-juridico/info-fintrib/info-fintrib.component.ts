@@ -114,10 +114,12 @@ export class InformacionFinancieraTributariaComponent implements OnInit, OnChang
         '📥 Datos recibidos para edición:',
         changes['datosIniciales'].currentValue
       );
-      this.form.patchValue(
-        changes['datosIniciales'].currentValue,
-        { emitEvent: true }
-      );
+      const data = changes['datosIniciales'].currentValue;
+      this.form.patchValue(data);
+
+      if (data.paisesTributarios) {
+        this.listaPaises = [...data.paisesTributarios];
+      }
     }
   }
 
@@ -125,6 +127,11 @@ export class InformacionFinancieraTributariaComponent implements OnInit, OnChang
     // Precargar datos si existen
     if (this.datosIniciales) {
       this.form.patchValue(this.datosIniciales);
+      if (this.datosIniciales.paisesTributarios) {
+        this.listaPaises = [
+          ...this.datosIniciales.paisesTributarios
+        ];
+      }
     }
 
     // Calcular patrimonio automáticamente
@@ -209,21 +216,9 @@ export class InformacionFinancieraTributariaComponent implements OnInit, OnChang
   // Fija el año de cierre de ventas a 2000
   fijarAnio2000(): void {
     const control = this.form.get('fecha_cierre_ventas');
-
     if (!control?.value) return;
-
-    const fecha = new Date(control.value);
-
-    const mes = fecha.getMonth();
-    const dia = fecha.getDate();
-
-    const fechaFija = new Date(2000, mes, dia);
-
-    const yyyy = fechaFija.getFullYear();
-    const mm = String(fechaFija.getMonth() + 1).padStart(2, '0');
-    const dd = String(fechaFija.getDate()).padStart(2, '0');
-
-    control.setValue(`${yyyy}-${mm}-${dd}`);
+    const [, mes, dia] = control.value.split('-');
+    control.setValue(`2000-${mes}-${dia}`);
   }
 
   // Funcion para agregar país de una tabla

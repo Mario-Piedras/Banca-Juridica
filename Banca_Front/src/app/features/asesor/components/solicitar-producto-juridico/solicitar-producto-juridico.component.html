@@ -11,13 +11,10 @@
         NIT del titular <span class="text-red-600">*</span>
       </label>
       <div class="flex gap-3">
-        <input type="text" [(ngModel)]="nit" (input)="onNitInput($event)" name="nit"
+        <input type="text" [(ngModel)]="nit" name="nit" required #nitControl="ngModel" (input)="onNitInput($event)"
           placeholder="Ej: 900123456" maxlength="11"
           class="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-400" />
-        <button type="button" (click)="buscarEmpresa()"
-          class="px-6 py-2 bg-blue-900 text-white rounded-md hover:bg-blue-800 transition-colors font-medium cursor-pointer">
-          Buscar empresa
-        </button>
+        <button type="button" (click)="buscarEmpresa()" class="form-btn">Buscar empresa</button>
       </div>
 
       <!-- Mensaje de confirmación - Empresa encontrada -->
@@ -45,8 +42,10 @@
           Empresa no registrada
         </span>
       </div>
-
       <p class="text-xs text-gray-500 mt-1">Ingrese el NIT del cliente</p>
+      <p *ngIf="nitControl.invalid && nitControl.touched" class="text-xs text-red-600 mt-1">
+        Campo obligatorio
+      </p>
     </div>
 
     <!-- Producto -->
@@ -66,17 +65,24 @@
       <label class="block text-sm font-semibold text-gray-800 mb-2">
         Proposito de cuenta <span class="text-red-600">*</span>
       </label>
-      <select [(ngModel)]="proposito_cuenta" name="proposito_cuenta"
+      <select [(ngModel)]="proposito_cuenta" name="proposito_cuenta" required #propositoControl="ngModel"
+        class="w-full px-4 py-2 border rounded-md"
+        [ngClass]="{'border-red-500':propositoControl.invalid && propositoControl.touched}"
         class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white">
-        <option value="" disabled selected>Seleccione el proposito de la cuenta</option>
+        <option value="" disabled selected>Seleccione el propósito de la cuenta</option>
         <option value="Ahorrar">Ahorrar</option>
         <option value="Invertir">Invertir</option>
-        <option value="Servicios financieros en negocios fiduciarios">Servicios financieros en negocios fiduciarios</option>
+        <option value="Servicios financieros en negocios fiduciarios">Servicios financieros en negocios fiduciarios
+        </option>
         <option value="Realizar transacciones">Realizar transacciones</option>
         <option value="Financiacion">Financiacion</option>
-        <option value="Recibir servicios especializados Banca de inversion">Recibir servicios especializados Banca de inversion</option>
+        <option value="Recibir servicios especializados Banca de inversion">Recibir servicios especializados Banca de
+          inversion</option>
       </select>
       <p class="text-xs text-gray-500 mt-1">El proposito de la cuenta</p>
+      <p *ngIf="propositoControl.invalid && propositoControl.touched" class="text-xs text-red-600 mt-1">
+        Campo obligatorio
+      </p>
     </div>
 
     <!-- Comentario / Observaciones -->
@@ -92,14 +98,8 @@
 
     <!-- Botones -->
     <div class="flex gap-3">
-      <button type="submit"
-        class="px-6 py-2 bg-blue-900 text-white rounded-md hover:bg-blue-800 transition-colors font-medium">
-        Enviar solicitud
-      </button>
-      <button type="button" (click)="cancelar()"
-        class="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors font-medium">
-        Cancelar
-      </button>
+      <button type="submit" [disabled]="!formularioValido" class="form-btn">Enviar solicitud</button>
+      <button type="button" (click)="cancelar()" class="form-cancel-btn">Cancelar</button>
     </div>
   </form>
 </div>

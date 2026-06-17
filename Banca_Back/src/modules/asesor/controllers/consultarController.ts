@@ -261,16 +261,16 @@ export class ClienteController {
         if (rowsFin?.[0]) {
           const r = rowsFin[0];
           infoFinancieraEmp = {
-            ingresos_op: r.ingresos_op,
-            ingresos_no_op: r.ingresos_no_op,
+            ingresos_op: Number(r.ingresos_op),
+            ingresos_no_op: Number(r.ingresos_no_op),
             detalle_ingresos: r.detalle_ingresos,
-            ventas_anuales: r.ventas_anuales,
+            ventas_anuales: Number(r.ventas_anuales),
             fecha_cierre_ventas: safeDateToISO(r.fecha_cierre_ventas),
-            egresos_mensuales: r.egresos_mensuales,
-            utilidad_neta: r.utilidad_neta,
-            total_activos: r.total_activos,
-            total_pasivos: r.total_pasivos,
-            total_patrimonio: r.total_patrimonio
+            egresos_mensuales: Number(r.egresos_mensuales),
+            utilidad_neta: Number(r.utilidad_neta),
+            total_activos: Number(r.total_activos),
+            total_pasivos: Number(r.total_pasivos),
+            total_patrimonio: Number(r.total_patrimonio)
           };
         }
       }
@@ -372,13 +372,15 @@ export class ClienteController {
       const datosIniciales = {
         infoGeneral: {
           ...empresa,
+          fecha_constitución: safeDateToISO(empresa.fecha_constitución),
           naturalezaEntidad: empresa.naturaleza,
-          // el front puede usar directamente naturaleza desde naturalezaEntidad o naturaleza, lo mantenemos ambas
           naturaleza: empresa.naturaleza
         },
         representanteLegal: {
-          representanteLegal: representanteLegalData,
-          contactoEntidad: contactoEntidadData,
+          representantes: [
+            ...(representanteLegalData ? [representanteLegalData] : []),
+            ...(contactoEntidadData ? [contactoEntidadData] : [])
+          ],
           contacto_adicional: contactoEntidadData ? 'Sí' : 'No'
         },
         naturalezaEntidad: {
