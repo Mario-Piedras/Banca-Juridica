@@ -304,12 +304,15 @@ onInputMonto(event: Event) {
     }
 
     const datosApertura = {
+      tipoCliente: this.tipoCliente,
       idSolicitud: this.idSolicitud,
       tipoDeposito: this.depositoInicial,
       valorDeposito: monto,
       codigoCheque: this.depositoInicial === 'Cheque' ? this.codigoCheque : undefined,
       numeroCheque: this.depositoInicial === 'Cheque' ? this.numeroCheque : undefined
     };
+
+    console.log(datosApertura);
 
     this.aperturaService.aperturarCuenta(datosApertura).subscribe({
       next: (respuesta: AperturarCuentaResponse) => {
@@ -319,9 +322,24 @@ onInputMonto(event: Event) {
 
           this.datosComprobante = {
             numeroCuenta: respuesta.numeroCuenta,
-            nombreCliente: this.nombreCompleto,
-            tipoDocumento: this.tipoDocumento,
-            numeroDocumento: this.numeroDocumento,
+
+            tipoCliente: this.tipoCliente,
+
+            nombreCliente:
+              this.tipoCliente === 'Juridica'
+                ? this.razonSocial
+                : this.nombreCompleto,
+
+            tipoDocumento:
+              this.tipoCliente === 'Natural'
+                ? this.tipoDocumento
+                : 'NIT',
+
+            numeroDocumento:
+              this.tipoCliente === 'Natural'
+                ? this.numeroDocumento
+                : this.nit,
+
             tipoDeposito: this.depositoInicial,
             valorDeposito: monto,
             fecha: new Date(),

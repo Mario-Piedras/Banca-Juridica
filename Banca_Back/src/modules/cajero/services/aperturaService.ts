@@ -38,7 +38,7 @@ export class AperturaService {
       const cliente = clientes[0];
 
       // Verificar si ya tiene cuenta activa
-      const [cuentas]: any = await connection.query(
+      /* const [cuentas]: any = await connection.query(
         'SELECT COUNT(*) as total FROM cuentas_ahorro WHERE id_cliente = ? AND estado_cuenta = \'Activa\'',
         [cliente.id_cliente]
       );
@@ -51,10 +51,10 @@ export class AperturaService {
           nombreCompleto: cliente.nombre_completo,
           idCliente: cliente.id_cliente,
         };
-      }
+      } */
 
       // ✅ MEJORADO: Buscar solicitud más reciente que NO haya sido utilizada en una cuenta cerrada
-      const [solicitudes]: any = await connection.query(
+      /* const [solicitudes]: any = await connection.query(
         `SELECT sa.id_solicitud, sa.estado, sa.comentario_director 
          FROM solicitudes_apertura sa
          WHERE sa.id_cliente = ? 
@@ -81,7 +81,45 @@ export class AperturaService {
         };
       }
 
-      const solicitud = solicitudes[0];
+      const solicitud = solicitudes[0]; */
+      
+      const [solicitudes]: any = await connection.query(
+        `
+        SELECT
+          id_solicitud,
+          estado,
+          comentario_director
+        FROM solicitudes_apertura
+        WHERE id_cliente = ?
+        ORDER BY fecha_solicitud DESC
+        `,
+        [cliente.id_cliente]
+      );
+
+      if (solicitudes.length === 0) {
+        return {
+          existe: true,
+          estado: 'SinSolicitud',
+          mensaje:
+            'No se encontró ninguna solicitud de apertura válida. Debe realizar una nueva solicitud con el asesor.',
+          icono: "info",
+          nombreCompleto: cliente.nombre_completo,
+          idCliente: cliente.id_cliente,
+        };
+      }
+
+      console.log('Solcitudes: ',solicitudes)
+
+      let solicitud = solicitudes[0]; // valor por defecto: la primera
+
+      for (const item of solicitudes) {
+        if (item.estado === 'Aprobada') {
+          solicitud = item; // sobrescribe siempre, quedando la última aprobada
+        }
+      }
+
+      console.log('Estado solcitud: ',solicitud)
+
       let mensaje = "";
       let icono = "";
 
@@ -149,18 +187,18 @@ export class AperturaService {
         [nit]
       );
 
+      const empresa = empresas[0];
+
       if (empresas.length === 0) {
         return {
           existe: false,
           estado: 'NoRegistrado',
           mensaje:
-            'La empresa no está registrada en el sistema.'
+            'La empresa no está registrada en el sistema. Debe registrarse primero con el asesor.',
         };
       }
 
-      const empresa = empresas[0];
-
-      // Buscar solicitud más reciente
+      // Buscar las solicitudes del cliente
       const [solicitudes]: any = await connection.query(
         `
         SELECT
@@ -170,7 +208,6 @@ export class AperturaService {
         FROM solicitudes_apertura
         WHERE id_empresa = ?
         ORDER BY fecha_solicitud DESC
-        LIMIT 1
         `,
         [empresa.id_info_empresas]
       );
@@ -185,7 +222,17 @@ export class AperturaService {
         };
       }
 
-      const solicitud = solicitudes[0];
+      console.log('Solcitudes: ',solicitudes)
+
+      let solicitud = solicitudes[0]; // valor por defecto: la primera
+
+      for (const item of solicitudes) {
+        if (item.estado === 'Aprobada') {
+          solicitud = item; // sobrescribe siempre, quedando la última aprobada
+        }
+      }
+
+      console.log('Estado solcitud: ',solicitud)
 
       let icono = 'info';
       let mensaje = '';
@@ -257,19 +304,79 @@ export class AperturaService {
 
       // Verificar que la solicitud esté aprobada
       const [solicitudes]: any = await connection.query(
-        "SELECT id_cliente, estado FROM solicitudes_apertura WHERE id_solicitud = ?",
+        `
+        SELECT
+          id_cliente,
+          id_empresa,
+          estado
+        FROM solicitudes_apertura
+        WHERE id_solicitud = ?
+        `,
         [datos.idSolicitud]
       );
 
-      if (solicitudes.length === 0 || solicitudes[0].estado !== "Aprobada") {
+      if (solicitudes.length === 0) { 
         await connection.rollback();
         return {
           exito: false,
-          mensaje: "La solicitud no está aprobada o no existe.",
+          mensaje: "La solicitud no existe.",
+        };
+      }
+
+      const [cuentaExistente]: any = await connection.query(
+        `
+          SELECT id_cuenta
+          FROM cuentas_ahorro
+          WHERE id_solicitud = ?
+          LIMIT 1
+        `,
+        [datos.idSolicitud]
+      );
+
+      if (solicitudes[0].estado !== "Aprobada") { 
+        await connection.rollback();
+        return {
+          exito: false,
+          mensaje: "La solicitud no está aprobada",
+        };
+      }
+
+      if (cuentaExistente.length > 0) {
+        await connection.rollback();
+
+        return {
+          exito: false,
+          mensaje: "La solicitud ya fue utilizada para aperturar una cuenta."
         };
       }
 
       const idCliente = solicitudes[0].id_cliente;
+      const idEmpresa = solicitudes[0].id_empresa;
+      const idSolicitud = solicitudes[0].id_solicitud;
+
+      const esJuridica = !!idEmpresa;
+
+      let cuentas: any;
+
+      console.log('solicitud a aperturar', solicitudes);
+
+      [cuentas] = await connection.query(
+          `
+          SELECT COUNT(*) total
+          FROM cuentas_ahorro
+          WHERE id_solicitud = ?
+          `,
+          [idSolicitud]
+        );
+
+      if (cuentas[0].total > 0) {
+        await connection.rollback();
+
+        return {
+          exito: false,
+          mensaje: 'Ya existe una cuenta activa para esta solicitud.'
+        };
+      }
 
       // Generar número de cuenta único
       let numeroCuenta = this.generarNumeroCuenta();
@@ -290,10 +397,25 @@ export class AperturaService {
 
       // Crear cuenta
       const [resultCuenta]: any = await connection.query(
-        "INSERT INTO cuentas_ahorro (numero_cuenta, id_cliente, id_solicitud, saldo) VALUES (?, ?, ?, ?)",
-        [numeroCuenta, idCliente, datos.idSolicitud, datos.valorDeposito]
+        `
+        INSERT INTO cuentas_ahorro
+        (
+          numero_cuenta,
+          id_cliente,
+          id_empresa,
+          id_solicitud,
+          saldo
+        )
+        VALUES (?, ?, ?, ?, ?)
+        `,
+        [
+        numeroCuenta,
+          esJuridica ? null : idCliente,
+          esJuridica ? idEmpresa : null,
+          datos.idSolicitud,
+          datos.valorDeposito
+        ]
       );
-
       const idCuenta = resultCuenta.insertId;
 
       // ✅ MEJORADO: Registrar transacción de apertura con todos los campos

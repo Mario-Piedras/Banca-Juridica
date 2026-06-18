@@ -24,13 +24,14 @@ export interface VerificarClienteResponse {
 }
 
 export interface AperturarCuentaRequest {
+  tipoCliente: string;
   idSolicitud: number;
   tipoDeposito: string;
   valorDeposito: number;
   codigoCheque?: string;
   numeroCheque?: string;
-  idUsuario?: number;    // ← NUEVO: Cajero que realiza
-  idCaja?: number;      // ← NUEVO: Caja asignada
+  idUsuario?: number;    
+  idCaja?: number;      
 }
 
 export interface AperturarCuentaResponse {

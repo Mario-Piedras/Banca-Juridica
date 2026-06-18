@@ -863,3 +863,16 @@ ADD CONSTRAINT `solicitudes_apertura_ibfk_1`
 ALTER TABLE `defaultdb`.`info_empresas` 
 ADD UNIQUE INDEX `nit_UNIQUE` (`nit` ASC) VISIBLE;
 ;
+
+ALTER TABLE `defaultdb`.`cuentas_ahorro` 
+DROP FOREIGN KEY `fk_cta_cliente`;
+ALTER TABLE `defaultdb`.`cuentas_ahorro` 
+CHANGE COLUMN `id_cliente` `id_cliente` INT NULL ;
+ALTER TABLE `defaultdb`.`cuentas_ahorro` 
+ADD CONSTRAINT `fk_cta_cliente`
+  FOREIGN KEY (`id_cliente`)
+  REFERENCES `defaultdb`.`clientes` (`id_cliente`);
+
+ALTER TABLE `defaultdb`.`cuentas_ahorro` 
+ADD UNIQUE INDEX `id_solicitud_UNIQUE` (`id_solicitud` ASC) VISIBLE;
+;

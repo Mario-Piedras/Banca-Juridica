@@ -478,7 +478,7 @@ DROP TABLE IF EXISTS `defaultdb`.`cuentas_ahorro` ;
 CREATE TABLE IF NOT EXISTS `defaultdb`.`cuentas_ahorro` (
   `id_cuenta` INT NOT NULL AUTO_INCREMENT,
   `numero_cuenta` VARCHAR(20) NOT NULL,
-  `id_cliente` INT NOT NULL,
+  `id_cliente` INT NULL DEFAULT NULL,
   `id_solicitud` INT NULL DEFAULT NULL,
   `saldo` DECIMAL(15,2) NOT NULL DEFAULT '0.00',
   `estado_cuenta` ENUM('Activa', 'Inactiva', 'Bloqueada', 'Cerrada') NOT NULL DEFAULT 'Activa',
