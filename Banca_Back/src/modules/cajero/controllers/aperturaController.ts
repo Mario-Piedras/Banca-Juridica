@@ -6,24 +6,61 @@ const aperturaService = new AperturaService();
 export class AperturaController {
   async verificarCliente(req: Request, res: Response) {
     try {
-      const { tipoDocumento, numeroDocumento } = req.body;
 
+      const {
+        tipoCliente,
+        tipoDocumento,
+        numeroDocumento,
+        nit
+      } = req.body;
+
+      // PERSONA JURÍDICA
+      if (tipoCliente === 'Juridica') {
+
+        if (!nit) {
+          return res.status(400).json({
+            exito: false,
+            mensaje: 'El NIT es requerido'
+          });
+        }
+
+        const resultado =
+          await aperturaService.verificarClienteJuridico(nit);
+
+        return res.json(resultado);
+
+      }
+
+      // PERSONA NATURAL
       if (!tipoDocumento || !numeroDocumento) {
         return res.status(400).json({
           exito: false,
-          mensaje: 'Tipo y número de documento son requeridos'
+          mensaje:
+            'Tipo y número de documento son requeridos'
         });
       }
 
-      const resultado = await aperturaService.verificarCliente(tipoDocumento, numeroDocumento);
+      const resultado =
+        await aperturaService.verificarCliente(
+          tipoDocumento,
+          numeroDocumento
+        );
+
       return res.json(resultado);
 
     } catch (error) {
-      console.error('Error en verificarCliente:', error);
+
+      console.error(
+        'Error en verificarCliente:',
+        error
+      );
+
       return res.status(500).json({
         exito: false,
-        mensaje: 'Error al verificar cliente'
+        mensaje:
+          'Error al verificar cliente'
       });
+
     }
   }
 
