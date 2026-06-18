@@ -49,36 +49,51 @@
 
     <!-- Pestaña 1: Información general -->
     <div *ngIf="pestanaActiva === 'informacion-general'">
-      <app-info-general [datosIniciales]="empresaData.infoGeneral" (formChange)="actualizarDatos('infoGeneral', $event)"
-        (nextTab)="manejarNextTab()" (saved)="abrirModalGuardado($event)"></app-info-general>
+      <app-info-general [datosIniciales]="datosIniciales.infoGeneral"
+        (formChange)="actualizarDatos('infoGeneral', $event)" (nextTab)="manejarNextTab()"
+        (saved)="abrirModalGuardado($event)"></app-info-general>
     </div>
 
     <!-- Pestaña 2: Representante legal -->
     <div *ngIf="pestanaActiva === 'representante-legal'">
-      <app-representante-legal [datosIniciales]="empresaData.representanteLegal"
+      <app-representante-legal [datosIniciales]="datosIniciales.representanteLegal"
         (formChange)="actualizarDatos('representanteLegal', $event)" (nextTab)="manejarNextTab()"
         (saved)="abrirModalGuardado($event)" (prevTab)="manejarPrevTab()"></app-representante-legal>
     </div>
 
     <!-- Pestaña 3: Naturaleza y tipo de entidad -->
     <div *ngIf="pestanaActiva === 'naturaleza-tipo'">
-      <app-naturaleza-tipo [datosIniciales]="empresaData.naturalezaEntidad"
+      <app-naturaleza-tipo [datosIniciales]="datosIniciales.naturalezaEntidad"
         (formChange)="actualizarDatos('naturalezaEntidad', $event)" (nextTab)="manejarNextTab()"
         (saved)="abrirModalGuardado($event)" (prevTab)="manejarPrevTab()"></app-naturaleza-tipo>
     </div>
 
     <!-- Pestaña 4: Información financiera y tributaria -->
     <div *ngIf="pestanaActiva === 'info-fintrib'">
-      <app-info-fintrib [datosIniciales]="empresaData.infoFinancieraTributaria"
+      <app-info-fintrib [datosIniciales]="datosIniciales.infoFinancieraTributaria"
         (formChange)="actualizarDatos('infoFinancieraTributaria', $event)" (nextTab)="manejarNextTab()"
         (saved)="abrirModalGuardado($event)" (prevTab)="manejarPrevTab()"></app-info-fintrib>
     </div>
 
     <!-- Pestaña 5: Origen de bienes y asociados -->
     <div *ngIf="pestanaActiva === 'origenbienes-infosocios'">
-      <app-origenbienes-infosocios [datosIniciales]="empresaData.declaracionBienesInfoSocios"
+      <app-origenbienes-infosocios [datosIniciales]="datosIniciales.declaracionBienesInfoSocios"
         (formChange)="actualizarDatos('declaracionBienesInfoSocios', $event)" (nextTab)="manejarNextTab()"
         (saved)="abrirModalGuardado($event)" (prevTab)="manejarPrevTab()"></app-origenbienes-infosocios>
+    </div>
+
+    <!-- Botones solo para edición -->
+    <div *ngIf="modo === 'editar'" class="text-center mt-8">
+      <!-- Botón de actualizar cliente -->
+      <button (click)="registrarCliente()" [disabled]="!datosCompletos()"
+        class="px-8 py-3 bg-blue-600 hover:bg-blue-700 cursor-pointer text-white font-semibold rounded-lg shadow-md transition-all disabled:bg-gray-300">
+        Actualizar Cliente
+      </button>
+      <!-- Botón para cancelar edición -->
+      <button (click)="cancelarEdicion()"
+        class="ml-4 px-6 py-3 bg-gray-300 hover:bg-gray-400 cursor-pointer text-gray-800 font-medium rounded-lg transition-colors">
+        Cancelar
+      </button>
     </div>
 
     <app-confirm-modal [visible]="confirmVisible" [title]="confirmTitle" [message]="confirmMessage" [type]="confirmType"

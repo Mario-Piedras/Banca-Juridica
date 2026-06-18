@@ -206,7 +206,7 @@ export class RegistrarClienteJuridicoComponent implements OnInit {
     }
 
     const payload = {
-      ...this.empresaData.infoGeneral,
+      infoGeneral: this.empresaData.infoGeneral,
       representanteLegal: this.empresaData.representanteLegal,
       naturalezaEntidad: this.empresaData.naturalezaEntidad,
       infoFinancieraTributaria: this.empresaData.infoFinancieraTributaria,
