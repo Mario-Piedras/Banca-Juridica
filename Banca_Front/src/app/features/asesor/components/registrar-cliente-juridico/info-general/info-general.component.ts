@@ -37,7 +37,7 @@ export class InformacionGeneralComponent implements OnInit, OnChanges {
       nombre_corto: ['', [
         Validators.required,
         Validators.minLength(3),
-        Validators.maxLength(10),
+        Validators.maxLength(20),
         Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
       ]],
       fecha_constitución: ['', [

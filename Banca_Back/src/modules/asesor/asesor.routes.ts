@@ -86,6 +86,7 @@ router.put('/actualizar-cliente/:id', (req, res) =>
   clienteController.actualizarCliente(req, res)
 );
 
+// Obtener empresa completa por ID
 router.get('/empresa-id/:id', (req, res) =>
   clienteController.obtenerEmpresaPorId(req, res)
 );

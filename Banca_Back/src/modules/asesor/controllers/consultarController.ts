@@ -1,4 +1,3 @@
-// src/modules/asesor/controllers/consultarController.ts
 import { Request, Response } from 'express';
 import { ClienteService } from '../services/consultarService';
 import { RegistrarClienteService } from '../services/registrarClienteService'; // ← AGREGAR
@@ -426,8 +425,9 @@ export class ClienteController {
 
       const payload = req.body;
 
-      await pool.beginTransaction();
+      const connection = await pool.getConnection();
       try {
+        await connection.beginTransaction();
         // 1) info_empresas: actualizar columnas principales que use el formulario
         const infoGeneral = payload?.infoGeneral || {};
 
@@ -471,8 +471,8 @@ export class ClienteController {
         const [empresaFKRows]: any = await pool.query(
           `
   SELECT
-      id_info_repre_legal,
-      id_cont_entidad
+    id_info_repre_legal,
+    id_cont_entidad
   FROM info_empresas
   WHERE id_info_empresas = ?
   LIMIT 1
@@ -486,11 +486,12 @@ export class ClienteController {
         const idContactoEntidad =
           empresaFKRows?.[0]?.id_cont_entidad;
 
-        const representantePayload =
-          payload?.representanteLegal?.representanteLegal;
+        // Estructura que devuelve obtenerEmpresaPorId()
+        const representantes =
+          payload?.representanteLegal?.representantes || [];
 
-        const contactoPayload =
-          payload?.representanteLegal?.contactoEntidad;
+        const representantePayload = representantes[0] || null;
+        const contactoPayload = representantes[1] || null;
 
         if (idRepresentanteLegal && representantePayload) {
           await pool.query(
@@ -581,32 +582,55 @@ export class ClienteController {
         }
 
         // 3) naturalezaEntidad / tipo_entidad
-        const naturalezaEntidad = payload?.naturalezaEntidad || {};
-        if (naturalezaEntidad?.naturaleza != null) {
-          // Encontrar id_tipo_entidad por naturaleza
-          const [tipoEntidadRows]: any = await pool.query(
-            `
+
+        const naturalezaEntidad =
+          payload?.naturalezaEntidad || {};
+
+        const [tipoEntidadRows]: any = await pool.query(
+          `
   SELECT id_tipo_entidad
   FROM info_empresas
   WHERE id_info_empresas = ?
   LIMIT 1
   `,
-            [idEmpresa]
-          );
+          [idEmpresa]
+        );
 
-          const idTipoEntidad =
-            tipoEntidadRows?.[0]?.id_tipo_entidad;
+        const idTipoEntidad =
+          tipoEntidadRows?.[0]?.id_tipo_entidad;
 
-          if (idTipoEntidad) {
-            await pool.query(
-              `
+        if (idTipoEntidad) {
+          await pool.query(
+            `
     UPDATE tipo_entidad SET
-      naturaleza = ?
+      naturaleza = ?,
+      codigo_ciiu = ?,
+      actividad_economia = ?,
+      num_empleados = ?,
+      tipo_sociedad = ?,
+      otra_sociedad = ?,
+      tipo_asociacion = ?,
+      otra_asociacion = ?,
+      ent_estatal = ?,
+      otra_ent_estatal = ?,
+      ent_estatal_descentralizada = ?
     WHERE id_tipo_entidad = ?
     `,
-              [naturalezaEntidad.naturaleza, idTipoEntidad]
-            );
-          }
+            [
+              naturalezaEntidad.naturaleza,
+              naturalezaEntidad.codigo_ciiu,
+              naturalezaEntidad.actividad_economia,
+              naturalezaEntidad.num_empleados,
+              naturalezaEntidad.tipo_sociedad,
+              naturalezaEntidad.otra_sociedad,
+              naturalezaEntidad.tipo_asociacion,
+              naturalezaEntidad.otra_asociacion,
+              naturalezaEntidad.ent_estatal,
+              naturalezaEntidad.otra_ent_estatal,
+              naturalezaEntidad.ent_estatal_descentralizada,
+              idTipoEntidad
+            ]
+          );
         }
 
         // 4) infoFinancieraTributaria: actualizar info_financiera_emp + info_tributaria + países
@@ -740,10 +764,10 @@ export class ClienteController {
           );
         }
 
-        await pool.commit();
+        await connection.commit();
         return res.json({ success: true, message: 'Empresa actualizada correctamente', idEmpresa });
       } catch (err: any) {
-        await pool.rollback();
+        await connection.rollback();
         return res.status(500).json({ success: false, message: err.message || 'Error al actualizar empresa' });
       }
     } catch (error: any) {

@@ -38,7 +38,7 @@
           <label class="block text-sm font-medium text-gray-700 mb-2">
             Nombre corto o sigla <span class="text-red-500">*</span>
           </label>
-          <input id="nombre_corto" type="text" formControlName="nombre_corto" maxlength="10"
+          <input id="nombre_corto" type="text" formControlName="nombre_corto" maxlength="20"
             pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]*" (keypress)="soloLetras($event)" class="input-field"
             placeholder="Ej: Placeholder">
           <div class="text-red-500 text-xs mt-1"

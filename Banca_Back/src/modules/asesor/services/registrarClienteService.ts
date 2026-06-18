@@ -84,7 +84,7 @@ export class RegistrarClienteService {
       );
       // como la base de datos usa 'Sí'/'No' en vez de booleanos esta linea hace la conversion
       const factaCrsEconomica = (data.actividad?.factaCrs ?? false) ? 'Sí' : 'No';
-       // === ⚠️ 3. Insertar actividad económica (faltante totalmente) ===
+      // === ⚠️ 3. Insertar actividad económica (faltante totalmente) ===
       await connection.execute(
         `
         INSERT INTO actividad_economica (
@@ -142,7 +142,7 @@ export class RegistrarClienteService {
           idCliente,
         ]
       );
-  
+
       const esResidente = (data.facta?.esResidenteExtranjero ?? false) ? 'Sí' : 'No';
       // === 4. Insertar FACTA/CRS ===
       await connection.execute(
@@ -150,7 +150,7 @@ export class RegistrarClienteService {
         INSERT INTO Facta_Crs (id_cliente, es_residente_extranjero, pais)
         VALUES (?, ?, ?)
         `,
-        [idCliente,esResidente, data.facta?.pais]
+        [idCliente, esResidente, data.facta?.pais]
       );
 
       await connection.commit();
@@ -268,11 +268,11 @@ export class RegistrarClienteService {
 
         // Información financiera
         financiera: financieraRows.length > 0 ? {
-          ingresosMensuales: financieraRows[0].ingresos_mensuales,
-          egresosMensuales: financieraRows[0].egresos_mensuales,
-          totalActivos: financieraRows[0].total_activos,
-          totalPasivos: financieraRows[0].total_pasivos
-        } : undefined ,// ← CAMBIAR de null a undefined,
+          ingresosMensuales: Number(financieraRows[0].ingresos_mensuales),
+          egresosMensuales: Number(financieraRows[0].egresos_mensuales),
+          totalActivos: Number(financieraRows[0].total_activos),
+          totalPasivos: Number(financieraRows[0].total_pasivos)
+        } : undefined,// ← CAMBIAR de null a undefined,
 
         // FACTA/CRS
         facta: factaRows.length > 0 ? {
@@ -298,151 +298,151 @@ export class RegistrarClienteService {
       await connection.beginTransaction();
 
       // 🧹 LIMPIEZA DE DATOS (versión tipada)
-    const cleanData: any = { ...data };
-    
-    // Limpiar datos principales
-    Object.keys(cleanData).forEach(key => {
-      if (cleanData[key] === undefined) {
-        cleanData[key] = null;
-      }
-    });
+      const cleanData: any = { ...data };
 
-    // Limpiar subobjetos
-    const secciones = ['contacto', 'actividad', 'laboral', 'financiera', 'facta'];
-    secciones.forEach(seccion => {
-      if (cleanData[seccion]) {
-        Object.keys(cleanData[seccion]).forEach(key => {
-          if (cleanData[seccion][key] === undefined) {
-            cleanData[seccion][key] = null;
-          }
-        });
-      }
-    });
+      // Limpiar datos principales
+      Object.keys(cleanData).forEach(key => {
+        if (cleanData[key] === undefined) {
+          cleanData[key] = null;
+        }
+      });
+
+      // Limpiar subobjetos
+      const secciones = ['contacto', 'actividad', 'laboral', 'financiera', 'facta'];
+      secciones.forEach(seccion => {
+        if (cleanData[seccion]) {
+          Object.keys(cleanData[seccion]).forEach(key => {
+            if (cleanData[seccion][key] === undefined) {
+              cleanData[seccion][key] = null;
+            }
+          });
+        }
+      });
 
       console.log('🔄 Actualizando cliente ID:', idCliente);
 
-    // === 1. Actualizar tabla clientes ===
-    await connection.execute(
-      `UPDATE clientes SET
+      // === 1. Actualizar tabla clientes ===
+      await connection.execute(
+        `UPDATE clientes SET
         tipo_documento = ?, lugar_expedicion = ?, ciudad_nacimiento = ?,
         fecha_nacimiento = ?, fecha_expedicion = ?, primer_nombre = ?,
         segundo_nombre = ?, primer_apellido = ?, segundo_apellido = ?,
         genero = ?, nacionalidad = ?, otra_nacionalidad = ?, estado_civil = ?,
         grupo_etnico = ?
       WHERE id_cliente = ?`,
-      [
-        cleanData.tipoDocumento,
-        cleanData.lugarExpedicion,
-        cleanData.ciudadNacimiento,
-        cleanData.fechaNacimiento,
-        cleanData.fechaExpedicion,
-        cleanData.primerNombre,
-        cleanData.segundoNombre,
-        cleanData.primerApellido,
-        cleanData.segundoApellido,
-        cleanData.genero,
-        cleanData.nacionalidad,
-        cleanData.otraNacionalidad,
-        cleanData.estadoCivil,
-        cleanData.grupoEtnico,
-        idCliente
-      ]
-    );
+        [
+          cleanData.tipoDocumento,
+          cleanData.lugarExpedicion,
+          cleanData.ciudadNacimiento,
+          cleanData.fechaNacimiento,
+          cleanData.fechaExpedicion,
+          cleanData.primerNombre,
+          cleanData.segundoNombre,
+          cleanData.primerApellido,
+          cleanData.segundoApellido,
+          cleanData.genero,
+          cleanData.nacionalidad,
+          cleanData.otraNacionalidad,
+          cleanData.estadoCivil,
+          cleanData.grupoEtnico,
+          idCliente
+        ]
+      );
 
-    // === 2. Actualizar contacto personal ===
-    await connection.execute(
-      `UPDATE contacto_personal SET
+      // === 2. Actualizar contacto personal ===
+      await connection.execute(
+        `UPDATE contacto_personal SET
         direccion = ?, barrio = ?, departamento = ?, telefono = ?,
         ciudad = ?, pais = ?, correo = ?, bloque_torre = ?, apto_casa = ?
       WHERE id_cliente = ?`,
-      [
-        cleanData.contacto?.direccion,
-        cleanData.contacto?.barrio,
-        cleanData.contacto?.departamento,
-        cleanData.contacto?.telefono,
-        cleanData.contacto?.ciudad,
-        cleanData.contacto?.pais,
-        cleanData.contacto?.correo,
-        cleanData.contacto?.bloqueTorre,
-        cleanData.contacto?.aptoCasa,
-        idCliente
-      ]
-    );
+        [
+          cleanData.contacto?.direccion,
+          cleanData.contacto?.barrio,
+          cleanData.contacto?.departamento,
+          cleanData.contacto?.telefono,
+          cleanData.contacto?.ciudad,
+          cleanData.contacto?.pais,
+          cleanData.contacto?.correo,
+          cleanData.contacto?.bloqueTorre,
+          cleanData.contacto?.aptoCasa,
+          idCliente
+        ]
+      );
 
-    // === 3. Actualizar actividad económica ===
-    const factaCrsEconomica = cleanData.actividad?.factaCrs ? 'Sí' : 'No';
-    await connection.execute(
-      `UPDATE actividad_economica SET
+      // === 3. Actualizar actividad económica ===
+      const factaCrsEconomica = cleanData.actividad?.factaCrs ? 'Sí' : 'No';
+      await connection.execute(
+        `UPDATE actividad_economica SET
         profesion = ?, ocupacion = ?, codigo_CIIU = ?, detalle_actividad = ?,
         numero_empleados = ?, Facta_Crs = ?
       WHERE id_cliente = ?`,
-      [
-        cleanData.actividad?.profesion,
-        cleanData.actividad?.ocupacion,
-        cleanData.actividad?.codigoCiiu,
-        cleanData.actividad?.detalleActividad,
-        cleanData.actividad?.numeroEmpleados,
-        factaCrsEconomica,
-        idCliente
-      ]
-    );
+        [
+          cleanData.actividad?.profesion,
+          cleanData.actividad?.ocupacion,
+          cleanData.actividad?.codigoCiiu,
+          cleanData.actividad?.detalleActividad,
+          cleanData.actividad?.numeroEmpleados,
+          factaCrsEconomica,
+          idCliente
+        ]
+      );
 
-    // === 4. Actualizar información laboral ===
-    await connection.execute(
-      `UPDATE info_laboral SET
+      // === 4. Actualizar información laboral ===
+      await connection.execute(
+        `UPDATE info_laboral SET
         nombre_empresa = ?, direccion_empresa = ?, pais_empresa = ?,
         departamento_empresa = ?, ciudad_empresa = ?, telefono_empresa = ?,
         ext = ?, celular_empresa = ?, correo_laboral = ?
       WHERE id_cliente = ?`,
-      [
-        cleanData.laboral?.nombreEmpresa,
-        cleanData.laboral?.direccionEmpresa,
-        cleanData.laboral?.paisEmpresa,
-        cleanData.laboral?.departamentoEmpresa,
-        cleanData.laboral?.ciudadEmpresa,
-        cleanData.laboral?.telefonoEmpresa,
-        cleanData.laboral?.ext,
-        cleanData.laboral?.celularEmpresa,
-        cleanData.laboral?.correoLaboral,
-        idCliente
-      ]
-    );
+        [
+          cleanData.laboral?.nombreEmpresa,
+          cleanData.laboral?.direccionEmpresa,
+          cleanData.laboral?.paisEmpresa,
+          cleanData.laboral?.departamentoEmpresa,
+          cleanData.laboral?.ciudadEmpresa,
+          cleanData.laboral?.telefonoEmpresa,
+          cleanData.laboral?.ext,
+          cleanData.laboral?.celularEmpresa,
+          cleanData.laboral?.correoLaboral,
+          idCliente
+        ]
+      );
 
-    // === 5. Actualizar información financiera ===
-    await connection.execute(
-      `UPDATE info_financiera SET
+      // === 5. Actualizar información financiera ===
+      await connection.execute(
+        `UPDATE info_financiera SET
         ingresos_mensuales = ?, egresos_mensuales = ?,
         total_activos = ?, total_pasivos = ?
       WHERE id_cliente = ?`,
-      [
-        cleanData.financiera?.ingresosMensuales,
-        cleanData.financiera?.egresosMensuales,
-        cleanData.financiera?.totalActivos,
-        cleanData.financiera?.totalPasivos,
-        idCliente
-      ]
-    );
+        [
+          cleanData.financiera?.ingresosMensuales,
+          cleanData.financiera?.egresosMensuales,
+          cleanData.financiera?.totalActivos,
+          cleanData.financiera?.totalPasivos,
+          idCliente
+        ]
+      );
 
-    // === 6. Actualizar FACTA/CRS ===
-    const esResidente = cleanData.facta?.esResidenteExtranjero ? 'Sí' : 'No';
-    await connection.execute(
-      `UPDATE Facta_Crs SET
+      // === 6. Actualizar FACTA/CRS ===
+      const esResidente = cleanData.facta?.esResidenteExtranjero ? 'Sí' : 'No';
+      await connection.execute(
+        `UPDATE Facta_Crs SET
         es_residente_extranjero = ?, pais = ?
       WHERE id_cliente = ?`,
-      [esResidente, cleanData.facta?.pais, idCliente]
-    );
+        [esResidente, cleanData.facta?.pais, idCliente]
+      );
 
-    await connection.commit();
+      await connection.commit();
 
-    return { success: true, message: 'Cliente actualizado correctamente', idCliente };
+      return { success: true, message: 'Cliente actualizado correctamente', idCliente };
 
-  } catch (error) {
-    await connection.rollback();
-    console.error('Error al actualizar cliente:', error);
-    throw new Error('Error al actualizar cliente');
-  } finally {
-    connection.release();
-  }
+    } catch (error) {
+      await connection.rollback();
+      console.error('Error al actualizar cliente:', error);
+      throw new Error('Error al actualizar cliente');
+    } finally {
+      connection.release();
+    }
   }
 
 }

@@ -126,11 +126,13 @@ export class RepresentanteLegalComponent implements OnInit, OnChanges {
   }
 
   private cargandoEdicion = false;
+  private inicializado = false;
 
   private cargarRepresentantes(data: any) {
     this.cargandoEdicion = true;
     this.representantes.clear();
-    if (data.representantes) {
+
+    if (data?.representantes?.length) {
       data.representantes.forEach((rep: any) => {
         const grupo = this.crearRepresentante();
         grupo.patchValue(rep, {
@@ -141,32 +143,29 @@ export class RepresentanteLegalComponent implements OnInit, OnChanges {
     }
 
     this.form.patchValue(
-      {
-        contacto_adicional: data.contacto_adicional
-      },
-      {
-        emitEvent: false
-      }
+      { contacto_adicional: data?.contacto_adicional ?? 'No' },
+      { emitEvent: false }
     );
 
     this.cargandoEdicion = false;
-    console.log(
-      'Representantes:',
-      this.representantes.length
-    );
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (
-      changes['datosIniciales']?.currentValue
-    ) {
-      console.log(
-        '📥 Datos recibidos para edición:',
-        changes['datosIniciales'].currentValue
-      );
-      this.cargarRepresentantes(
-        changes['datosIniciales'].currentValue
-      );
+    const cambio = changes['datosIniciales'];
+    if (!cambio) return;
+
+    // Solo recargar cuando lleguen datos del backend (primera carga / primer cambio)
+    // Esto evita que el cursor pierda foco por reconstrucción del FormArray en cada tecla.
+    if (cambio.firstChange && cambio.currentValue) {
+      this.cargarRepresentantes(cambio.currentValue);
+      this.inicializado = true;
+      return;
+    }
+
+    // Si se empieza con datos vacíos y luego llegan, también permitir una sola vez.
+    if (!this.inicializado && cambio.currentValue) {
+      this.cargarRepresentantes(cambio.currentValue);
+      this.inicializado = true;
     }
   }
 
@@ -178,13 +177,10 @@ export class RepresentanteLegalComponent implements OnInit, OnChanges {
 
     // Emitir cambios del formulario
     this.form.valueChanges.subscribe(valores => {
-
       if (this.cargandoEdicion) {
         return;
       }
-
       this.formChange.emit(valores);
-
     });
 
     // Informa los cambios del formulario en la consola
@@ -193,7 +189,6 @@ export class RepresentanteLegalComponent implements OnInit, OnChanges {
 
       Object.keys(this.form.controls).forEach(key => {
         const control = this.form.get(key);
-
         if (control?.invalid) {
           console.log(key, control.errors);
         }
@@ -202,35 +197,25 @@ export class RepresentanteLegalComponent implements OnInit, OnChanges {
 
     // Tipo documentos
     this.representantes.controls.forEach((rep: any) => {
-
       rep.get('tipo_documento')?.valueChanges.subscribe((tipo: string) => {
-
         const numDocumento = rep.get('num_documento');
-
         if (tipo === 'Pasaporte') {
-
           numDocumento?.setValidators([
             Validators.required,
             Validators.minLength(6),
             Validators.maxLength(12),
             Validators.pattern(/^[a-zA-Z0-9]+$/)
           ]);
-
         } else {
-
           numDocumento?.setValidators([
             Validators.required,
             Validators.minLength(6),
             Validators.maxLength(11),
             Validators.pattern(/^[0-9]+$/)
           ]);
-
         }
-
         numDocumento?.updateValueAndValidity();
-
       });
-
     });
 
     // Crear representante principal
@@ -245,7 +230,6 @@ export class RepresentanteLegalComponent implements OnInit, OnChanges {
       if (this.cargandoEdicion) {
         return;
       }
-
       if (
         valor === 'Sí' &&
         this.representantes.length === 1
@@ -261,9 +245,7 @@ export class RepresentanteLegalComponent implements OnInit, OnChanges {
       ) {
         this.representantes.removeAt(1);
       }
-
     });
-
   }
 
   // Botón de guardar formulario
@@ -293,7 +275,6 @@ export class RepresentanteLegalComponent implements OnInit, OnChanges {
           alert('Error al guardar en la base de datos');
         }
       });
-
   }
 
   // Botón de volver al formulario anterior
@@ -373,10 +354,7 @@ export class RepresentanteLegalComponent implements OnInit, OnChanges {
 
   // Valida el tipo de documento
   validarDocumento(event: KeyboardEvent, representante: any) {
-
-    const tipoDocumento =
-      representante.get('tipo_documento')?.value;
-
+    const tipoDocumento = representante.get('tipo_documento')?.value;
     const inputChar = event.key;
 
     // Permitir teclas especiales
@@ -392,13 +370,10 @@ export class RepresentanteLegalComponent implements OnInit, OnChanges {
 
     // PASAPORTE → alfanumérico
     if (tipoDocumento === 'Pasaporte') {
-
       const pattern = /^[a-zA-Z0-9]$/;
-
       if (!pattern.test(inputChar)) {
         event.preventDefault();
       }
-
       return;
     }
 
