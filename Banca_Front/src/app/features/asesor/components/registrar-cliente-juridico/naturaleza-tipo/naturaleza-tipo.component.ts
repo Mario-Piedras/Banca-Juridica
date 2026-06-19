@@ -14,6 +14,7 @@ import { HttpClient } from '@angular/common/http';
   ]
 })
 export class NaturalezaEntidadComponent implements OnInit, OnChanges {
+  @Input() modo: 'nuevo' | 'editar' = 'nuevo';
   @Input() datosIniciales: any;
   @Output() formChange = new EventEmitter();
   @Output() prevTab = new EventEmitter<void>();

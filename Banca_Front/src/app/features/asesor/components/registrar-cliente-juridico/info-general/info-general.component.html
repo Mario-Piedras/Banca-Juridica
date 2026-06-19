@@ -212,7 +212,7 @@
     </div>
 
     <!-- Botón Guardar -->
-    <div class="form-button-display">
+    <div class="form-button-display" *ngIf="modo !== 'editar'">
       <button type="button" (click)="guardarSeccion()" [disabled]="form.invalid" class="form-btn">
         Guardar y continuar
       </button>

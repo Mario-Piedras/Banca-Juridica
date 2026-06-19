@@ -20,6 +20,7 @@ interface PaisTributar {
   ]
 })
 export class InformacionFinancieraTributariaComponent implements OnInit, OnChanges {
+  @Input() modo: 'nuevo' | 'editar' = 'nuevo';
   @Input() datosIniciales: any;
   @Output() formChange = new EventEmitter();
   @Output() prevTab = new EventEmitter<void>();

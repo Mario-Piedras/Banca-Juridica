@@ -16,6 +16,7 @@ import { switchMap } from 'rxjs';
   ]
 })
 export class DeclaracionBienesInfoSociosComponent implements OnInit, OnChanges {
+  @Input() modo: 'nuevo' | 'editar' = 'nuevo';
   @Input() datosIniciales: any;
   @Output() formChange = new EventEmitter();
   @Output() prevTab = new EventEmitter<void>();

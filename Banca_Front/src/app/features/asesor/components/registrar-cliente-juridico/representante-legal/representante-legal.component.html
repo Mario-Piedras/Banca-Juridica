@@ -277,7 +277,7 @@
     </fieldset>
 
     <!-- Botones -->
-    <div class="form-buttons-display">
+    <div class="form-buttons-display" *ngIf="modo !== 'editar'">
       <button type="button" (click)="volver()" class="form-btn">Volver a la página anterior</button>
       <button type="button" (click)="guardarSeccion()" [disabled]="form.invalid" class="form-btn">
         Guardar y continuar
