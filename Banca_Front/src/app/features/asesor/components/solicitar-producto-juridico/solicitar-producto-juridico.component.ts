@@ -9,7 +9,7 @@ import { AuthService } from '../../../../core/services/auth.service';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './solicitar-producto-juridico.component.html',
-  styleUrl: './solicitar-producto-juridico.component.css'
+  styleUrl: '../solicitar-producto/solicitar-producto.component.css'
 })
 export class SolicitarProductoJuridicoComponent implements OnInit {
   nit: string = '';
