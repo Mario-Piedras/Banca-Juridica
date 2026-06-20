@@ -65,11 +65,6 @@ export class CancelacionCuentaComponent {
             saldoDisponible: `$${response.datos.saldo.toLocaleString('es-CO')}`
           });
 
-          // Validar saldo
-          if (response.datos.saldo !== 0) {
-            alert(`⚠️ ADVERTENCIA\n\nLa cuenta tiene saldo: $${response.datos.saldo.toLocaleString('es-CO')}\n\nPara cancelar la cuenta, el saldo debe ser $0.\nRealice retiros o transferencias hasta dejar el saldo en cero.`);
-          }
-
           alert(response.mensaje);
         } else {
           alert(response.mensaje);

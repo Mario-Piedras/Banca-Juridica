@@ -377,6 +377,7 @@ export interface BuscarCuentaResponse {
     estadoCuenta: string;
     idCuenta: number;
     idCliente: number;
+    tipoCuenta: string;
   };
 }
 
@@ -469,6 +470,7 @@ export interface CancelarCuentaResponse {
     numeroCuenta: string;
     titular: string;
     numeroDocumento: string;
+    tipoCuenta: string;
     saldoFinal: number;
     motivoCancelacion: string;
     fechaCancelacion: Date;

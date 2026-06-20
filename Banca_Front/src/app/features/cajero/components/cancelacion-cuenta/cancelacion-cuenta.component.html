@@ -8,7 +8,8 @@
 
     <div class="p-4 md:p-6">
       <!-- Grid responsive: 1 columna en móvil, 2 en tablet+ -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 mb-3 md:mb-4">
+      <div *ngIf="cuentaEncontrada"
+        class="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 mb-3 md:mb-4">
         <div>
           <p class="text-xs md:text-sm text-gray-600">ID de Cuenta:</p>
           <p class="text-base md:text-lg font-bold text-blue-900">{{ datosComprobante.idCuenta }}</p>
@@ -107,7 +108,8 @@
         </div>
 
         <!-- Grid responsive: Titular y Documento lado a lado -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 mb-3 md:mb-4">
+        <div *ngIf="cuentaEncontrada"
+          class="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 mb-3 md:mb-4">
           <!-- Titular (readonly) -->
           <div>
             <label class="block text-xs md:text-sm font-medium text-gray-700 mb-1">
@@ -130,7 +132,7 @@
         </div>
 
         <!-- Saldo Disponible (readonly) -->
-        <div class="mb-3 md:mb-4">
+        <div *ngIf="cuentaEncontrada" class="mb-3 md:mb-4">
           <label class="block text-xs md:text-sm font-medium text-gray-700 mb-1">
             Saldo Disponible
           </label>
@@ -140,7 +142,7 @@
         </div>
 
         <!-- Motivo de Cancelación (opcional) -->
-        <div class="mb-3 md:mb-4">
+        <div *ngIf="cuentaEncontrada" class="mb-3 md:mb-4">
           <label class="block text-xs md:text-sm font-medium text-gray-700 mb-1">
             Motivo de Cancelación
           </label>
