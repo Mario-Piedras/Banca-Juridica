@@ -43,7 +43,7 @@ export class InfofinancieraController {
                 ingresos_op: body.ingresos_op,
                 ingresos_no_op: body.ingresos_no_op,
                 detalle_ingresos: body.detalle_ingresos,
-                ventas_anuales: body.ventas_anuales,
+                ventas_mensuales: body.ventas_mensuales,
                 fecha_cierre_ventas: body.fecha_cierre_ventas,
                 egresos_mensuales: body.egresos_mensuales,
                 utilidad_neta: body.utilidad_neta,

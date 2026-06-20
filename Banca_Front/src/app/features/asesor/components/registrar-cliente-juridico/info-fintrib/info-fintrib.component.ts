@@ -51,7 +51,7 @@ export class InformacionFinancieraTributariaComponent implements OnInit, OnChang
         Validators.maxLength(100),
         Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
       ]],
-      ventas_anuales: ['', [
+      ventas_mensuales: ['', [
         Validators.required,
         Validators.min(1),
         Validators.max(9999999999999)
@@ -82,6 +82,7 @@ export class InformacionFinancieraTributariaComponent implements OnInit, OnChang
       ]],
       total_patrimonio: ['', [
         Validators.required,
+        Validators.min(1),
         Validators.max(9999999999999)
       ]],
       // Información tributaria
@@ -135,11 +136,22 @@ export class InformacionFinancieraTributariaComponent implements OnInit, OnChang
       }
     }
 
-    // Calcular patrimonio automáticamente
+    // Obtener las ventas mensuales
+    this.form.get('ventas_mensuales')?.valueChanges.subscribe(() => {
+      this.calcularUtilidadneta();
+    });
+
+    // Obtener los egresos mensuales
+    this.form.get('egresos_mensuales')?.valueChanges.subscribe(() => {
+      this.calcularUtilidadneta();
+    });
+
+    // Obtener el total de activos
     this.form.get('total_activos')?.valueChanges.subscribe(() => {
       this.calcularPatrimonio();
     });
 
+    // Obtener el total de pasivos
     this.form.get('total_pasivos')?.valueChanges.subscribe(() => {
       this.calcularPatrimonio();
     });
@@ -175,6 +187,19 @@ export class InformacionFinancieraTributariaComponent implements OnInit, OnChang
 
   }
 
+  // Restringir fechas posteriores a hoy
+  validarFechaNoFutura() {
+    return (control: any) => {
+      if (!control.value) return null;
+      const fecha = new Date(control.value);
+      const hoy = new Date();
+      hoy.setHours(0, 0, 0, 0); // MEJORA: Ignorar hora
+      fecha.setHours(0, 0, 0, 0);
+      return fecha <= hoy ? null : { fechaFutura: true };
+    };
+  }
+  fechaMaxima = new Date().toISOString().split('T')[0];
+
   // Limpia el localStorage al cerrar o recargar la página
   @HostListener('window:beforeunload')
   limpiarStorage(): void {
@@ -183,7 +208,7 @@ export class InformacionFinancieraTributariaComponent implements OnInit, OnChang
     );
   }
 
-  // 
+  // Convierte valores formateados (ej: "1.000.000") a número entero limpio
   private parseValor(valor: any): number {
     if (valor == null) return 0;
     return Number(
@@ -191,7 +216,7 @@ export class InformacionFinancieraTributariaComponent implements OnInit, OnChang
     );
   }
 
-  // Hace un calculo automatico del total de patrimonio
+  // Hace un cálculo automático del total de patrimonio
   calcularPatrimonio(): void {
     const activos = this.parseValor(this.form.get('total_activos')?.value);
     const pasivos = this.parseValor(this.form.get('total_pasivos')?.value);
@@ -214,12 +239,27 @@ export class InformacionFinancieraTributariaComponent implements OnInit, OnChang
     }
   }
 
-  // Fija el año de cierre de ventas a 2000
-  fijarAnio2000(): void {
-    const control = this.form.get('fecha_cierre_ventas');
-    if (!control?.value) return;
-    const [, mes, dia] = control.value.split('-');
-    control.setValue(`2000-${mes}-${dia}`);
+  // Hace un cálculo automático de la utilidad nta
+  calcularUtilidadneta(): void {
+    const ventas = this.parseValor(this.form.get('ventas_mensuales')?.value);
+    const egresos = this.parseValor(this.form.get('egresos_mensuales')?.value);
+    console.log({ ventas, egresos });
+    const utilidad = ventas - egresos;
+
+    // Guardar valor numérico real
+    this.form.get('utilidad_neta')?.setValue(
+      Math.max(0, utilidad),
+      { emitEvent: false }
+    );
+
+    // Mostrar formato moneda en el input
+    const inputUtilidad =
+      document.getElementById('utilidad_neta') as HTMLInputElement;
+
+    if (inputUtilidad) {
+      inputUtilidad.value =
+        utilidad.toLocaleString('es-CO');
+    }
   }
 
   // Funcion para agregar país de una tabla
@@ -347,7 +387,7 @@ export class InformacionFinancieraTributariaComponent implements OnInit, OnChang
       ingresos_op: formData.ingresos_op,
       ingresos_no_op: formData.ingresos_no_op,
       detalle_ingresos: formData.detalle_ingresos,
-      ventas_anuales: formData.ventas_anuales,
+      ventas_mensuales: formData.ventas_mensuales,
       fecha_cierre_ventas: formData.fecha_cierre_ventas,
       egresos_mensuales: formData.egresos_mensuales,
       utilidad_neta: formData.utilidad_neta,
@@ -431,17 +471,6 @@ export class InformacionFinancieraTributariaComponent implements OnInit, OnChang
     this.prevTab.emit();
   }
 
-  validarFechaNoFutura() {
-    return (control: any) => {
-      if (!control.value) return null;
-      const fecha = new Date(control.value);
-      const hoy = new Date();
-      hoy.setHours(0, 0, 0, 0); // MEJORA: Ignorar hora
-      fecha.setHours(0, 0, 0, 0);
-      return fecha <= hoy ? null : { fechaFutura: true };
-    };
-  }
-
   // Obtener lista de errores del formulario
   obtenerErroresFormulario(): string[] {
     const errores: string[] = [];
@@ -469,8 +498,8 @@ export class InformacionFinancieraTributariaComponent implements OnInit, OnChang
       ingresos_op: 'Ingresos operacionales mensuales',
       ingresos_no_op: 'Ingresos operacionales mensuales',
       detalle_ingresos: 'Detalle de ingresos no operacionales u originados en actividades diferentes a la papel',
-      ventas_anuales: 'Ventas anuales',
-      fecha_cierre_ventas: 'Fecha de cierre de entas',
+      ventas_mensuales: 'Ventas mensuales',
+      fecha_cierre_ventas: 'Fecha de cierre de ventas',
       egresos_mensuales: 'Egresos mensuales',
       utilidad_neta: 'Utilidad neta',
       total_activos: 'Rotal activos',

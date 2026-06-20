@@ -37,6 +37,20 @@
     justify-content: space-between;
 }
 
+.input-readonly-field {
+    background-color: var(--color-gray-100);
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    box-sizing: border-box;
+    cursor: not-allowed;
+}
+
+.input-readonly-field:focus {
+    outline: none;
+}
+
 .trib-otro {
     display: flex;
     gap: 16px;

@@ -69,7 +69,7 @@ VALUES
 	('Compraventa',NULL,'Otra','Ingresos por alianzas estratégicas','Argentina','Buenos Aires','Sí','No');
 
 INSERT INTO info_financiera_emp (
-    ingresos_op,ingresos_no_op,detalle_ingresos,ventas_anuales,fecha_cierre_ventas,
+    ingresos_op,ingresos_no_op,detalle_ingresos,ventas_mensuales,fecha_cierre_ventas,
     egresos_mensuales,utilidad_neta,total_activos,total_pasivos,total_patrimonio)
 VALUES
 -- Registro 1

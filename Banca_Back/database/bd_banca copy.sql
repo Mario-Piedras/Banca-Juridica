@@ -185,7 +185,7 @@ CREATE TABLE IF NOT EXISTS `defaultdb`.`info_financiera_emp` (
   `ingresos_op` DECIMAL(15,2) NULL DEFAULT '0.00',
   `ingresos_no_op` DECIMAL(15,2) NULL DEFAULT '0.00',
   `detalle_ingresos` VARCHAR(100) NULL DEFAULT NULL,
-  `ventas_anuales` DECIMAL(15,2) NULL DEFAULT '0.00',
+  `ventas_mensuales` DECIMAL(15,2) NULL DEFAULT '0.00',
   `fecha_cierre_ventas` DATE NOT NULL,
   `egresos_mensuales` DECIMAL(15,2) NULL DEFAULT '0.00',
   `utilidad_neta` DECIMAL(15,2) NULL DEFAULT '0.00',

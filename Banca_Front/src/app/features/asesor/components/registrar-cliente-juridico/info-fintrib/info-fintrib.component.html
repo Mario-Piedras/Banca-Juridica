@@ -56,17 +56,17 @@
         <!-- Tercera fila -->
         <div class="form-column-finan">
 
-          <!-- Ventas anuales -->
+          <!-- Ventas mensuales -->
           <div class="input-stuff">
             <label class="block text-sm font-medium text-gray-700 mb-2">
-              Ventas anuales <span class="text-red-500">*</span>
+              Ventas mensuales <span class="text-red-500">*</span>
             </label>
-            <input id="ventas_anuales" type="text" (input)="formatearMoneda($event, 'ventas_anuales')"
-              formControlName="ventas_anuales" min="1" (keydown)="bloquearNegativos($event)" class="input-field"
+            <input id="ventas_mensuales" type="text" (input)="formatearMoneda($event, 'ventas_mensuales')"
+              formControlName="ventas_mensuales" min="1" (keydown)="bloquearNegativos($event)" class="input-field"
               placeholder="Ej: $1.000.000.000">
             <div class="text-red-500 text-xs mt-1"
-              *ngIf="form.get('ventas_anuales')?.invalid && form.get('ventas_anuales')?.touched">
-              <span *ngIf="form.get('ventas_anuales')?.errors?.['required']">Campo obligatorio</span>
+              *ngIf="form.get('ventas_mensuales')?.invalid && form.get('ventas_mensuales')?.touched">
+              <span *ngIf="form.get('ventas_mensuales')?.errors?.['required']">Campo obligatorio</span>
             </div>
           </div>
 
@@ -75,7 +75,7 @@
             <label class="block text-sm font-medium text-gray-700 mb-2">
               Fecha de cierre de ventas <span class="text-red-500">*</span>
             </label>
-            <input id="fecha_cierre_ventas" type="date" formControlName="fecha_cierre_ventas" (change)="fijarAnio2000()"
+            <input id="fecha_cierre_ventas" type="date" formControlName="fecha_cierre_ventas" [max]="fechaMaxima"
               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
             <div class="text-red-500 text-xs mt-1"
               *ngIf="form.get('fecha_cierre_ventas')?.invalid && form.get('fecha_cierre_ventas')?.touched">
@@ -103,13 +103,8 @@
             <label class="block text-sm font-medium text-gray-700 mb-2">
               Utilidad neta <span class="text-red-500">*</span>
             </label>
-            <input id="utilidad_neta" type="text" (input)="formatearMoneda($event, 'utilidad_neta')"
-              formControlName="utilidad_neta" min="1" (keydown)="bloquearNegativos($event)" class="input-field"
-              placeholder="Ej: $1.000.000.000">
-            <div class="text-red-500 text-xs mt-1"
-              *ngIf="form.get('utilidad_neta')?.invalid && form.get('utilidad_neta')?.touched">
-              <span *ngIf="form.get('utilidad_neta')?.errors?.['required']">Campo obligatorio</span>
-            </div>
+            <input id="utilidad_neta" type="text" formControlName="utilidad_neta" class="input-readonly-field"
+              readonly placeholder="Ej: $1.000.000.000">
           </div>
 
           <!-- Total activos -->
@@ -147,7 +142,7 @@
           <label class="block text-sm font-medium text-gray-700 mb-2">
             Total patrimonio <span class="text-red-500">*</span>
           </label>
-          <input id="total_patrimonio" type="text" formControlName="total_patrimonio" class="input-field bg-gray-100"
+          <input id="total_patrimonio" type="text" formControlName="total_patrimonio" class="input-readonly-field"
             readonly placeholder="Ej: $1.000.000.000">
         </div>
 
