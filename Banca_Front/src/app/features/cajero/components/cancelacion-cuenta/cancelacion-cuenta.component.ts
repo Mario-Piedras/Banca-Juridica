@@ -24,7 +24,9 @@ export class CancelacionCuentaComponent {
     titular: '',
     saldoFinal: 0,
     motivoCancelacion: '',
-    fecha: new Date()
+    fecha: new Date(),
+
+    tipoTitular: 'Natural'
   };
 
   constructor(
@@ -53,6 +55,11 @@ export class CancelacionCuentaComponent {
         if (response.existe && response.datos) {
           this.cuentaEncontrada = true;
           this.idCuenta = response.datos.idCuenta;
+          const tipoTitular =
+            response.datos.idCliente
+              ? 'Natural'
+              : 'Juridica';
+          this.datosComprobante.tipoTitular = tipoTitular;
 
           // Agregar estas líneas para deshabilitar campos después de buscar
           this.cancelacionForm.get('numeroDocumento')?.disable();
@@ -122,7 +129,8 @@ export class CancelacionCuentaComponent {
             titular: titular,
             saldoFinal: response.datos.saldoFinal,
             motivoCancelacion: response.datos.motivoCancelacion,
-            fecha: new Date(response.datos.fechaCancelacion)
+            fecha: new Date(response.datos.fechaCancelacion),
+            tipoTitular: this.datosComprobante.tipoTitular
           };
 
           this.cancelacionRealizada = true;

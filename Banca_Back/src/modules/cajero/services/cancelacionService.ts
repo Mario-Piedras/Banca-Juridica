@@ -10,40 +10,42 @@ export class CancelacionService {
       await connection.beginTransaction();
 
       // 1. Buscar cuenta y validar que exista y esté activa
-      const [cuentas]: any = await connection.query(`
-      SELECT
+      const [cuentas]: any = await connection.query(
+        `
+        SELECT
           ca.id_cuenta,
           ca.numero_cuenta,
           ca.saldo,
           ca.estado_cuenta,
           ca.id_cliente,
           ca.id_empresa,
+          ca.id_solicitud,
 
           c.numero_documento,
+
           CONCAT(
-            c.primer_nombre,
-            ' ',
+            c.primer_nombre,' ',
             IFNULL(CONCAT(c.segundo_nombre,' '),''),
-            c.primer_apellido,
-            ' ',
+            c.primer_apellido,' ',
             IFNULL(c.segundo_apellido,'')
-          ) nombre_completo,
+          ) AS nombre_completo,
 
-          e.nit,
-          e.razon_social
+          ie.nit,
+          ie.razon_social
 
-      FROM cuentas_ahorro ca
+        FROM cuentas_ahorro ca
 
-      LEFT JOIN clientes c
-      ON ca.id_cliente = c.id_cliente
+        LEFT JOIN clientes c
+        ON ca.id_cliente = c.id_cliente
 
-      LEFT JOIN info_empresas e
-      ON ca.id_empresa = e.id_info_empresas
+        LEFT JOIN info_empresas ie
+        ON ca.id_empresa = ie.id_info_empresas
 
-      WHERE ca.numero_cuenta = ?
+        WHERE ca.numero_cuenta = ?
 
-      FOR UPDATE
-      `, [datos.numeroCuenta]);
+        FOR UPDATE
+        `,
+      [datos.numeroCuenta]);
 
       if (cuentas.length === 0) {
         await connection.rollback();
@@ -80,11 +82,19 @@ export class CancelacionService {
       }
 
       // 4. Validar que el número de documento coincida
-      if (cuenta.numero_documento !== datos.numeroDocumento) {
+      const documentoTitular =
+        cuenta.id_empresa
+          ? cuenta.nit
+          : cuenta.numero_documento;
+
+      if (documentoTitular !== datos.numeroDocumento) {
+
         await connection.rollback();
+
         return {
           exito: false,
-          mensaje: '❌ El número de documento no coincide con el titular de la cuenta.'
+          mensaje:
+            '❌ El documento/NIT no coincide con el titular de la cuenta.'
         };
       }
 
@@ -109,10 +119,10 @@ export class CancelacionService {
         ['Cerrada', cuenta.id_cuenta]
       );
 
-      // 7. Marcar la solicitud como "Utilizada" o cambiarla a NULL
+      // 7. Marcar la solicitud como "Cancelada" para indicar que la cuenta se cerró
       await connection.query(
-        'UPDATE cuentas_ahorro SET id_solicitud = NULL WHERE id_cuenta = ?',
-        [cuenta.id_cuenta]
+        'UPDATE solicitudes_apertura SET estado = ? WHERE id_solicitud = ?',
+        ['Cancelada', cuenta.id_solicitud]
       );
 
       // 8. Registrar transacción de cierre con auditoría completa
@@ -140,8 +150,15 @@ export class CancelacionService {
         datos: {
           idCuenta: cuenta.id_cuenta,
           numeroCuenta: cuenta.numero_cuenta,
-          titular,
-          numeroDocumento,
+          titular:
+            cuenta.id_empresa
+              ? cuenta.razon_social
+              : cuenta.nombre_completo,
+
+          numeroDocumento:
+            cuenta.id_empresa
+              ? cuenta.nit
+              : cuenta.numero_documento,
           tipoCuenta,
           saldoFinal: 0,
           motivoCancelacion: motivoFinal,
