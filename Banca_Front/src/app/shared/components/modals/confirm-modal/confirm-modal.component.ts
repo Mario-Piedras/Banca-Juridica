@@ -18,6 +18,7 @@ export class ConfirmModalComponent {
     @Input() confirmText = 'Aceptar';
 
     @Output() confirm = new EventEmitter<void>();
+    @Output() cancel = new EventEmitter<void>();
     @Output() closed = new EventEmitter<void>();
 
     onBackdropClick(): void {
@@ -29,10 +30,14 @@ export class ConfirmModalComponent {
         this.close();
     }
 
+    onCancel(): void {
+        this.cancel.emit();
+        this.close();
+    }
+
     private close(): void {
         // Cerrar visual
         this.visible = false;
         this.closed.emit();
     }
 }
-

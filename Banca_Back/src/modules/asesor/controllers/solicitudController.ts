@@ -126,7 +126,8 @@ export class SolicitudController {
         req.user.id_usuario_rol,
         comentario,
         tipo_cliente,
-        proposito_cuenta
+        proposito_cuenta,
+        archivo
       );
 
       res.status(201).json({

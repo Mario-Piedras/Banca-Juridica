@@ -87,20 +87,36 @@ export class RegistrarClienteJuridicoComponent implements OnInit {
   }
 
   onModalConfirm(): void {
-    // Cerrar modal y en caso de "final" redirigir a consultar-cliente
+    // Cerrar modal
     this.confirmVisible = false;
 
-    // “Registro finalizado” => ya no avanzamos pestañas, redirigimos.
-    if (this.confirmType === 'success' && this.confirmTitle === 'Registro finalizado') {
+    // Cancelar edición
+    if (this.confirmType === 'confirm') {
+      this.router.navigate(['/asesor/consultar-cliente']);
+      return;
+    }
+
+    // “Registro finalizado” => redirigir a consultar-cliente.
+    if (
+      this.confirmType === 'success' &&
+      this.confirmTitle === 'Registro finalizado'
+    ) {
       this.router.navigate(['/asesor/consultar-cliente']);
       return;
     }
 
     // Para guardados parciales: avanzar exactamente a la siguiente pestaña.
-    this.irASiguientePestanaActual();
+    if (
+      this.confirmType === 'success' &&
+      this.confirmTitle === 'Información guardada'
+    ) {
+      this.irASiguientePestanaActual();
+    }
   }
 
-
+  onModalCancel(): void {
+    this.confirmVisible = false;
+  }
 
   onModalClosed(): void {
     this.confirmVisible = false;
@@ -147,7 +163,11 @@ export class RegistrarClienteJuridicoComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error al cargar cliente:', err);
-        alert('No se pudo cargar el cliente para edición');
+        this.confirmVisible = true;
+        this.confirmTitle = 'Error';
+        this.confirmMessage = 'No se pudo cargar el cliente para edición';
+        this.confirmButtonText = 'Aceptar';
+        this.confirmType = 'error';
         this.router.navigate(['/asesor/consultar-cliente']);
         this.cargando = false;
       }
@@ -155,9 +175,12 @@ export class RegistrarClienteJuridicoComponent implements OnInit {
   }
 
   cancelarEdicion() {
-    if (confirm('¿Estás seguro de que quieres cancelar la edición? Los cambios no guardados se perderán.')) {
-      this.router.navigate(['/asesor/consultar-cliente']);
-    }
+    this.confirmVisible = true;
+    this.confirmTitle = '¿Estás seguro de que quieres cancelar la edición?';
+    this.confirmMessage =
+      'Los cambios no guardados se perderán.';
+    this.confirmType = 'confirm';
+    this.confirmButtonText = 'Aceptar';
   }
   // 🔁 Cambiar pestaña manualmente
   cambiarPestana(nombre: string) {
@@ -223,24 +246,40 @@ export class RegistrarClienteJuridicoComponent implements OnInit {
       this.asesorService.registrarCliente(payload).subscribe({
         next: (res) => {
           console.log('✅ Cliente registrado con éxito:', res);
-          alert('Cliente registrado correctamente');
-          this.router.navigate(['/asesor/consultar-cliente']);
+          this.confirmVisible = true;
+          this.confirmTitle = 'Registro finalizado';
+          this.confirmMessage = 'El registro finalizo correctamente.';
+          this.confirmButtonText = 'Aceptar';
+          this.confirmType = 'success';
         },
         error: (err) => {
           console.error('❌ Error al registrar cliente:', err);
-          alert('Error al registrar el cliente: ' + (err.error?.message || err.message));
+          const errorMessage = err.error?.message || err.message || 'Error al registrar el cliente';
+          this.confirmVisible = true;
+          this.confirmTitle = 'Error';
+          this.confirmMessage = errorMessage;
+          this.confirmButtonText = 'Aceptar';
+          this.confirmType = 'error';
         },
       });
     } else if (this.modo === 'editar' && this.idEmpresa) {
       this.asesorService.actualizarEmpresa(this.idEmpresa, payload).subscribe({
         next: (res) => {
           console.log('✅ Empresa actualizada con éxito:', res);
-          alert('Empresa actualizada correctamente');
-          this.router.navigate(['/asesor/consultar-cliente']);
+          this.confirmVisible = true;
+          this.confirmTitle = 'Registro finalizado';
+          this.confirmMessage = 'Empresa actualizada correctamente.';
+          this.confirmButtonText = 'Aceptar';
+          this.confirmType = 'success';
         },
         error: (err) => {
           console.error('❌ Error al actualizar cliente:', err);
-          alert('Error al actualizar el cliente: ' + (err.error?.message || err.message));
+          const errorMessage = err.error?.message || err.message || 'Error al actualizar el cliente';
+          this.confirmVisible = true;
+          this.confirmTitle = 'Error';
+          this.confirmMessage = errorMessage;
+          this.confirmButtonText = 'Aceptar';
+          this.confirmType = 'error';
         },
       });
     }

@@ -96,7 +96,8 @@
 
     <!-- Modal de confirmación -->
     <app-confirm-modal [visible]="confirmVisible" [title]="confirmTitle" [message]="confirmMessage" [type]="confirmType"
-      [confirmText]="confirmButtonText" (confirm)="onModalConfirm()" (closed)="onModalClosed()">
+      [confirmText]="confirmButtonText" (confirm)="onModalConfirm()" (cancel)="onModalCancel()"
+      (closed)="onModalClosed()">
     </app-confirm-modal>
 
   </div>

@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SolicitudService } from '../../services/solicitud.service';
 import { AuthService } from '../../../../core/services/auth.service';
+import { ConfirmModalComponent } from '../../../../shared/components/modals/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-solicitar-producto-juridico',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ConfirmModalComponent],
   templateUrl: './solicitar-producto-juridico.component.html',
   styleUrl: '../solicitar-producto/solicitar-producto.component.css'
 })
@@ -24,6 +25,13 @@ export class SolicitarProductoJuridicoComponent implements OnInit {
 
   // Datos del usuario autenticado
   currentUser: any = null;
+
+  // Modal confirmación al enviar solicitud
+  confirmModalVisible = false;
+  confirmModalTitle = '';
+  confirmModalMessage = '';
+  confirmModalType: 'success' | 'error' | 'confirm' = 'success';
+  confirmModalConfirmText = 'Aceptar';
 
   constructor(
     private solicitudService: SolicitudService,
@@ -56,6 +64,7 @@ export class SolicitarProductoJuridicoComponent implements OnInit {
     input.value = this.nit;
   }
 
+  // Buscar empresa
   buscarEmpresa(): void {
     if (!this.nit.trim()) {
       alert('Por favor ingrese un NIT');
@@ -87,6 +96,7 @@ export class SolicitarProductoJuridicoComponent implements OnInit {
     });
   }
 
+  // Envio de la solicitud
   enviarSolicitud(): void {
     // Validaciones
     if (!this.nit.trim()) {
@@ -103,7 +113,7 @@ export class SolicitarProductoJuridicoComponent implements OnInit {
       alert('Error: No se pudo obtener la información del usuario. Por favor, inicie sesión nuevamente.');
       return;
     }
-    console.log(this.proposito_cuenta);
+
     // Preparar datos de la solicitud
     const solicitud = {
       nit: this.nit,
@@ -122,24 +132,34 @@ export class SolicitarProductoJuridicoComponent implements OnInit {
       next: (response) => {
         this.isLoading = false;
         console.log('Solicitud enviada exitosamente:', response);
-        alert(' Solicitud enviada exitosamente');
+        this.confirmModalTitle = 'Solicitud enviada';
+        this.confirmModalMessage = 'La solicitud se ha enviado exitosamente.';
+        this.confirmModalType = 'success';
+        this.confirmModalConfirmText = 'Aceptar';
+        this.confirmModalVisible = true;
         this.limpiarFormulario();
       },
       error: (error) => {
         this.isLoading = false;
         console.error('Error al enviar solicitud:', error);
         const errorMessage = error.error?.message || 'Error al enviar la solicitud';
-        alert(` ${errorMessage}`);
+        this.confirmModalTitle = 'Error';
+        this.confirmModalMessage = errorMessage;
+        this.confirmModalType = 'error';
+        this.confirmModalConfirmText = 'Aceptar';
+        this.confirmModalVisible = true;
       }
     });
   }
 
+  // Cancelación del envio
   cancelar(): void {
     if (confirm('¿Está seguro de que desea cancelar? Se perderán los datos ingresados.')) {
       this.limpiarFormulario();
     }
   }
 
+  // Limpieza del formulario
   private limpiarFormulario(): void {
     this.nit = '';
     this.justificacion = '';

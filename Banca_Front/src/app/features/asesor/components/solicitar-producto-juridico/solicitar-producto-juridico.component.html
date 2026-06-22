@@ -99,4 +99,10 @@
       <button type="button" (click)="cancelar()" class="form-cancel-btn">Cancelar</button>
     </div>
   </form>
+
+  <app-confirm-modal [visible]="confirmModalVisible" [title]="confirmModalTitle" [message]="confirmModalMessage"
+    [type]="confirmModalType" [confirmText]="confirmModalConfirmText" (confirm)="confirmModalVisible = false"
+    (closed)="confirmModalVisible = false">
+  </app-confirm-modal>
+
 </div>
