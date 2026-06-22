@@ -457,7 +457,9 @@ export class InformacionFinancieraTributariaComponent implements OnInit, OnChang
           this.STORAGE_KEY
         );
         this.saved.emit('parcial');
-        this.nextTab.emit();
+        // El padre controlará la navegación hasta que el usuario acepte el modal.
+        // this.nextTab.emit();
+
       },
       error: (err) => {
         console.error(err);

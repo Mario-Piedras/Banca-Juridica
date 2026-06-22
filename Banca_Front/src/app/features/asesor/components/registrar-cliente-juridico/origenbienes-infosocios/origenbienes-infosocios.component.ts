@@ -232,9 +232,11 @@ export class DeclaracionBienesInfoSociosComponent implements OnInit, OnChanges {
         console.log('Datos guardados:', res);
         this.formChange.emit(this.form.value);
         this.saved.emit('final');
-        this.nextTab.emit();
+        // El padre controlará la navegación hasta que el usuario acepte el modal.
+        // this.nextTab.emit();
 
         // No navegar aquí: el padre controla el modal "Guardar y finalizar" y la navegación tras Aceptar.
+
       },
 
       error: (err) => {

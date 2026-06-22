@@ -90,10 +90,16 @@ export class RegistrarClienteJuridicoComponent implements OnInit {
     // Cerrar modal y en caso de "final" redirigir a consultar-cliente
     this.confirmVisible = false;
 
+    // “Registro finalizado” => ya no avanzamos pestañas, redirigimos.
     if (this.confirmType === 'success' && this.confirmTitle === 'Registro finalizado') {
       this.router.navigate(['/asesor/consultar-cliente']);
+      return;
     }
+
+    // Para guardados parciales: avanzar exactamente a la siguiente pestaña.
+    this.irASiguientePestanaActual();
   }
+
 
 
   onModalClosed(): void {

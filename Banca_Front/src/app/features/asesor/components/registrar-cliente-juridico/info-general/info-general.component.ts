@@ -177,7 +177,9 @@ export class InformacionGeneralComponent implements OnInit, OnChanges {
 
             this.formChange.emit(this.form.value);
             this.saved.emit('parcial');
-            this.nextTab.emit();
+            // El padre controlará la navegación hasta que el usuario acepte el modal.
+            // this.nextTab.emit();
+
 
           },
           error: (err) => {
