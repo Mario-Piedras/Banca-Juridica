@@ -399,6 +399,9 @@ export interface ProcesarRetiroResponse {
     saldoNuevo: number;
     montoRetirado: number;
     fechaTransaccion: Date;
+    nombreTitular: string;
+    numeroDocumento: string;
+    tipoCuenta: string;
   };
 }
 
@@ -443,6 +446,7 @@ export interface ProcesarConsignacionResponse {
     numeroCuenta: string;
     titular: string;
     numeroDocumento: string;
+    tipoTitular: string;
     saldoAnterior: number;
     saldoNuevo: number;
     valorConsignado: number;

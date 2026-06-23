@@ -40,7 +40,9 @@ export interface ProcesarRetiroResponse {
     saldoNuevo: number;
     montoRetirado: number;
     fechaTransaccion: Date;
-    nombreTitular?: string;  // ← AGREGADO
+    nombreTitular?: string;
+    numeroDocumento?: string;
+    tipoCuenta?: string;
   };
 }
 

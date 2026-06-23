@@ -196,7 +196,9 @@ constructor(
             saldoNuevo: response.datos.saldoNuevo,
             fecha: new Date(response.datos.fechaTransaccion),
             nombreCajero: this.datosComprobante.nombreCajero,
-            tipoTitular: this.datosComprobante.tipoTitular
+            tipoTitular:
+              response.datos.tipoTitular ||
+              this.datosComprobante.tipoTitular
           };
 
           this.consignacionRealizada = true;

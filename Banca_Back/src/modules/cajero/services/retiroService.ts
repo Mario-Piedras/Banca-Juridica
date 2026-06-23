@@ -103,86 +103,141 @@ export class RetiroService {
     try {
       await connection.beginTransaction();
 
-      // 1. Obtener saldo actual y datos del cliente (CON FOR UPDATE)
+      // Buscar cuenta (Natural o Jurídica)
       const [cuentas]: any = await connection.query(`
-        SELECT ca.saldo, ca.id_cliente, c.numero_documento,
-               CONCAT(c.primer_nombre, ' ', 
-                      IFNULL(CONCAT(c.segundo_nombre, ' '), ''), 
-                      c.primer_apellido, ' ', 
-                      IFNULL(c.segundo_apellido, '')) AS nombre_completo
+        SELECT
+          ca.id_cuenta,
+          ca.saldo,
+          ca.estado_cuenta,
+          ca.id_cliente,
+          ca.id_empresa,
+
+          c.numero_documento,
+
+          CONCAT(
+            c.primer_nombre,' ',
+            IFNULL(CONCAT(c.segundo_nombre,' '),''),
+            c.primer_apellido,' ',
+            IFNULL(c.segundo_apellido,'')
+          ) AS nombre_completo,
+
+          ie.nit,
+          ie.razon_social
+
         FROM cuentas_ahorro ca
-        INNER JOIN clientes c ON ca.id_cliente = c.id_cliente
-        WHERE ca.id_cuenta = ? AND ca.estado_cuenta = \'Activa\' FOR UPDATE
+
+        LEFT JOIN clientes c
+        ON ca.id_cliente = c.id_cliente
+
+        LEFT JOIN info_empresas ie
+        ON ca.id_empresa = ie.id_info_empresas
+
+        WHERE ca.id_cuenta = ?
+        AND ca.estado_cuenta = 'Activa'
+
+        FOR UPDATE
       `, [datos.idCuenta]);
 
       if (cuentas.length === 0) {
         await connection.rollback();
+
         return {
           exito: false,
           mensaje: 'La cuenta no existe o no está activa.'
         };
       }
 
-      const saldoActual = parseFloat(cuentas[0].saldo);
-      const idCliente = cuentas[0].id_cliente;
-      const numeroDocumento = cuentas[0].numero_documento;
-      const nombreTitular = cuentas[0].nombre_completo;
+      const cuenta = cuentas[0];
 
-      // 2. Validar que el número de documento coincida
-      if (numeroDocumento !== datos.numeroDocumento) {
+      const esJuridica = !!cuenta.id_empresa;
+
+      const documentoTitular =
+        esJuridica
+          ? cuenta.nit
+          : cuenta.numero_documento;
+
+      const nombreTitular =
+        esJuridica
+          ? cuenta.razon_social
+          : cuenta.nombre_completo;
+
+      const saldoActual = parseFloat(cuenta.saldo);
+
+      // Validar documento / NIT
+      if (documentoTitular !== datos.numeroDocumento) {
         await connection.rollback();
+
         return {
           exito: false,
-          mensaje: 'El número de documento no coincide con el titular de la cuenta.'
+          mensaje:
+            'El documento/NIT no coincide con el titular de la cuenta.'
         };
       }
 
-      // 3. Validaciones de saldo y monto
-      if (saldoActual < datos.montoRetirar) {
-        await connection.rollback();
-        return {
-          exito: false,
-          mensaje: `Saldo insuficiente. Saldo disponible: $${saldoActual.toLocaleString()}`
-        };
-      }
-
+      // Validar monto
       if (datos.montoRetirar <= 0) {
         await connection.rollback();
+
         return {
           exito: false,
-          mensaje: 'El monto a retirar debe ser mayor a cero.'
+          mensaje:
+            'El monto a retirar debe ser mayor a cero.'
+        };
+      }
+
+      if (saldoActual < datos.montoRetirar) {
+        await connection.rollback();
+
+        return {
+          exito: false,
+          mensaje:
+            `Saldo insuficiente. Saldo disponible: $${saldoActual.toLocaleString('es-CO')}`
         };
       }
 
       const nuevoSaldo = saldoActual - datos.montoRetirar;
 
-      // 4. Actualizar saldo de la cuenta
+      // Actualizar cuenta
       await connection.query(
-        'UPDATE cuentas_ahorro SET saldo = ? WHERE id_cuenta = ?',
+        `
+        UPDATE cuentas_ahorro
+        SET saldo = ?
+        WHERE id_cuenta = ?
+        `,
         [nuevoSaldo, datos.idCuenta]
       );
 
-      // 5. Registrar transacción con auditoría completa
-      const [resultado]: any = await connection.query(`
-        INSERT INTO transacciones 
-        (id_cuenta, tipo_transaccion, monto, saldo_anterior, saldo_nuevo, 
-         id_usuario, id_caja, cajero, fecha_transaccion) 
-        VALUES (?, 'Retiro', ?, ?, ?, ?, ?, ?, NOW())
-      `, [
-        datos.idCuenta, 
-        datos.montoRetirar, 
-        saldoActual, 
-        nuevoSaldo,
-        datos.idUsuario || null,
-        datos.idCaja || null,
-        datos.nombreCaja || `Usuario ${datos.idUsuario}`
-      ]);
+      // Registrar transacción
+      const [resultado]: any =
+        await connection.query(`
+          INSERT INTO transacciones
+          (
+            id_cuenta,
+            tipo_transaccion,
+            monto,
+            saldo_anterior,
+            saldo_nuevo,
+            id_usuario,
+            id_caja,
+            cajero,
+            fecha_transaccion
+          )
+          VALUES
+          (?, 'Retiro', ?, ?, ?, ?, ?, ?, NOW())
+        `, [
+          datos.idCuenta,
+          datos.montoRetirar,
+          saldoActual,
+          nuevoSaldo,
+          datos.idUsuario || null,
+          datos.idCaja || null,
+          datos.nombreCaja || `Usuario ${datos.idUsuario}`
+        ]);
 
-      // 6. Actualizar saldo efectivo del cajero
       await saldoCajeroService.actualizarSaldoEfectivo(
-        datos.montoRetirar, 
-        'restar', 
-        datos.idUsuario || 0 // CAMBIAR: usar idUsuario en lugar de cajero
+        datos.montoRetirar,
+        'restar',
+        datos.idUsuario || 0
       );
 
       await connection.commit();
@@ -196,15 +251,29 @@ export class RetiroService {
           saldoNuevo: nuevoSaldo,
           montoRetirado: datos.montoRetirar,
           fechaTransaccion: new Date(),
+          nombreTitular,
+          numeroDocumento: documentoTitular,
+          tipoCuenta:
+            esJuridica
+              ? 'Juridica'
+              : 'Natural'
         }
       };
 
     } catch (error) {
+
       await connection.rollback();
-      console.error('Error al procesar retiro:', error);
-      throw new Error('Error al procesar el retiro');
+
+      console.error(error);
+
+      throw new Error(
+        'Error al procesar el retiro'
+      );
+
     } finally {
+
       connection.release();
+
     }
   }
 }

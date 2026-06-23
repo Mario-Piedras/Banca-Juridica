@@ -486,9 +486,9 @@ CREATE TABLE IF NOT EXISTS `defaultdb`.`cuentas_ahorro` (
   `id_empresa` INT NULL DEFAULT NULL,
   PRIMARY KEY (`id_cuenta`),
   UNIQUE INDEX `numero_cuenta` (`numero_cuenta` ASC) VISIBLE,
-  INDEX `idx_cta_numero` (`numero_cuenta` ASC) VISIBLE,
+  UNIQUE INDEX `idx_cta_numero` (`numero_cuenta` ASC) VISIBLE,
   INDEX `idx_cta_cliente` (`id_cliente` ASC) VISIBLE,
-  INDEX `idx_cta_solicitud` (`id_solicitud` ASC) VISIBLE,
+  UNIQUE INDEX `idx_cta_solicitud` (`id_solicitud` ASC) VISIBLE,
   INDEX `idx_estado` (`estado_cuenta` ASC) VISIBLE,
   INDEX `cuentas_ahorro_fk_1_idx` (`id_empresa` ASC) VISIBLE,
   CONSTRAINT `cuentas_ahorro_fk_1`
