@@ -102,7 +102,7 @@ export class AperturaService {
           icono = "schedule";
           break;
         default:
-          mensaje = "Estado de solicitud desconocido.";
+          mensaje = "Esta solicitud ya ha sido utilizada para aperturar una cuenta, por favor hable con el asesor para radicar una nueva.";
           icono = "help";
       }
 
@@ -221,7 +221,7 @@ export class AperturaService {
 
         default:
           mensaje =
-            'Estado desconocido.';
+            'Esta solicitud ya ha sido utilizada para aperturar una cuenta, por favor hable con el asesor para radicar una nueva.';
       }
 
       return {

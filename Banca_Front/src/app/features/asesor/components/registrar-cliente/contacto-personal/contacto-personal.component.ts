@@ -41,6 +41,7 @@ export class ContactoPersonalComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
+    // Cargar departamentos de Colombia desde JSON
     this.cargarDepartamentosColombia();
 
     // Desactivar ciudad al inicio
@@ -79,6 +80,7 @@ export class ContactoPersonalComponent implements OnInit, OnChanges {
 
     // Cargar datos iniciales
     if (this.datosIniciales) {
+      console.log('📥 Cargando datos:', this.datosIniciales);
       this.form.patchValue(this.datosIniciales);
       if (this.datosIniciales.pais === 'Colombia') {
         this.form.get('tipoPais')?.setValue('Colombia');
@@ -132,27 +134,27 @@ export class ContactoPersonalComponent implements OnInit, OnChanges {
     }
   }
 
+  // Cargar desde colombia-data.json
   cargarDepartamentosColombia() {
     console.log('📡 Cargando archivo...');
     // Cambiar la ruta - SIN el prefijo /assets/
     this.http.get<any[]>('colombia-data.json').subscribe({
       next: (data) => {
-        console.log('Datos recibidos:', data);
+        console.log('✅ Datos recibidos:', data);
         this.colombiaData = data;
         this.departamentos = data.map(d => d.departamento);
-        console.log('Departamentos cargados:', this.departamentos);
+        console.log('✅ Departamentos cargados:', this.departamentos);
       },
       error: (err) => {
-        console.error('Error:', err);
+        console.error('❌ Error:', err);
       }
     });
   }
 
-
   actualizarCiudades(departamento: string) {
     const deptoData = this.colombiaData.find(d => d.departamento === departamento);
     this.ciudades = deptoData ? deptoData.ciudades : [];
-    console.log('Ciudades disponibles:', this.ciudades);
+    console.log('🏙️ Ciudades disponibles:', this.ciudades);
   }
 
   esColombia(): boolean {

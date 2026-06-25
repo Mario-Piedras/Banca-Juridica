@@ -14,6 +14,7 @@ import { AuthService } from '../../../../core/services/auth.service';
 export class SolicitarProductoComponent implements OnInit {
   cedula: string = '';
   producto: string = 'Cuenta de Ahorros (Persona natural)';
+  proposito_cuenta: string = '';
   comentario: string = '';
   archivoSeleccionado: string = '';
   archivoFile: File | null = null;
@@ -134,10 +135,10 @@ export class SolicitarProductoComponent implements OnInit {
     const solicitud = {
       cedula: this.cedula,
       producto: this.producto,
+      proposito_cuenta: this.proposito_cuenta,
       comentario: this.comentario,
       archivo: this.archivoFile,
-      tipo_cliente: 'Natural',
-      proposito_cuenta: ''
+      tipo_cliente: 'Natural'
     };
 
     console.log('Enviando solicitud:', solicitud);

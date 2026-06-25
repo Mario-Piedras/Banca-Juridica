@@ -49,10 +49,17 @@ export class RetiroService {
 
       const cuenta = cuentas[0];
 
+      if (cuenta.estado_cuenta == 'Cerrada') {
+        return {
+          existe: false,
+          mensaje: `La cuenta está ${cuenta.estado_cuenta}. Ya no puedes realizar esta acción.`
+        };
+      }
+
       if (cuenta.estado_cuenta !== 'Activa') {
         return {
           existe: false,
-          mensaje: `La cuenta está ${cuenta.estado_cuenta}. No se pueden realizar retiros.`
+          mensaje: `La cuenta está ${cuenta.estado_cuenta}. No se pueden realizar transacciones.`
         };
       }
 

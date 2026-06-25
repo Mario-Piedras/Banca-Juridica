@@ -182,11 +182,7 @@ export class AperturaCuentaComponent {
         this.clienteVerificado = true;
         this.estadoSolicitud = respuesta.estado;
         this.mensajeEstado = respuesta.mensaje;
-        if (this.tipoCliente === 'Juridica') {
-          this.razonSocial = respuesta.nombreCompleto || '';
-        } else {
-          this.nombreCompleto = respuesta.nombreCompleto || '';
-        }
+        this.nombreCompleto = respuesta.nombreCompleto || '';
         this.idSolicitud = respuesta.idSolicitud || null;
         this.iconoEstado = respuesta.icono || 'info';
 
@@ -351,10 +347,7 @@ onInputMonto(event: Event) {
 
             tipoCliente: this.tipoCliente,
 
-            nombreCliente:
-              this.tipoCliente === 'Juridica'
-                ? this.razonSocial
-                : this.nombreCompleto,
+            nombreCliente: this.nombreCompleto,
 
             tipoDocumento:
               this.tipoCliente === 'Natural'

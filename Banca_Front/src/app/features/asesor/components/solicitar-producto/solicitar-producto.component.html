@@ -59,6 +59,30 @@
       <p class="text-xs text-gray-500 mt-1">Actualmente solo disponible Cuenta de Ahorros</p>
     </div>
 
+    <!-- Justificación o razón -->
+    <div class="mb-6">
+      <label class="block text-sm font-semibold text-gray-800 mb-2">
+        Proposito de cuenta <span class="text-red-600">*</span>
+      </label>
+      <select [(ngModel)]="proposito_cuenta" name="proposito_cuenta" required #propositoControl="ngModel"
+        class="input-field" [ngClass]="{'border-red-500':propositoControl.invalid && propositoControl.touched}"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white">
+        <option value="" disabled selected>Seleccione el propósito de la cuenta</option>
+        <option value="Ahorrar">Ahorrar</option>
+        <option value="Invertir">Invertir</option>
+        <option value="Servicios financieros en negocios fiduciarios">Servicios financieros en negocios fiduciarios
+        </option>
+        <option value="Realizar transacciones">Realizar transacciones</option>
+        <option value="Financiacion">Financiacion</option>
+        <option value="Recibir servicios especializados Banca de inversion">Recibir servicios especializados Banca de
+          inversion</option>
+      </select>
+      <p class="text-xs text-gray-500 mt-1">El proposito de la cuenta</p>
+      <p *ngIf="propositoControl.invalid && propositoControl.touched" class="text-xs text-red-600 mt-1">
+        Campo obligatorio
+      </p>
+    </div>
+
     <!-- Comentario / Observaciones -->
     <div class="mb-6">
       <label class="block text-sm font-semibold text-gray-800 mb-2">

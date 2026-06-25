@@ -44,10 +44,7 @@ export class SolicitudService {
     }
 
     formData.append('producto', solicitud.producto);
-    if (solicitud.proposito_cuenta !== undefined && solicitud.proposito_cuenta !== null) {
-      formData.append('proposito_cuenta', solicitud.proposito_cuenta);
-    }
-
+    formData.append('proposito_cuenta', solicitud.proposito_cuenta);
     formData.append('comentario', solicitud.comentario || '');
     formData.append('tipo_cliente', solicitud.tipo_cliente || 'Natural');
 
