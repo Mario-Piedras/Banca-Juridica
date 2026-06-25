@@ -377,6 +377,7 @@ export interface BuscarCuentaResponse {
     estadoCuenta: string;
     idCuenta: number;
     idCliente: number;
+    tipoCuenta: string;
   };
 }
 
@@ -398,6 +399,9 @@ export interface ProcesarRetiroResponse {
     saldoNuevo: number;
     montoRetirado: number;
     fechaTransaccion: Date;
+    nombreTitular: string;
+    numeroDocumento: string;
+    tipoCuenta: string;
   };
 }
 
@@ -442,6 +446,7 @@ export interface ProcesarConsignacionResponse {
     numeroCuenta: string;
     titular: string;
     numeroDocumento: string;
+    tipoTitular: string;
     saldoAnterior: number;
     saldoNuevo: number;
     valorConsignado: number;
@@ -469,6 +474,7 @@ export interface CancelarCuentaResponse {
     numeroCuenta: string;
     titular: string;
     numeroDocumento: string;
+    tipoCuenta: string;
     saldoFinal: number;
     motivoCancelacion: string;
     fechaCancelacion: Date;

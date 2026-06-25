@@ -36,52 +36,6 @@ export class AperturaService {
       }
 
       const cliente = clientes[0];
-
-      // Verificar si ya tiene cuenta activa
-      /* const [cuentas]: any = await connection.query(
-        'SELECT COUNT(*) as total FROM cuentas_ahorro WHERE id_cliente = ? AND estado_cuenta = \'Activa\'',
-        [cliente.id_cliente]
-      );
-
-      if (cuentas[0].total > 0) {
-        return {
-          existe: true,
-          estado: "YaTieneCuenta",
-          mensaje: "El cliente ya tiene una cuenta activa.",
-          nombreCompleto: cliente.nombre_completo,
-          idCliente: cliente.id_cliente,
-        };
-      } */
-
-      // ✅ MEJORADO: Buscar solicitud más reciente que NO haya sido utilizada en una cuenta cerrada
-      /* const [solicitudes]: any = await connection.query(
-        `SELECT sa.id_solicitud, sa.estado, sa.comentario_director 
-         FROM solicitudes_apertura sa
-         WHERE sa.id_cliente = ? 
-         AND sa.id_solicitud NOT IN (
-           SELECT id_solicitud 
-           FROM cuentas_ahorro 
-           WHERE id_solicitud IS NOT NULL 
-           AND estado_cuenta = 'Cerrada'
-         )
-         ORDER BY sa.fecha_solicitud DESC 
-         LIMIT 1`,
-        [cliente.id_cliente]
-      );
-
-      if (solicitudes.length === 0) {
-        return {
-          existe: true,
-          estado: "SinSolicitud",
-          mensaje:
-            "No se encontró ninguna solicitud de apertura válida. Debe realizar una nueva solicitud con el asesor.",
-          icono: "info",
-          nombreCompleto: cliente.nombre_completo,
-          idCliente: cliente.id_cliente,
-        };
-      }
-
-      const solicitud = solicitudes[0]; */
       
       const [solicitudes]: any = await connection.query(
         `

@@ -876,3 +876,6 @@ ADD CONSTRAINT `fk_cta_cliente`
 ALTER TABLE `defaultdb`.`cuentas_ahorro` 
 ADD UNIQUE INDEX `id_solicitud_UNIQUE` (`id_solicitud` ASC) VISIBLE;
 ;
+
+ALTER TABLE `defaultdb`.`solicitudes_apertura` 
+CHANGE COLUMN `estado` `estado` ENUM('Pendiente', 'Aprobada', 'Rechazada', 'Devuelta', 'Aperturada', 'Cancelada') NOT NULL DEFAULT 'Pendiente' ;

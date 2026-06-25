@@ -22,6 +22,7 @@ export interface ProcesarConsignacionResponse {
     numeroCuenta: string;
     titular: string;
     numeroDocumento: string;
+    tipoTitular?: 'Natural' | 'Juridica';
     saldoAnterior: number;
     saldoNuevo: number;
     valorConsignado: number;
