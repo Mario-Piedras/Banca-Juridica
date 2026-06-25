@@ -29,7 +29,8 @@ export class RetiroVentanillaComponent {
     montoRetirado: 0,
     saldoAnterior: 0,
     saldoNuevo: 0,
-    fecha: new Date()
+    fecha: new Date(),
+    tipoTitular: 'Natural'
   };
 
   constructor(
@@ -68,6 +69,23 @@ export class RetiroVentanillaComponent {
     input.value = valorFormateado;
   }
 
+  // Permitir solo números en número de cuenta
+  onInputNumeroCuenta(event: Event) {
+    const input = event.target as HTMLInputElement;
+
+    // Eliminar cualquier carácter que no sea número
+    const valor = input.value.replace(/[^0-9]/g, '');
+
+    // Actualizar visualmente
+    input.value = valor;
+
+    // Actualizar el FormControl
+    this.retiroForm.patchValue(
+      { numeroCuenta: valor },
+      { emitEvent: false }
+    );
+  }
+
   buscarCuenta() {
     const numeroCuenta = this.retiroForm.get('numeroCuenta')?.value;
 
@@ -81,6 +99,11 @@ export class RetiroVentanillaComponent {
         if (response.existe && response.datos) {
           this.cuentaEncontrada = true;
           this.idCuenta = response.datos.idCuenta;
+
+          const tipoTitular = response.datos.idCliente 
+          ? 'Natural' 
+          : 'Juridica';
+          this.datosComprobante.tipoTitular = tipoTitular;
 
           this.retiroForm.get('montoRetirar')?.enable();
 
@@ -135,13 +158,15 @@ export class RetiroVentanillaComponent {
 
           this.datosComprobante = {
             idTransaccion: response.datos.idTransaccion,
-            numeroCuenta: numeroCuenta,
-            numeroDocumento: numeroDocumento,
-            titular: titular,
+            numeroCuenta,
+            numeroDocumento: response.datos.numeroDocumento || numeroDocumento,
+            titular: response.datos.nombreTitular || titular,
             montoRetirado: response.datos.montoRetirado,
             saldoAnterior: response.datos.saldoAnterior,
             saldoNuevo: response.datos.saldoNuevo,
-            fecha: new Date(response.datos.fechaTransaccion)
+            fecha: new Date(response.datos.fechaTransaccion),
+            tipoTitular:
+              response.datos.tipoCuenta || this.datosComprobante.tipoTitular
           };
 
           this.retiroRealizado = true;
@@ -176,6 +201,9 @@ export class RetiroVentanillaComponent {
     this.cuentaEncontrada = false;
     this.idCuenta = 0;
     this.retiroForm.get('montoRetirar')?.disable();
+
+    this.datosComprobante.tipoTitular = 'Natural';
+    
     this.retiroForm.patchValue({
       numeroDocumento: '',
       titular: '',

@@ -29,9 +29,12 @@ export class AperturaCuentaComponent {
   };
 
   // Datos del formulario
+  tipoCliente: string = '';
   tipoDocumento: string = '';
   numeroDocumento: string = '';
   nombreCompleto: string = '';
+  nit: string = '';
+  razonSocial: string = '';
   depositoInicial: string = '';
   valorDeposito: number = 0;
   codigoCheque: string = '';
@@ -76,32 +79,114 @@ export class AperturaCuentaComponent {
     this.numeroDocumento = valor;
   }
 
+  onInputNit(event: Event) {
+    const input = event.target as HTMLInputElement;
+
+    let valor = input.value;
+
+    // Permitir solo números y guion
+    valor = valor.replace(/[^0-9-]/g, '');
+
+    // Solo permitir un guion
+    const partes = valor.split('-');
+
+    if (partes.length > 2) {
+      valor = partes[0] + '-' + partes.slice(1).join('');
+    }
+
+    // Máximo 20 caracteres
+    valor = valor.substring(0, 20);
+
+    input.value = valor;
+    this.nit = valor;
+  }
+
   // Validar cuando cambia el tipo de documento
   onTipoDocumentoChange() {
     // Limpiar el número de documento cuando cambia el tipo
     this.numeroDocumento = '';
   }
 
+  onTipoClienteChange() {
+    this.limpiarFormulario();
+
+    // Mantener seleccionado el tipo
+    const tipo = this.tipoCliente;
+
+    this.tipoCliente = tipo;
+  }
+
   buscarCliente() {
-    if (!this.tipoDocumento || !this.numeroDocumento) {
-      alert('Por favor ingrese el tipo y número de documento');
+    if (
+      this.tipoCliente === 'Natural'
+      &&
+      (!this.tipoDocumento || !this.numeroDocumento)
+    ) {
+
+      alert(
+        'Por favor ingrese tipo y número de documento'
+      );
+
       return;
+
+    }
+
+    if (
+      this.tipoCliente === 'Juridica'
+      &&
+      !this.nit
+    ) {
+
+      alert(
+        'Por favor ingrese el NIT'
+      );
+
+      return;
+
     }
 
     // Validación adicional antes de enviar
-    if (!this.validarDocumento()) {
+    if (
+      this.tipoCliente === 'Natural'
+      &&
+      !this.validarDocumento()
+    ) {
       return;
     }
 
-    this.aperturaService.verificarCliente({
-      tipoDocumento: this.tipoDocumento,
-      numeroDocumento: this.numeroDocumento
-    }).subscribe({
+    let datosBusqueda: any;
+
+    if (this.tipoCliente === 'Natural') {
+
+      datosBusqueda = {
+        tipoCliente: 'Natural',
+        tipoDocumento: this.tipoDocumento,
+        numeroDocumento: this.numeroDocumento
+      };
+
+    }
+
+    else {
+
+      datosBusqueda = {
+        tipoCliente: 'Juridica',
+        nit: this.nit
+      };
+
+    }
+
+    this.aperturaService
+    .verificarCliente(datosBusqueda)
+    .subscribe({
       next: (respuesta: VerificarClienteResponse) => {
         this.clienteVerificado = true;
         this.estadoSolicitud = respuesta.estado;
         this.mensajeEstado = respuesta.mensaje;
-        this.nombreCompleto = respuesta.nombreCompleto || '';
+        if (this.tipoCliente === 'Juridica') {
+          this.razonSocial = respuesta.nombreCompleto || '';
+        } else {
+          this.nombreCompleto = respuesta.nombreCompleto || '';
+        }
         this.idSolicitud = respuesta.idSolicitud || null;
         this.iconoEstado = respuesta.icono || 'info';
 
@@ -245,12 +330,15 @@ onInputMonto(event: Event) {
     }
 
     const datosApertura = {
+      tipoCliente: this.tipoCliente,
       idSolicitud: this.idSolicitud,
       tipoDeposito: this.depositoInicial,
       valorDeposito: monto,
       codigoCheque: this.depositoInicial === 'Cheque' ? this.codigoCheque : undefined,
       numeroCheque: this.depositoInicial === 'Cheque' ? this.numeroCheque : undefined
     };
+
+    console.log(datosApertura);
 
     this.aperturaService.aperturarCuenta(datosApertura).subscribe({
       next: (respuesta: AperturarCuentaResponse) => {
@@ -260,9 +348,24 @@ onInputMonto(event: Event) {
 
           this.datosComprobante = {
             numeroCuenta: respuesta.numeroCuenta,
-            nombreCliente: this.nombreCompleto,
-            tipoDocumento: this.tipoDocumento,
-            numeroDocumento: this.numeroDocumento,
+
+            tipoCliente: this.tipoCliente,
+
+            nombreCliente:
+              this.tipoCliente === 'Juridica'
+                ? this.razonSocial
+                : this.nombreCompleto,
+
+            tipoDocumento:
+              this.tipoCliente === 'Natural'
+                ? this.tipoDocumento
+                : 'NIT',
+
+            numeroDocumento:
+              this.tipoCliente === 'Natural'
+                ? this.numeroDocumento
+                : this.nit,
+
             tipoDeposito: this.depositoInicial,
             valorDeposito: monto,
             fecha: new Date(),
@@ -284,6 +387,8 @@ onInputMonto(event: Event) {
   limpiarFormulario() {
     this.tipoDocumento = '';
     this.numeroDocumento = '';
+    this.nit = '';
+    this.razonSocial = ''; 
     this.nombreCompleto = '';
     this.depositoInicial = '';
     this.valorDeposito = 0;

@@ -32,7 +32,8 @@ export class ConsignacionComponent {
     saldoAnterior: 0,
     saldoNuevo: 0,
     fecha: new Date(),
-    nombreCajero: ''
+    nombreCajero: '',
+    tipoTitular: 'Natural'
   };
 
 constructor(
@@ -101,6 +102,31 @@ constructor(
     input.value = valorFormateado;
   }
 
+  onInputNumeroCuenta(event: Event) {
+
+    const input = event.target as HTMLInputElement;
+
+    // Permitir únicamente números
+    let valor = input.value.replace(/[^0-9]/g, '');
+
+    // Respetar maxlength del HTML
+    valor = valor.substring(0, 20);
+
+    // Actualizar visualmente
+    input.value = valor;
+
+    // Actualizar FormControl
+    this.consignacionForm.patchValue(
+      {
+        numeroCuenta: valor
+      },
+      {
+        emitEvent: false
+      }
+    );
+
+  }
+
   buscarCuenta() {
     const numeroCuenta = this.consignacionForm.get('numeroCuenta')?.value;
     if (!numeroCuenta) {
@@ -113,6 +139,10 @@ constructor(
         if (response.existe && response.datos) {
           this.cuentaEncontrada = true;
           this.idCuenta = response.datos.idCuenta;
+          const tipoTitular = response.datos.idCliente 
+          ? 'Natural' 
+          : 'Juridica';
+          this.datosComprobante.tipoTitular = tipoTitular;
 
           // Habilitar campos cuando se encuentra la cuenta
           this.consignacionForm.get('tipoConsignacion')?.enable();
@@ -190,7 +220,10 @@ constructor(
             saldoAnterior: response.datos.saldoAnterior,
             saldoNuevo: response.datos.saldoNuevo,
             fecha: new Date(response.datos.fechaTransaccion),
-            nombreCajero: this.datosComprobante.nombreCajero
+            nombreCajero: this.datosComprobante.nombreCajero,
+            tipoTitular:
+              response.datos.tipoTitular ||
+              this.datosComprobante.tipoTitular
           };
 
           this.consignacionRealizada = true;
@@ -232,6 +265,8 @@ constructor(
     // Deshabilitar campos dependientes
     this.consignacionForm.get('tipoConsignacion')?.disable();
     this.consignacionForm.get('valor')?.disable();
+
+    this.datosComprobante.tipoTitular = 'Natural';
 
     this.consignacionForm.patchValue({
       numeroDocumento: '',
