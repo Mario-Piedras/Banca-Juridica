@@ -96,7 +96,7 @@
             Número de Cuenta <span class="text-red-500">*</span>
           </label>
           <div class="flex gap-2">
-            <input type="text" formControlName="numeroCuenta" placeholder="Ingrese el número de cuenta" maxlength="20"
+            <input type="text" formControlName="numeroCuenta" placeholder="Ingrese el número de cuenta" maxlength="20" (input)="onInputNumeroCuenta($event)"
               class="flex-1 px-2 md:px-3 py-1.5 md:py-2 text-xs md:text-sm border rounded-lg focus:outline-none focus:border-blue-500"
               [ngClass]="{
                 'border-gray-300': !(retiroForm.get('numeroCuenta')?.invalid && retiroForm.get('numeroCuenta')?.touched),

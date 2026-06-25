@@ -69,6 +69,23 @@ export class RetiroVentanillaComponent {
     input.value = valorFormateado;
   }
 
+  // Permitir solo números en número de cuenta
+  onInputNumeroCuenta(event: Event) {
+    const input = event.target as HTMLInputElement;
+
+    // Eliminar cualquier carácter que no sea número
+    const valor = input.value.replace(/[^0-9]/g, '');
+
+    // Actualizar visualmente
+    input.value = valor;
+
+    // Actualizar el FormControl
+    this.retiroForm.patchValue(
+      { numeroCuenta: valor },
+      { emitEvent: false }
+    );
+  }
+
   buscarCuenta() {
     const numeroCuenta = this.retiroForm.get('numeroCuenta')?.value;
 

@@ -79,6 +79,28 @@ export class AperturaCuentaComponent {
     this.numeroDocumento = valor;
   }
 
+  onInputNit(event: Event) {
+    const input = event.target as HTMLInputElement;
+
+    let valor = input.value;
+
+    // Permitir solo números y guion
+    valor = valor.replace(/[^0-9-]/g, '');
+
+    // Solo permitir un guion
+    const partes = valor.split('-');
+
+    if (partes.length > 2) {
+      valor = partes[0] + '-' + partes.slice(1).join('');
+    }
+
+    // Máximo 20 caracteres
+    valor = valor.substring(0, 20);
+
+    input.value = valor;
+    this.nit = valor;
+  }
+
   // Validar cuando cambia el tipo de documento
   onTipoDocumentoChange() {
     // Limpiar el número de documento cuando cambia el tipo

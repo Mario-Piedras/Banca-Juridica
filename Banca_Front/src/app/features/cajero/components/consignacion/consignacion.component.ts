@@ -102,6 +102,31 @@ constructor(
     input.value = valorFormateado;
   }
 
+  onInputNumeroCuenta(event: Event) {
+
+    const input = event.target as HTMLInputElement;
+
+    // Permitir únicamente números
+    let valor = input.value.replace(/[^0-9]/g, '');
+
+    // Respetar maxlength del HTML
+    valor = valor.substring(0, 20);
+
+    // Actualizar visualmente
+    input.value = valor;
+
+    // Actualizar FormControl
+    this.consignacionForm.patchValue(
+      {
+        numeroCuenta: valor
+      },
+      {
+        emitEvent: false
+      }
+    );
+
+  }
+
   buscarCuenta() {
     const numeroCuenta = this.consignacionForm.get('numeroCuenta')?.value;
     if (!numeroCuenta) {
