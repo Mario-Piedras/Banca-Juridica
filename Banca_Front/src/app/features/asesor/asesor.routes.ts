@@ -54,21 +54,6 @@ export const ASESOR_ROUTES: Routes = [
           ),
       },
       {
-        path: 'solicitar-producto-juridico',
-        loadComponent: () =>
-          import('./components/solicitar-producto-juridico/solicitar-producto-juridico.component').then(
-            (m) => m.SolicitarProductoJuridicoComponent
-          ),
-      },
-      {
-        path: 'solicitar-producto2',
-        loadComponent: () =>
-          import('./components/solicitar-producto2/solicitar-producto2.component').then(
-            (m) => m.SolicitarProducto2Component
-          ),
-      },
-
-      {
         path: 'solicitudes-radicadas',
         loadComponent: () =>
           import('./components/solicitudes-radicadas/solicitudes-radicadas.component').then(
