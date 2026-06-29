@@ -147,7 +147,7 @@
   </form>
 
   <app-confirm-modal [visible]="confirmModalVisible" [title]="confirmModalTitle" [message]="confirmModalMessage"
-    [type]="confirmModalType" [confirmText]="confirmModalConfirmText" (confirm)="confirmModalVisible = false"
+    [type]="confirmModalType" [confirmText]="confirmModalConfirmText" (confirm)="onConfirmModal()"
     (closed)="confirmModalVisible = false">
   </app-confirm-modal>
 

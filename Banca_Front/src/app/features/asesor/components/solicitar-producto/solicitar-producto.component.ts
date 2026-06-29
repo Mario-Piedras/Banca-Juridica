@@ -235,7 +235,6 @@ export class SolicitarProductoComponent implements OnInit {
         this.confirmModalType = 'success';
         this.confirmModalConfirmText = 'Aceptar';
         this.confirmModalVisible = true;
-        this.limpiarFormulario();
       },
       error: (error) => {
         this.isLoading = false;
@@ -269,6 +268,12 @@ export class SolicitarProductoComponent implements OnInit {
 
     const fileInput = document.getElementById('archivoInputSolicitudProducto') as HTMLInputElement | null;
     if (fileInput) fileInput.value = '';
+  }
+
+  onConfirmModal(): void {
+    // Limpiar TODO cuando el usuario presiona Aceptar en el modal.
+    this.limpiarFormulario();
+    this.confirmModalVisible = false;
   }
 
 }
