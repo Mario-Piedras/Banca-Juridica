@@ -25,9 +25,8 @@ export class SolicitarProductoComponent implements OnInit {
   cedula: string = '';
   nit: string = '';
 
-  // Valor guardado en BD
-  productoSeleccionado: string = 'Ahorros';
-
+  // Valores guardados en la BD
+  tipo_cuenta: string = 'Ahorros';
   proposito_cuenta: string = '';
   comentario: string = '';
 
@@ -36,7 +35,6 @@ export class SolicitarProductoComponent implements OnInit {
   archivoSeleccionadoNombre: string = '';
 
   estadoBusqueda: EstadoBusqueda = {
-
     encontrado: false,
     noEncontrado: false,
     nombre: ''
@@ -45,16 +43,33 @@ export class SolicitarProductoComponent implements OnInit {
   currentUser: any = null;
   isLoading: boolean = false;
 
-  confirmModalVisible = false;
-  confirmModalTitle = '';
-  confirmModalMessage = '';
-  confirmModalType: 'success' | 'error' | 'confirm' = 'success';
-  confirmModalConfirmText = 'Aceptar';
+  // Modal de confirmación
+  modalVisible = false;
+  modalTitle = '';
+  modalMessage = '';
+  modalType: 'success' | 'error' | 'confirm' = 'success';
+  modalConfirmText = 'Aceptar';
+  private pendingAction: (() => void) | null = null;
 
   constructor(
     private solicitudService: SolicitudService,
     private authService: AuthService
-  ) {}
+  ) { }
+
+  private mostrarModal(
+    title: string,
+    message: string,
+    type: 'success' | 'error' | 'confirm',
+    confirmText = 'Aceptar',
+    action?: () => void
+  ): void {
+    this.modalTitle = title;
+    this.modalMessage = message;
+    this.modalType = type;
+    this.modalConfirmText = confirmText;
+    this.pendingAction = action ?? null;
+    this.modalVisible = true;
+  }
 
   ngOnInit(): void {
     this.authService.currentUser.subscribe((user) => {
@@ -102,7 +117,7 @@ export class SolicitarProductoComponent implements OnInit {
     const file = input.files[0];
     const maxSize = 5 * 1024 * 1024; // 5MB
     if (file.size > maxSize) {
-      alert('El archivo es demasiado grande. El tamaño máximo es 5MB.');
+      this.mostrarModal('Archivo inválido', 'El archivo es demasiado grande. El tamaño máximo es 5 MB.', 'error');
       input.value = '';
       this.archivoFile = null;
       this.archivoSeleccionadoNombre = '';
@@ -119,7 +134,7 @@ export class SolicitarProductoComponent implements OnInit {
     ];
 
     if (!allowedTypes.includes(file.type)) {
-      alert('Tipo de archivo no permitido. Use PDF, JPG, PNG o Word.');
+      this.mostrarModal('Archivo inválido', 'Tipo de archivo no permitido. Usa PDF, JPG, PNG o Word.', 'error');
       input.value = '';
       this.archivoFile = null;
       this.archivoSeleccionadoNombre = '';
@@ -130,17 +145,18 @@ export class SolicitarProductoComponent implements OnInit {
     this.archivoSeleccionadoNombre = file.name;
   }
 
+  // Búsqueda del cliente
   buscarClienteOVerificar(): void {
-
-    if (!this.tipoClienteSeleccionado) {
-      alert('Seleccione el tipo de cliente');
-      return;
-    }
-
     const entrada = this.tipoClienteSeleccionado === 'Natural' ? this.cedula : this.nit;
 
     if (!entrada.trim()) {
-      alert(this.tipoClienteSeleccionado === 'Natural' ? 'Por favor ingrese una cédula' : 'Por favor ingrese un NIT');
+      this.mostrarModal(
+        'Información',
+        this.tipoClienteSeleccionado === 'Natural'
+          ? 'Por favor ingrese una cédula.'
+          : 'Por favor ingrese un NIT.',
+        'error'
+      );
       return;
     }
 
@@ -182,30 +198,39 @@ export class SolicitarProductoComponent implements OnInit {
   }
 
   enviarSolicitud(): void {
-    if (!this.tipoClienteSeleccionado) {
-      alert('Seleccione el tipo de cliente');
-      return;
-    }
-
     const entrada = this.tipoClienteSeleccionado === 'Natural' ? this.cedula : this.nit;
 
     if (!entrada.trim()) {
-      alert(this.tipoClienteSeleccionado === 'Natural' ? 'Por favor ingrese la cédula del titular' : 'Por favor ingrese el NIT del titular');
+      this.mostrarModal(
+        'Información',
+        this.tipoClienteSeleccionado === 'Natural'
+          ? 'Por favor ingrese la cédula del titular.'
+          : 'Por favor ingrese el NIT del titular.',
+        'error'
+      );
       return;
     }
 
     if (!this.estadoBusqueda.encontrado) {
-      alert('Debe buscar y verificar que el cliente/empresa existe antes de enviar la solicitud');
+      this.mostrarModal(
+        'Información',
+        'Debe buscar y verificar que el cliente o empresa existe antes de enviar la solicitud.',
+        'error'
+      );
       return;
     }
 
     if (!this.currentUser) {
-      alert('Error: No se pudo obtener la información del usuario. Por favor, inicie sesión nuevamente.');
+      this.mostrarModal(
+        'Error',
+        'No se pudo obtener la información del usuario. Inicie sesión nuevamente.',
+        'error'
+      );
       return;
     }
 
     const solicitud: any = {
-      producto: this.productoSeleccionado, // Ahorros en BD
+      tipo_cuenta: this.tipo_cuenta,
       proposito_cuenta: this.proposito_cuenta,
       comentario: this.comentario,
       tipo_cliente: this.tipoClienteSeleccionado
@@ -230,29 +255,33 @@ export class SolicitarProductoComponent implements OnInit {
       next: (response) => {
         this.isLoading = false;
         console.log('Solicitud enviada exitosamente:', response);
-        this.confirmModalTitle = 'Solicitud enviada';
-        this.confirmModalMessage = 'La solicitud se ha enviado exitosamente.';
-        this.confirmModalType = 'success';
-        this.confirmModalConfirmText = 'Aceptar';
-        this.confirmModalVisible = true;
+        this.modalTitle = 'Solicitud enviada';
+        this.modalMessage = 'La solicitud se ha enviado exitosamente.';
+        this.modalType = 'success';
+        this.modalConfirmText = 'Aceptar';
+        this.modalVisible = true;
       },
       error: (error) => {
         this.isLoading = false;
         console.error('Error al enviar solicitud:', error);
         const errorMessage = error.error?.message || 'Error al enviar la solicitud';
-        this.confirmModalTitle = 'Error';
-        this.confirmModalMessage = errorMessage;
-        this.confirmModalType = 'error';
-        this.confirmModalConfirmText = 'Aceptar';
-        this.confirmModalVisible = true;
+        this.modalTitle = 'Error';
+        this.modalMessage = errorMessage;
+        this.modalType = 'error';
+        this.modalConfirmText = 'Aceptar';
+        this.modalVisible = true;
       }
     });
   }
 
   cancelar(): void {
-    if (confirm('¿Está seguro de que desea cancelar? Se perderán los datos ingresados.')) {
-      this.limpiarFormulario();
-    }
+    this.mostrarModal(
+      'Cancelar solicitud',
+      '¿Está seguro de que desea cancelar? Se perderán los datos ingresados.',
+      'confirm',
+      'Aceptar',
+      () => this.limpiarFormulario()
+    );
   }
 
   // Limpieza del formulario
@@ -265,15 +294,17 @@ export class SolicitarProductoComponent implements OnInit {
     this.estadoBusqueda = { encontrado: false, noEncontrado: false, nombre: '' };
     this.archivoFile = null;
     this.archivoSeleccionadoNombre = '';
-
-    const fileInput = document.getElementById('archivoInputSolicitudProducto') as HTMLInputElement | null;
-    if (fileInput) fileInput.value = '';
   }
 
   onConfirmModal(): void {
-    // Limpiar TODO cuando el usuario presiona Aceptar en el modal.
-    this.limpiarFormulario();
-    this.confirmModalVisible = false;
+    if (this.pendingAction) {
+      this.pendingAction();
+      this.pendingAction = null;
+    } else if (this.modalType === 'success') {
+      // Limpiar TODO cuando el usuario presiona Aceptar en el modal.
+      this.limpiarFormulario();
+    }
+    this.modalVisible = false;
   }
 
 }

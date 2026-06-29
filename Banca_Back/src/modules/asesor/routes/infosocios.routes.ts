@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { InfosociosController } from '../controllers/infosociosController';
+import { InfosociosController } from '../controllers/infosocios.controller';
 import { authMiddleware, requireRole } from '../../../shared/middleware/authMiddleware';
 
 const router = Router();

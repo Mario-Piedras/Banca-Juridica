@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RetiroService } from '../../services/retiro.service';
 import { ConsignacionService } from '../../services/consignacion.service';
+import { ConfirmModalComponent, ConfirmModalType } from '../../../../shared/components/modals/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-consignacion',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, ConfirmModalComponent],
   templateUrl: './consignacion.component.html',
   styleUrls: ['./consignacion.component.css']
 })
@@ -36,49 +37,64 @@ export class ConsignacionComponent {
     tipoTitular: 'Natural'
   };
 
-constructor(
-  private fb: FormBuilder,
-  private retiroService: RetiroService,
-  private consignacionService: ConsignacionService
-) {
-  this.consignacionForm = this.fb.group({
-    numeroCuenta: ['', [Validators.required]],
-    numeroDocumento: [{ value: '', disabled: true }],
-    saldoDisponible: [{ value: '', disabled: true }],
-    titular: [{ value: '', disabled: true }],
-    tipoConsignacion: [{ value: '', disabled: true }, [Validators.required]],
-    valor: [{ value: '', disabled: true }, [Validators.required, Validators.min(this.MONTO_MINIMO)]],
-    codigoCheque: [{ value: '', disabled: true }],
-    numeroCheque: [{ value: '', disabled: true }]
-  });
+  // Modal de confirmación
+  modalVisible = false;
+  modalTitle = '';
+  modalMessage = '';
+  modalType: ConfirmModalType = 'success';
+  modalConfirmText = 'Aceptar';
 
-  // Obtener nombre del cajero desde localStorage
-  const userStr = localStorage.getItem('user');
-  if (userStr) {
-    try {
-      const user = JSON.parse(userStr);
-      this.datosComprobante.nombreCajero = user.nombre || 'Cajero Principal';
-    } catch (e) {
+  constructor(
+    private fb: FormBuilder,
+    private retiroService: RetiroService,
+    private consignacionService: ConsignacionService
+  ) {
+    this.consignacionForm = this.fb.group({
+      numeroCuenta: ['', [Validators.required]],
+      numeroDocumento: [{ value: '', disabled: true }],
+      saldoDisponible: [{ value: '', disabled: true }],
+      titular: [{ value: '', disabled: true }],
+      tipoConsignacion: [{ value: '', disabled: true }, [Validators.required]],
+      valor: [{ value: '', disabled: true }, [Validators.required, Validators.min(this.MONTO_MINIMO)]],
+      codigoCheque: [{ value: '', disabled: true }],
+      numeroCheque: [{ value: '', disabled: true }]
+    });
+
+    // Obtener nombre del cajero desde localStorage
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+      try {
+        const user = JSON.parse(userStr);
+        this.datosComprobante.nombreCajero = user.nombre || 'Cajero Principal';
+      } catch (e) {
+        this.datosComprobante.nombreCajero = 'Cajero Principal';
+      }
+    } else {
       this.datosComprobante.nombreCajero = 'Cajero Principal';
     }
-  } else {
-    this.datosComprobante.nombreCajero = 'Cajero Principal';
+
+    this.consignacionForm.get('tipoConsignacion')?.valueChanges.subscribe(tipo => {
+      if (tipo === 'Cheque') {
+        this.consignacionForm.get('codigoCheque')?.enable();
+        this.consignacionForm.get('numeroCheque')?.enable();
+      } else {
+        this.consignacionForm.get('codigoCheque')?.disable();
+        this.consignacionForm.get('numeroCheque')?.disable();
+        this.consignacionForm.patchValue({
+          codigoCheque: '',
+          numeroCheque: ''
+        });
+      }
+    });
   }
 
-  this.consignacionForm.get('tipoConsignacion')?.valueChanges.subscribe(tipo => {
-    if (tipo === 'Cheque') {
-      this.consignacionForm.get('codigoCheque')?.enable();
-      this.consignacionForm.get('numeroCheque')?.enable();
-    } else {
-      this.consignacionForm.get('codigoCheque')?.disable();
-      this.consignacionForm.get('numeroCheque')?.disable();
-      this.consignacionForm.patchValue({
-        codigoCheque: '',
-        numeroCheque: ''
-      });
-    }
-  });
-}
+  private mostrarModal(type: ConfirmModalType, title: string, message: string): void {
+    this.modalType = type;
+    this.modalTitle = title;
+    this.modalMessage = message;
+    this.modalConfirmText = 'Aceptar';
+    this.modalVisible = true;
+  }
 
   onInputValor(event: Event) {
     const input = event.target as HTMLInputElement;
@@ -127,10 +143,11 @@ constructor(
 
   }
 
+  // Búsqueda de la cuenta
   buscarCuenta() {
     const numeroCuenta = this.consignacionForm.get('numeroCuenta')?.value;
     if (!numeroCuenta) {
-      alert('Por favor ingrese un número de cuenta');
+      this.mostrarModal('error', 'Error', 'Por favor ingrese un número de cuenta');
       return;
     }
 
@@ -139,9 +156,8 @@ constructor(
         if (response.existe && response.datos) {
           this.cuentaEncontrada = true;
           this.idCuenta = response.datos.idCuenta;
-          const tipoTitular = response.datos.idCliente 
-          ? 'Natural' 
-          : 'Juridica';
+
+          const tipoTitular = response.datos.idCliente ? 'Natural' : 'Juridica';
           this.datosComprobante.tipoTitular = tipoTitular;
 
           // Habilitar campos cuando se encuentra la cuenta
@@ -153,15 +169,16 @@ constructor(
             titular: response.datos.titular,
             saldoDisponible: `$${response.datos.saldo.toLocaleString('es-CO')}`
           });
-          alert(response.mensaje);
+
+          this.mostrarModal('success', 'Éxito', response.mensaje);
         } else {
-          alert(response.mensaje);
+          this.mostrarModal('error', 'Error', response.mensaje);
           this.limpiarDatosCuenta();
         }
       },
       error: (error) => {
         console.error('Error al buscar cuenta:', error);
-        alert('Error al buscar la cuenta. Intente nuevamente.');
+        this.mostrarModal('error', 'Error', 'Error al buscar la cuenta. Intente nuevamente.');
         this.limpiarDatosCuenta();
       }
     });
@@ -169,7 +186,7 @@ constructor(
 
   onProcesarConsignacion() {
     if (this.consignacionForm.invalid || !this.cuentaEncontrada) {
-      alert('Por favor complete todos los campos requeridos');
+      this.mostrarModal('error', 'Error', 'Por favor complete todos los campos requeridos');
       return;
     }
 
@@ -181,7 +198,7 @@ constructor(
     const monto = parseFloat(valor);
 
     if (monto > this.MONTO_MAXIMO) {
-      alert(`⚠️ El valor máximo permitido es $9,999,999,999,999`);
+      this.mostrarModal('error', 'Error', '⚠️ El valor máximo permitido es $9,999,999,999,999');
       return;
     }
 
@@ -190,7 +207,11 @@ constructor(
       const numeroCheque = this.consignacionForm.get('numeroCheque')?.value;
 
       if (!codigoCheque || !numeroCheque) {
-        alert('⚠️ Para consignación con cheque debe ingresar código y número de cheque');
+        this.mostrarModal(
+          'error',
+          'Error',
+          '⚠️ Para consignación con cheque debe ingresar código y número de cheque'
+        );
         return;
       }
     }
@@ -206,7 +227,11 @@ constructor(
     this.consignacionService.procesarConsignacion(datosConsignacion).subscribe({
       next: (response) => {
         if (response.exito && response.datos) {
-          alert(`✅ ${response.mensaje}\n\nSaldo anterior: $${response.datos.saldoAnterior.toLocaleString()}\nValor consignado: $${response.datos.valorConsignado.toLocaleString()}\nSaldo nuevo: $${response.datos.saldoNuevo.toLocaleString()}`);
+          this.mostrarModal(
+            'success',
+            'Éxito',
+            `${response.mensaje}\n\nSaldo anterior: $${response.datos.saldoAnterior.toLocaleString()}\nValor consignado: $${response.datos.valorConsignado.toLocaleString()}\nSaldo nuevo: $${response.datos.saldoNuevo.toLocaleString()}`
+          );
 
           this.datosComprobante = {
             idTransaccion: response.datos.idTransaccion,
@@ -221,27 +246,27 @@ constructor(
             saldoNuevo: response.datos.saldoNuevo,
             fecha: new Date(response.datos.fechaTransaccion),
             nombreCajero: this.datosComprobante.nombreCajero,
-            tipoTitular:
-              response.datos.tipoTitular ||
-              this.datosComprobante.tipoTitular
+            tipoTitular: response.datos.tipoTitular || this.datosComprobante.tipoTitular
           };
 
           this.consignacionRealizada = true;
         } else {
-          alert(response.mensaje);
+          this.mostrarModal('error', 'Error', response.mensaje);
         }
       },
       error: (error) => {
         console.error('Error al procesar consignación:', error);
-        alert('Error al procesar la consignación. Intente nuevamente.');
+        this.mostrarModal('error', 'Error', 'Error al procesar la consignación. Intente nuevamente.');
       }
     });
   }
 
+  // Impresión del comprobante
   imprimirComprobante() {
     window.print();
   }
 
+  // Limpieza del formulario
   limpiarFormulario() {
     this.consignacionForm.reset();
     this.cuentaEncontrada = false;
@@ -290,4 +315,5 @@ constructor(
     this.consignacionForm.get('codigoCheque')?.disable();
     this.consignacionForm.get('numeroCheque')?.disable();
   }
+
 }

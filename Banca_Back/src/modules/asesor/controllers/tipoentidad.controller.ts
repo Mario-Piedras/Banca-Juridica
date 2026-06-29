@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
-import { CrudController } from './crudController';
+import { CrudController } from './crud.controller';
 
 const crudController = new CrudController();
-const TABLE_NAME = 'info_socios';
-const ID_FIELD = 'id_info_socios';
+const TABLE_NAME = 'tipo_entidad';
+const ID_FIELD = 'id_tipo_entidad';
 
-export class InfosociosController {
+export class TipoentidadController {
     async obtenerTodos(req: Request, res: Response): Promise<Response> {
         try {
             const rows = await crudController.obtenerTodos(TABLE_NAME);
@@ -37,22 +37,40 @@ export class InfosociosController {
         try {
 
             const body = req.body;
-
+            const id_empresa = body.id_empresa;
             const data = {
-                rnve: body.rnve,
-                hay_socios_accionistas: body.hay_socios_accionistas,
-                personas_control: body.personas_control,
-                personas_expuestas: body.personas_expuestas,
-                bolsa_valores: body.bolsa_valores
+                naturaleza: body.naturaleza,
+                codigo_ciiu: body.codigo_ciiu,
+                actividad_economia: body.actividad_economia,
+                num_empleados: body.num_empleados,
+                tipo_sociedad: body.tipo_sociedad,
+                otra_sociedad: body.otra_sociedad,
+                tipo_asociacion: body.tipo_asociacion,
+                otra_asociacion: body.otra_asociacion,
+                ent_estatal: body.ent_estatal,
+                otra_ent_estatal: body.otra_ent_estatal,
+                ent_estatal_descentralizada: body.ent_estatal_descentralizada
             };
 
             if (!data || Object.keys(data).length === 0) {
                 return res.status(400).json({ mensaje: 'Los datos son obligatorios' });
             }
 
+            // Guardar tipo entidad
             const nuevo = await crudController.crear(TABLE_NAME, data);
-            return res.status(201).json(nuevo);
+            // Actualizar FK en info_empresas
+            await crudController.actualizar(
+                'info_empresas',
+                { id_info_empresas: id_empresa },
+                { id_tipo_entidad: nuevo.id }
+            );
+
+            return res.status(201).json({
+                mensaje: 'Tipo entidad guardado correctamente',
+                data: nuevo
+            });
         } catch (error: any) {
+            console.error(error);
             return res.status(500).json({ error: error.message });
         }
     }

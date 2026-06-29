@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { InfofinancieraController } from '../controllers/infofinancieraController';
+import { InfofinancieraController } from '../controllers/infofinanciera.controller';
 import { authMiddleware, requireRole } from '../../../shared/middleware/authMiddleware';
 
 const router = Router();

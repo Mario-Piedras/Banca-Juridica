@@ -78,10 +78,10 @@
       <label class="block text-sm font-semibold text-gray-800 mb-2">
         Producto <span class="text-red-600">*</span>
       </label>
-      <select [(ngModel)]="productoSeleccionado" name="productoSeleccionado" class="input-field" disabled>
-        <option [value]="productoSeleccionado">
-          {{ productoLabelVisual }}
-        </option>
+      <select [(ngModel)]="tipo_cuenta" name="tipo_cuenta" class="input-field" disabled>
+        <option value="Ahorros" selected>{{ tipoClienteSeleccionado === 'Natural'
+          ? 'Cuenta de Ahorros (Persona Natural)'
+          : 'Cuenta de Ahorros (Persona Jurídica)' }}</option>
       </select>
       <p class="text-xs text-gray-500 mt-1">Actualmente solo disponible Cuenta de Ahorros</p>
     </div>
@@ -146,9 +146,8 @@
     </div>
   </form>
 
-  <app-confirm-modal [visible]="confirmModalVisible" [title]="confirmModalTitle" [message]="confirmModalMessage"
-    [type]="confirmModalType" [confirmText]="confirmModalConfirmText" (confirm)="onConfirmModal()"
-    (closed)="confirmModalVisible = false">
+  <app-confirm-modal [visible]="modalVisible" [title]="modalTitle" [message]="modalMessage" [type]="modalType"
+    [confirmText]="modalConfirmText" (confirm)="onConfirmModal()" (closed)="modalVisible = false">
   </app-confirm-modal>
 
 </div>

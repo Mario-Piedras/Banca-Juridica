@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { DeclaracionbienesController } from '../controllers/declaracionbienesController';
+import { DeclaracionbienesController } from '../controllers/declaracionbienes.controller';
 import { authMiddleware, requireRole } from '../../../shared/middleware/authMiddleware';
 
 

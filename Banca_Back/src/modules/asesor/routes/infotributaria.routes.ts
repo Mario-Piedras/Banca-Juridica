@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { InfotributariaController } from '../controllers/infotributariaController';
+import { InfotributariaController } from '../controllers/infotributaria.controller';
 import { authMiddleware, requireRole } from '../../../shared/middleware/authMiddleware';
 
 

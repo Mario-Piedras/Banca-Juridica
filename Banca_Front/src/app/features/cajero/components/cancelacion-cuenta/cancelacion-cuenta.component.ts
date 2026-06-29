@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RetiroService } from '../../services/retiro.service';
 import { CancelacionService } from '../../services/cancelacion.service';
+import { ConfirmModalComponent, ConfirmModalType } from '../../../../shared/components/modals/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-cancelacion-cuenta',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, ConfirmModalComponent],
   templateUrl: './cancelacion-cuenta.component.html',
   styleUrls: ['./cancelacion-cuenta.component.css']
 })
@@ -25,9 +26,15 @@ export class CancelacionCuentaComponent {
     saldoFinal: 0,
     motivoCancelacion: '',
     fecha: new Date(),
-
     tipoTitular: 'Natural'
   };
+
+  // Modal de confirmación
+  modalVisible = false;
+  modalTitle = '';
+  modalMessage = '';
+  modalType: ConfirmModalType = 'success';
+  modalConfirmText = 'Aceptar';
 
   constructor(
     private fb: FormBuilder,
@@ -43,10 +50,22 @@ export class CancelacionCuentaComponent {
     });
   }
 
+  esConfirmacionCancelacion = false;
+
+  private mostrarModal(type: ConfirmModalType, title: string, message: string): void {
+    this.esConfirmacionCancelacion = false;
+    this.modalType = type;
+    this.modalTitle = title;
+    this.modalMessage = message;
+    this.modalConfirmText = 'Aceptar';
+    this.modalVisible = true;
+  }
+
+  // Búsqueda de la cuenta
   buscarCuenta() {
     const numeroCuenta = this.cancelacionForm.get('numeroCuenta')?.value;
     if (!numeroCuenta) {
-      alert('Por favor ingrese un número de cuenta');
+      this.mostrarModal('error', 'Error', 'Por favor ingrese un número de cuenta');
       return;
     }
 
@@ -72,25 +91,24 @@ export class CancelacionCuentaComponent {
             saldoDisponible: `$${response.datos.saldo.toLocaleString('es-CO')}`
           });
 
-          alert(response.mensaje);
+          this.mostrarModal('success', 'Éxito', response.mensaje);
         } else {
-          alert(response.mensaje);
+          this.mostrarModal('error', 'Error', response.mensaje);
           this.limpiarDatosCuenta();
         }
       },
       error: (error) => {
         console.error('Error al buscar cuenta:', error);
-        alert('Error al buscar la cuenta. Intente nuevamente.');
+        this.mostrarModal('error', 'Error', 'Error al buscar la cuenta. Intente nuevamente.');
         this.limpiarDatosCuenta();
       }
     });
   }
 
-
   onCancelarCuenta() {
     // Solo validar que la cuenta esté encontrada
     if (!this.cuentaEncontrada) {
-      alert('Por favor busque una cuenta válida');
+      this.mostrarModal('error', 'Error', 'Por favor busque una cuenta válida');
       return;
     }
 
@@ -100,55 +118,28 @@ export class CancelacionCuentaComponent {
     const titular = this.cancelacionForm.get('titular')?.value;
 
     // Confirmar cancelación
-    const confirmar = confirm(
-      `⚠️ CONFIRMACIÓN DE CANCELACIÓN\n\n` +
+    this.esConfirmacionCancelacion = true;
+
+    this.modalType = 'confirm';
+    this.modalTitle = 'Confirmar cancelación';
+    this.modalMessage =
       `Cuenta: ${numeroCuenta}\n` +
       `Titular: ${titular}\n` +
       `Documento: ${numeroDocumento}\n\n` +
       `¿Está seguro de cancelar esta cuenta?\n` +
-      `Esta acción NO se puede deshacer.`
-    );
+      `Esta acción NO se puede deshacer.`;
 
-    if (!confirmar) return;
+    this.modalConfirmText = 'Sí, cancelar';
+    this.modalVisible = true;
 
-    const datosCancelacion = {
-      numeroCuenta: numeroCuenta,
-      numeroDocumento: numeroDocumento,
-      motivoCancelacion: motivoCancelacion  // ✅ Puede estar vacío
-    };
-
-    this.cancelacionService.cancelarCuenta(datosCancelacion).subscribe({
-      next: (response) => {
-        if (response.exito && response.datos) {
-          alert(`${response.mensaje}\n\nLa cuenta ha sido cerrada permanentemente.`);
-
-          this.datosComprobante = {
-            idCuenta: response.datos.idCuenta,
-            numeroCuenta: numeroCuenta,
-            numeroDocumento: numeroDocumento,
-            titular: titular,
-            saldoFinal: response.datos.saldoFinal,
-            motivoCancelacion: response.datos.motivoCancelacion,
-            fecha: new Date(response.datos.fechaCancelacion),
-            tipoTitular: this.datosComprobante.tipoTitular
-          };
-
-          this.cancelacionRealizada = true;
-        } else {
-          alert(response.mensaje);
-        }
-      },
-      error: (error) => {
-        console.error('Error al cancelar cuenta:', error);
-        alert('Error al cancelar la cuenta. Intente nuevamente.');
-      }
-    });
   }
 
+  // Impresión del comprobante
   imprimirComprobante() {
     window.print();
   }
 
+  // Limpieza del formulario
   limpiarFormulario() {
     this.cancelacionForm.reset();
     this.cuentaEncontrada = false;
@@ -177,9 +168,56 @@ export class CancelacionCuentaComponent {
     });
   }
 
-
   onCancelar() {
     this.cancelacionForm.reset();
     this.limpiarDatosCuenta();
   }
+
+  onConfirmModal(): void {
+    if (!this.esConfirmacionCancelacion) {
+      return;
+    }
+
+    this.esConfirmacionCancelacion = false;
+
+    const numeroCuenta = this.cancelacionForm.get('numeroCuenta')?.value;
+    const numeroDocumento = this.cancelacionForm.get('numeroDocumento')?.value;
+    const motivoCancelacion = this.cancelacionForm.get('motivoCancelacion')?.value?.trim() || '';
+    const titular = this.cancelacionForm.get('titular')?.value;
+
+    const datosCancelacion = {
+      numeroCuenta: numeroCuenta,
+      numeroDocumento: numeroDocumento,
+      motivoCancelacion: motivoCancelacion  // ✅ Puede estar vacío
+    };
+
+    this.cancelacionService.cancelarCuenta(datosCancelacion).subscribe({
+      next: (response) => {
+        if (response.exito && response.datos) {
+          this.mostrarModal('success', 'Éxito', `${response.mensaje}\n\nLa cuenta ha sido cerrada permanentemente.`);
+
+          this.datosComprobante = {
+            idCuenta: response.datos.idCuenta,
+            numeroCuenta: numeroCuenta,
+            numeroDocumento: numeroDocumento,
+            titular: titular,
+            saldoFinal: response.datos.saldoFinal,
+            motivoCancelacion: response.datos.motivoCancelacion,
+            fecha: new Date(response.datos.fechaCancelacion),
+            tipoTitular: this.datosComprobante.tipoTitular
+          };
+
+          this.cancelacionRealizada = true;
+        } else {
+          this.mostrarModal('error', 'Error', response.mensaje);
+        }
+      },
+      error: (error) => {
+        console.error('Error al cancelar cuenta:', error);
+        this.mostrarModal('error', 'Error', 'Error al cancelar la cuenta. Intente nuevamente.');
+      }
+    });
+
+  }
+
 }

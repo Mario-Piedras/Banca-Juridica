@@ -43,7 +43,7 @@ export class SolicitudService {
       formData.append('nit', solicitud.nit);
     }
 
-    formData.append('producto', solicitud.producto);
+    formData.append('tipo_cuenta', solicitud.tipo_cuenta);
     formData.append('proposito_cuenta', solicitud.proposito_cuenta);
     formData.append('comentario', solicitud.comentario || '');
     formData.append('tipo_cliente', solicitud.tipo_cliente || 'Natural');

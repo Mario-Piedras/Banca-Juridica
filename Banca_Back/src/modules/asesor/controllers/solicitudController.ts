@@ -79,7 +79,7 @@ export class SolicitudController {
   // Crear nueva solicitud
   async crearSolicitud(req: Request, res: Response): Promise<void> {
     try {
-      const { cedula, nit, comentario, tipo_cliente, proposito_cuenta } = req.body;
+      const { cedula, nit, comentario, tipo_cliente, proposito_cuenta, tipo_cuenta } = req.body;
       const archivo = req.file?.buffer;
 
       // Verificar que el usuario esté autenticado y tenga id_usuario_rol
@@ -127,6 +127,7 @@ export class SolicitudController {
         comentario,
         tipo_cliente,
         proposito_cuenta,
+        tipo_cuenta,
         archivo
       );
 

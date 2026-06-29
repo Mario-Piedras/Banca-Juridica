@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { TipoentidadController } from '../controllers/tipoentidadController';
+import { TipoentidadController } from '../controllers/tipoentidad.controller';
 import { authMiddleware, requireRole } from '../../../shared/middleware/authMiddleware';
 
 
