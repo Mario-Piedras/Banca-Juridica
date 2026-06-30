@@ -1,22 +1,15 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-    FormBuilder,
-    FormGroup,
-    ReactiveFormsModule,
-    Validators
-} from '@angular/forms';
-
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MovimientosCuentaService } from '../../services/movimientos-cuenta.service';
+import { ConfirmModalComponent } from '../../../../shared/components/modals/confirm-modal/confirm-modal.component';
 
 @Component({
     selector: 'app-movimientos-cuenta',
     standalone: true,
-    imports: [
-        CommonModule,
-        ReactiveFormsModule
-    ],
-    templateUrl: './movimientos-cuenta.component.html'
+    imports: [CommonModule, ReactiveFormsModule, ConfirmModalComponent],
+    templateUrl: './movimientos-cuenta.component.html',
+    styleUrls: ['./movimientos-cuenta.component.css'],
 })
 export class MovimientosCuentaComponent {
     form: FormGroup;
@@ -35,6 +28,14 @@ export class MovimientosCuentaComponent {
         fecha: new Date(),
         tipoTitular: 'Natural'
     };
+
+    // Modal de confirmación
+    modalVisible = false;
+    modalTitle = '';
+    modalMessage = '';
+    modalType: 'success' | 'error' | 'confirm' = 'success';
+    modalConfirmText = 'Aceptar';
+    private pendingAction: (() => void) | null = null;
 
     constructor(
         private fb: FormBuilder,
@@ -63,6 +64,21 @@ export class MovimientosCuentaComponent {
         });
     }
 
+    private mostrarModal(
+        title: string,
+        message: string,
+        type: 'success' | 'error' | 'confirm',
+        confirmText = 'Aceptar',
+        action?: () => void
+    ): void {
+        this.modalTitle = title;
+        this.modalMessage = message;
+        this.modalType = type;
+        this.modalConfirmText = confirmText;
+        this.pendingAction = action ?? null;
+        this.modalVisible = true;
+    }
+
     onInputNumeroCuenta(event: Event) {
         const input = event.target as HTMLInputElement;
 
@@ -79,94 +95,61 @@ export class MovimientosCuentaComponent {
         );
     }
 
+    // Búsqueda de la cuenta
     buscarCuenta() {
-
         if (this.form.invalid) {
-
-            alert(
-                'Ingrese una cuenta válida'
-            );
-
+            this.mostrarModal('Error', 'Por favor ingrese un número de cuenta', 'error');
             return;
-
         }
 
-        const numeroCuenta =
-            this.form
-                .get(
-                    'numeroCuenta'
-                )
-                ?.value;
+        const numeroCuenta = this.form.get('numeroCuenta')?.value;
+        this.movimientosService.buscarCuenta(numeroCuenta).subscribe({
+            next: (response) => {
+                if (
+                    response.existe
+                ) {
 
-        this.movimientosService
-            .buscarCuenta(
-                numeroCuenta
-            )
-            .subscribe({
+                    this.mostrarModal(
+                        'Éxito',
+                        'La cuenta fue encontrada correctamente.',
+                        'success',
+                        'Aceptar',
+                        () => {
+                            this.cuentaEncontrada = true;
+                            this.tipoTitular = response.datos.tipoTitular;
 
-                next: (
-                    response
-                ) => {
+                            this.form.patchValue({
+                                titular: response.datos.titular,
+                                numeroDocumento: response.datos.numeroDocumento
+                            });
 
-                    if (
-                        response.existe
-                    ) {
-
-                        this.cuentaEncontrada =
-                            true;
-
-                        this.tipoTitular =
-                            response
-                                .datos
-                                .tipoTitular;
-
-                        this.form.patchValue({
-
-                            titular:
-                                response
-                                    .datos
-                                    .titular,
-
-                            numeroDocumento:
-                                response
-                                    .datos
-                                    .numeroDocumento
-
-                        });
-
-                        this.consultarMovimientos(
-                            numeroCuenta
-                        );
-
-                    } else {
-
-                        alert(
-                            response
-                                .mensaje
-                        );
-
-                    }
-
-                },
-
-                error: (
-                    err
-                ) => {
-
-                    alert(
-                        err
-                        .error
-                        ?.mensaje
-                        ||
-                        'Error'
+                            this.consultarMovimientos(numeroCuenta);
+                        }
                     );
+                } else {
+                    this.mostrarModal('Error', response.mensaje, 'error');
 
                 }
 
-            });
+            },
+
+            error: (
+                err
+            ) => {
+
+                this.mostrarModal(
+                    'Error',
+                    err.error?.mensaje || 'Error al buscar la cuenta.',
+                    'error'
+                );
+
+            }
+
+        });
 
     }
 
+    // Consulta de los movimientos
     consultarMovimientos(
         numeroCuenta: string
     ) {
@@ -176,8 +159,10 @@ export class MovimientosCuentaComponent {
                     resp.movimientos;
             },
             error: () => {
-                alert(
-                    'Error consultando movimientos'
+                this.mostrarModal(
+                    'Error',
+                    'Error consultando los movimientos de la cuenta.',
+                    'error'
                 );
             }
         });
@@ -213,4 +198,12 @@ export class MovimientosCuentaComponent {
         this.cuentaEncontrada = false;
         this.tipoTitular = 'Natural';
     }
+
+    onConfirmModal(): void {
+        if (this.pendingAction) {
+            this.pendingAction();
+            this.pendingAction = null;
+        }
+    }
+
 }

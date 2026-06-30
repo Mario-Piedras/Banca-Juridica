@@ -31,11 +31,11 @@
             <p class="text-sm md:text-base font-semibold">{{ datosComprobante.titular }}</p>
           </div>
           <div>
-            <p class="text-xs md:text-sm text-gray-600">{{ 
+            <p class="text-xs md:text-sm text-gray-600">{{
               datosComprobante.tipoTitular === 'Juridica'
               ? 'NIT'
               : 'Documento'
-            }}</p>
+              }}</p>
             <p class="text-sm md:text-base font-semibold">{{ datosComprobante.numeroDocumento }}</p>
           </div>
         </div>
@@ -96,7 +96,8 @@
             Número de Cuenta <span class="text-red-500">*</span>
           </label>
           <div class="flex gap-2">
-            <input type="text" formControlName="numeroCuenta" (input)="onInputNumeroCuenta($event)" placeholder="Ingrese el número de cuenta" maxlength="20"
+            <input type="text" formControlName="numeroCuenta" (input)="onInputNumeroCuenta($event)"
+              placeholder="Ingrese el número de cuenta" maxlength="20"
               class="flex-1 px-2 md:px-3 py-1.5 md:py-2 text-xs md:text-sm border rounded-lg focus:outline-none focus:border-blue-500"
               [ngClass]="{
                 'border-gray-300': !(notaDebitoForm.get('numeroCuenta')?.invalid && notaDebitoForm.get('numeroCuenta')?.touched),
@@ -134,7 +135,7 @@
               datosComprobante.tipoTitular === 'Juridica'
               ? 'NIT'
               : 'Documento'
-            }}</label>
+              }}</label>
             <input type="text" formControlName="numeroDocumento" placeholder="Número de documento"
               class="w-full px-2 md:px-3 py-1.5 md:py-2 text-xs md:text-sm border border-gray-200 rounded-lg bg-gray-50 text-gray-700 font-semibold"
               readonly />
@@ -192,4 +193,10 @@
       </form>
     </div>
   </div>
+
+  <!-- Modal de confirmación -->
+  <app-confirm-modal [visible]="modalVisible" [title]="modalTitle" [message]="modalMessage" [type]="modalType"
+    [confirmText]="modalConfirmText" (confirm)="onConfirmModal()" (closed)="modalVisible = false">
+  </app-confirm-modal>
+
 </div>

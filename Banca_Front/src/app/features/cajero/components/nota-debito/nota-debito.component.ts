@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RetiroService } from '../../services/retiro.service';
 import { NotaDebitoService } from '../../services/nota-debito.service';
+import { ConfirmModalComponent, ConfirmModalType } from '../../../../shared/components/modals/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-nota-debito',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, ConfirmModalComponent],
   templateUrl: './nota-debito.component.html',
   styleUrls: ['./nota-debito.component.css']
 })
@@ -33,6 +34,14 @@ export class NotaDebitoComponent {
     tipoTitular: 'Natural'
   };
 
+  // Modal de confirmación
+  modalVisible = false;
+  modalTitle = '';
+  modalMessage = '';
+  modalType: ConfirmModalType = 'success';
+  modalConfirmText = 'Aceptar';
+  private pendingAction: (() => void) | null = null;
+
   constructor(
     private fb: FormBuilder,
     private retiroService: RetiroService,
@@ -45,6 +54,21 @@ export class NotaDebitoComponent {
       saldoDisponible: [{ value: '', disabled: true }],
       valor: [{ value: '', disabled: true }, [Validators.required, Validators.min(this.MONTO_MINIMO)]]  // ✅ disabled
     });
+  }
+
+  private mostrarModal(
+    title: string,
+    message: string,
+    type: 'success' | 'error' | 'confirm',
+    confirmText = 'Aceptar',
+    action?: () => void
+  ): void {
+    this.modalTitle = title;
+    this.modalMessage = message;
+    this.modalType = type;
+    this.modalConfirmText = confirmText;
+    this.pendingAction = action ?? null;
+    this.modalVisible = true;
   }
 
   onInputValor(event: Event) {
@@ -79,10 +103,11 @@ export class NotaDebitoComponent {
     });
   }
 
+  // Búsqueda de la cuenta
   buscarCuenta() {
     const numeroCuenta = this.notaDebitoForm.get('numeroCuenta')?.value;
     if (!numeroCuenta) {
-      alert('Por favor ingrese un número de cuenta');
+      this.mostrarModal('Error', 'Por favor ingrese un número de cuenta.', 'error');
       return;
     }
 
@@ -107,15 +132,15 @@ export class NotaDebitoComponent {
             titular: response.datos.titular,
             saldoDisponible: `$${response.datos.saldo.toLocaleString('es-CO')}`
           });
-          alert(response.mensaje);
+          this.mostrarModal('Éxito', response.mensaje, 'success');
         } else {
-          alert(response.mensaje);
+          this.mostrarModal('Error', response.mensaje, 'error');
           this.limpiarDatosCuenta();
         }
       },
       error: (error) => {
         console.error('Error al buscar cuenta:', error);
-        alert('Error al buscar la cuenta. Intente nuevamente.');
+        this.mostrarModal('Error', 'Error al buscar la cuenta. Intente nuevamente.', 'error');
         this.limpiarDatosCuenta();
       }
     });
@@ -123,7 +148,7 @@ export class NotaDebitoComponent {
 
   onAplicarNotaDebito() {
     if (this.notaDebitoForm.invalid || !this.cuentaEncontrada) {
-      alert('Por favor complete todos los campos requeridos');
+      this.mostrarModal('Error', 'Por favor complete todos los campos requeridos', 'error');
       return;
     }
 
@@ -134,7 +159,7 @@ export class NotaDebitoComponent {
     const monto = parseFloat(valor);
 
     if (monto > this.MONTO_MAXIMO) {
-      alert(`⚠️ El valor máximo permitido es $9,999,999,999,999`);
+      this.mostrarModal('Error', '⚠️ El valor máximo permitido es $9,999,999,999,999', 'error');
       return;
     }
 
@@ -149,38 +174,40 @@ export class NotaDebitoComponent {
         if (response.exito && response.datos) {
           alert(`✅ ${response.mensaje}\n\nSaldo anterior: $${response.datos.saldoAnterior.toLocaleString()}\nValor debitado: $${response.datos.valor.toLocaleString()}\nSaldo nuevo: $${response.datos.saldoNuevo.toLocaleString()}`);
 
-        this.datosComprobante = {
-          idTransaccion: response.datos.idTransaccion,
-          numeroCuenta,
-          numeroDocumento:
-            response.datos.numeroDocumento || numeroDocumento,
-          titular:
-            response.datos.nombreTitular || titular,
-          valor: response.datos.valor,
-          saldoAnterior: response.datos.saldoAnterior,
-          saldoNuevo: response.datos.saldoNuevo,
-          fecha: new Date(response.datos.fechaTransaccion),
-          tipoTitular:
-            response.datos.tipoCuenta ||
-            this.datosComprobante.tipoTitular
-        };
+          this.datosComprobante = {
+            idTransaccion: response.datos.idTransaccion,
+            numeroCuenta,
+            numeroDocumento:
+              response.datos.numeroDocumento || numeroDocumento,
+            titular:
+              response.datos.nombreTitular || titular,
+            valor: response.datos.valor,
+            saldoAnterior: response.datos.saldoAnterior,
+            saldoNuevo: response.datos.saldoNuevo,
+            fecha: new Date(response.datos.fechaTransaccion),
+            tipoTitular:
+              response.datos.tipoCuenta ||
+              this.datosComprobante.tipoTitular
+          };
 
           this.notaDebitoRealizada = true;
         } else {
-          alert(response.mensaje);
+          this.mostrarModal('Error', response.mensaje, 'error');
         }
       },
       error: (error) => {
         console.error('Error al aplicar nota débito:', error);
-        alert('Error al aplicar la nota débito. Intente nuevamente.');
+        this.mostrarModal('Error', 'Error al aplicar la nota débito. Intente nuevamente.', 'error');
       }
     });
   }
 
+  // Impresión del comprobante
   imprimirComprobante() {
     window.print();
   }
 
+  // Limpieza del formulario
   limpiarFormulario() {
     this.notaDebitoForm.reset();
     this.cuentaEncontrada = false;
@@ -220,4 +247,12 @@ export class NotaDebitoComponent {
     this.notaDebitoForm.get('saldoDisponible')?.disable();
     this.notaDebitoForm.get('valor')?.disable();
   }
+
+  onConfirmModal(): void {
+    if (this.pendingAction) {
+      this.pendingAction();
+      this.pendingAction = null;
+    }
+  }
+
 }

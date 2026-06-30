@@ -40,7 +40,7 @@ export const ASESOR_ROUTES: Routes = [
           ),
       },
       {
-        path: 'editar-cliente-juridico/:id', // ← EDICIÓN EMPRESA / CLIENTE JURÍDICO
+        path: 'editar-cliente-juridico/:id', // ← EDICIÓN PERSONA JURÍDICA
         loadComponent: () =>
           import('./components/registrar-cliente-juridico/registrar-cliente-juridico.component').then(
             (m) => m.RegistrarClienteJuridicoComponent
@@ -54,18 +54,18 @@ export const ASESOR_ROUTES: Routes = [
           ),
       },
       {
-        path: 'movimientos-cuenta',
-        loadComponent: () =>
-          import('./components/movimientos-cuenta/movimientos-cuenta.component').then(
-              (m) => m.MovimientosCuentaComponent
-            )
-      },
-      {
         path: 'solicitudes-radicadas',
         loadComponent: () =>
           import('./components/solicitudes-radicadas/solicitudes-radicadas.component').then(
             (m) => m.SolicitudesRadicadasComponent
           ),
+      },
+      {
+        path: 'movimientos-cuenta',
+        loadComponent: () =>
+          import('./components/movimientos-cuenta/movimientos-cuenta.component').then(
+            (m) => m.MovimientosCuentaComponent
+          )
       }
     ]
   }
