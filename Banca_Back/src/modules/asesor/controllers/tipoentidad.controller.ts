@@ -1,14 +1,11 @@
 import { Request, Response } from 'express';
-import { CrudController } from './crudController';
+import { CrudController } from './crud.controller';
 
 const crudController = new CrudController();
-const TABLE_NAME = 'pais_tributar';
-const ID_FIELD = 'id_pais_tributar';
+const TABLE_NAME = 'tipo_entidad';
+const ID_FIELD = 'id_tipo_entidad';
 
-// Llave foránea relacionada
-const FK_INFO_TRIBUTARIA = 'id_info_tributaria';
-
-export class PaistributarController {
+export class TipoentidadController {
     async obtenerTodos(req: Request, res: Response): Promise<Response> {
         try {
             const rows = await crudController.obtenerTodos(TABLE_NAME);
@@ -40,42 +37,41 @@ export class PaistributarController {
         try {
 
             const body = req.body;
-
+            const id_empresa = body.id_empresa;
             const data = {
-                pais: body.pais,
-                tin: body.tin,
-                id_info_tributaria: body.id_info_tributaria
+                naturaleza: body.naturaleza,
+                codigo_ciiu: body.codigo_ciiu,
+                actividad_economia: body.actividad_economia,
+                num_empleados: body.num_empleados,
+                tipo_sociedad: body.tipo_sociedad,
+                otra_sociedad: body.otra_sociedad,
+                tipo_asociacion: body.tipo_asociacion,
+                otra_asociacion: body.otra_asociacion,
+                ent_estatal: body.ent_estatal,
+                otra_ent_estatal: body.otra_ent_estatal,
+                ent_estatal_descentralizada: body.ent_estatal_descentralizada
             };
-            console.log(data);
-            // Validaciones
-            if (
-                !data.pais ||
-                !data.tin ||
-                !data.id_info_tributaria
-            ) {
-                return res.status(400).json({
-                    mensaje: 'Pais, TIN e id_info_tributaria son obligatorios'
-                });
+
+            if (!data || Object.keys(data).length === 0) {
+                return res.status(400).json({ mensaje: 'Los datos son obligatorios' });
             }
 
-            const nuevo = await crudController.crear(
-                TABLE_NAME,
-                data
+            // Guardar tipo entidad
+            const nuevo = await crudController.crear(TABLE_NAME, data);
+            // Actualizar FK en info_empresas
+            await crudController.actualizar(
+                'info_empresas',
+                { id_info_empresas: id_empresa },
+                { id_tipo_entidad: nuevo.id }
             );
 
-            return res.status(201).json(nuevo);
-
-        } catch (error: any) {
-
-            console.error(
-                'Error creando país tributario:',
-                error
-            );
-
-            return res.status(500).json({
-                error: error.message
+            return res.status(201).json({
+                mensaje: 'Tipo entidad guardado correctamente',
+                data: nuevo
             });
-
+        } catch (error: any) {
+            console.error(error);
+            return res.status(500).json({ error: error.message });
         }
     }
 

@@ -87,13 +87,22 @@ router.put('/actualizar-cliente/:id', (req, res) =>
   clienteController.actualizarCliente(req, res)
 );
 
+// Obtener empresa completa por ID
+router.get('/empresa-id/:id', (req, res) =>
+  clienteController.obtenerEmpresaPorId(req, res)
+);
+
+// Actualizar cliente existente
+router.put('/actualizar-empresa/:id', (req, res) =>
+  clienteController.actualizarEmpresa(req, res)
+);
+
 // ========== MOVIMIENTOS ==========
 router.get(
   '/movimientos/cuenta/:numeroCuenta',
   requireRole('Asesor'),
   movimientosCuentaController.buscarCuenta
 );
-
 router.get(
   '/movimientos/:numeroCuenta',
   requireRole('Asesor'),
@@ -131,7 +140,5 @@ router.get(
   requireRole('Asesor', 'Director-operativo'),
   solicitudController.descargarArchivo
 );
-
-
 
 export default router;

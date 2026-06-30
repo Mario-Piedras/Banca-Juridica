@@ -102,6 +102,12 @@ export class ConsultarClienteComponent {
     this.buscando = false;
   }
 
+  get rutaEditar() {
+    return this.tipoCliente === 'Persona Natural'
+      ? ['/asesor/editar-cliente', this.cliente.id_cliente]
+      : ['/asesor/editar-cliente-juridico', this.cliente.id_info_empresas];
+  }
+
   // Permite solamente caracteres numéricos
   soloNumeros(event: KeyboardEvent): void {
     const pattern = /^[0-9]$/;

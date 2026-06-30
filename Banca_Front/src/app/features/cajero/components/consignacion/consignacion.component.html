@@ -365,4 +365,9 @@
       </form>
     </div>
   </div>
+
+  <app-confirm-modal [visible]="modalVisible" [title]="modalTitle" [message]="modalMessage" [type]="modalType"
+    [confirmText]="modalConfirmText" (confirm)="modalVisible = false" (cancel)="modalVisible = false"
+    (closed)="modalVisible = false"></app-confirm-modal>
+
 </div>

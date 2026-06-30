@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Output, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -13,7 +13,8 @@ import { HttpClient } from '@angular/common/http';
     './representante-legal.component.css'
   ]
 })
-export class RepresentanteLegalComponent implements OnInit {
+export class RepresentanteLegalComponent implements OnInit, OnChanges {
+  @Input() modo: 'nuevo' | 'editar' = 'nuevo';
   @Input() datosIniciales: any;
   @Output() formChange = new EventEmitter();
   @Output() prevTab = new EventEmitter<void>();
@@ -80,12 +81,12 @@ export class RepresentanteLegalComponent implements OnInit {
         Validators.maxLength(50)
       ]],
       barrio: ['', [
-        Validators.minLength(5),
+        Validators.minLength(3),
         Validators.maxLength(50),
         Validators.required
       ]],
       ciudad_municipio: ['', [
-        Validators.minLength(5),
+        Validators.minLength(3),
         Validators.maxLength(50),
         Validators.required
       ]],
@@ -125,6 +126,50 @@ export class RepresentanteLegalComponent implements OnInit {
     });
   }
 
+  private cargandoEdicion = false;
+  private inicializado = false;
+
+  private cargarRepresentantes(data: any) {
+    this.cargandoEdicion = true;
+    this.representantes.clear();
+
+    if (data?.representantes?.length) {
+      data.representantes.forEach((rep: any) => {
+        const grupo = this.crearRepresentante();
+        grupo.patchValue(rep, {
+          emitEvent: false
+        });
+        this.representantes.push(grupo);
+      });
+    }
+
+    this.form.patchValue(
+      { contacto_adicional: data?.contacto_adicional ?? 'No' },
+      { emitEvent: false }
+    );
+
+    this.cargandoEdicion = false;
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    const cambio = changes['datosIniciales'];
+    if (!cambio) return;
+
+    // Solo recargar cuando lleguen datos del backend (primera carga / primer cambio)
+    // Esto evita que el cursor pierda foco por reconstrucción del FormArray en cada tecla.
+    if (cambio.firstChange && cambio.currentValue) {
+      this.cargarRepresentantes(cambio.currentValue);
+      this.inicializado = true;
+      return;
+    }
+
+    // Si se empieza con datos vacíos y luego llegan, también permitir una sola vez.
+    if (!this.inicializado && cambio.currentValue) {
+      this.cargarRepresentantes(cambio.currentValue);
+      this.inicializado = true;
+    }
+  }
+
   ngOnInit(): void {
     // Precargar datos si existen
     if (this.datosIniciales) {
@@ -133,6 +178,9 @@ export class RepresentanteLegalComponent implements OnInit {
 
     // Emitir cambios del formulario
     this.form.valueChanges.subscribe(valores => {
+      if (this.cargandoEdicion) {
+        return;
+      }
       this.formChange.emit(valores);
     });
 
@@ -142,7 +190,6 @@ export class RepresentanteLegalComponent implements OnInit {
 
       Object.keys(this.form.controls).forEach(key => {
         const control = this.form.get(key);
-
         if (control?.invalid) {
           console.log(key, control.errors);
         }
@@ -151,45 +198,39 @@ export class RepresentanteLegalComponent implements OnInit {
 
     // Tipo documentos
     this.representantes.controls.forEach((rep: any) => {
-
       rep.get('tipo_documento')?.valueChanges.subscribe((tipo: string) => {
-
         const numDocumento = rep.get('num_documento');
-
         if (tipo === 'Pasaporte') {
-
           numDocumento?.setValidators([
             Validators.required,
             Validators.minLength(6),
             Validators.maxLength(12),
             Validators.pattern(/^[a-zA-Z0-9]+$/)
           ]);
-
         } else {
-
           numDocumento?.setValidators([
             Validators.required,
             Validators.minLength(6),
             Validators.maxLength(11),
             Validators.pattern(/^[0-9]+$/)
           ]);
-
         }
-
         numDocumento?.updateValueAndValidity();
-
       });
-
     });
 
     // Crear representante principal
-    this.representantes.push(
-      this.crearRepresentante()
-    );
+    if (this.representantes.length === 0) {
+      this.representantes.push(
+        this.crearRepresentante()
+      );
+    }
 
     // Escuchar si desea contacto adicional
     this.form.get('contacto_adicional')?.valueChanges.subscribe(valor => {
-
+      if (this.cargandoEdicion) {
+        return;
+      }
       if (
         valor === 'Sí' &&
         this.representantes.length === 1
@@ -205,9 +246,7 @@ export class RepresentanteLegalComponent implements OnInit {
       ) {
         this.representantes.removeAt(1);
       }
-
     });
-
   }
 
   // Botón de guardar formulario
@@ -230,14 +269,15 @@ export class RepresentanteLegalComponent implements OnInit {
           console.log('Guardado en BD:', res);
           this.formChange.emit(this.form.value);
           this.saved.emit('parcial');
-          this.nextTab.emit();
+          // El padre controlará la navegación hasta que el usuario acepte el modal.
+          // this.nextTab.emit();
+
         },
         error: (err) => {
           console.error(err);
           alert('Error al guardar en la base de datos');
         }
       });
-
   }
 
   // Botón de volver al formulario anterior
@@ -317,10 +357,7 @@ export class RepresentanteLegalComponent implements OnInit {
 
   // Valida el tipo de documento
   validarDocumento(event: KeyboardEvent, representante: any) {
-
-    const tipoDocumento =
-      representante.get('tipo_documento')?.value;
-
+    const tipoDocumento = representante.get('tipo_documento')?.value;
     const inputChar = event.key;
 
     // Permitir teclas especiales
@@ -336,13 +373,10 @@ export class RepresentanteLegalComponent implements OnInit {
 
     // PASAPORTE → alfanumérico
     if (tipoDocumento === 'Pasaporte') {
-
       const pattern = /^[a-zA-Z0-9]$/;
-
       if (!pattern.test(inputChar)) {
         event.preventDefault();
       }
-
       return;
     }
 

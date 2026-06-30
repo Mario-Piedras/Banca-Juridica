@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Output, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -13,7 +13,8 @@ import { HttpClient } from '@angular/common/http';
     './info-general.component.css'
   ]
 })
-export class InformacionGeneralComponent implements OnInit {
+export class InformacionGeneralComponent implements OnInit, OnChanges {
+  @Input() modo: 'nuevo' | 'editar' = 'nuevo';
   @Input() datosIniciales: any;
   @Output() formChange = new EventEmitter();
   @Output() nextTab = new EventEmitter();
@@ -37,7 +38,7 @@ export class InformacionGeneralComponent implements OnInit {
       nombre_corto: ['', [
         Validators.required,
         Validators.minLength(3),
-        Validators.maxLength(10),
+        Validators.maxLength(20),
         Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s.]+$/)
       ]],
       fecha_constitución: ['', [
@@ -104,6 +105,22 @@ export class InformacionGeneralComponent implements OnInit {
     });
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (
+      changes['datosIniciales'] &&
+      changes['datosIniciales'].currentValue
+    ) {
+      console.log(
+        '📥 Datos recibidos para edición:',
+        changes['datosIniciales'].currentValue
+      );
+      this.form.patchValue(
+        changes['datosIniciales'].currentValue,
+        { emitEvent: true }
+      );
+    }
+  }
+
   ngOnInit() {
     // Precargar datos si existen
     if (this.datosIniciales) {
@@ -160,7 +177,9 @@ export class InformacionGeneralComponent implements OnInit {
 
             this.formChange.emit(this.form.value);
             this.saved.emit('parcial');
-            this.nextTab.emit();
+            // El padre controlará la navegación hasta que el usuario acepte el modal.
+            // this.nextTab.emit();
+
 
           },
           error: (err) => {

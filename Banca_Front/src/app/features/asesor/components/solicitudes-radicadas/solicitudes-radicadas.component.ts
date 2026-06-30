@@ -8,7 +8,7 @@ interface Solicitud {
   cedula?: string;
   nit?: string;
   fecha: string;
-  estado: 'PENDIENTE' | 'APROBADO' | 'RECHAZADO';
+  estado: 'PENDIENTE' | 'APROBADO' | 'RECHAZADO' | 'APERTURADA' | 'CANCELADA';
   producto: string;
   comentario_asesor?: string;
   comentario_director?: string;
@@ -93,7 +93,7 @@ export class SolicitudesRadicadasComponent {
           console.log('RESPUESTA NIT:', data);
           this.solicitudes = data.map((item) => ({
             id: item.id_solicitud,
-            nit: item.nit, 
+            nit: item.nit,
             fecha: this.formatearFecha(item.fecha),
             estado: this.mapearEstado(item.estado),
             producto: item.producto,
@@ -168,14 +168,17 @@ export class SolicitudesRadicadasComponent {
     });
   }
 
-  private mapearEstado(estado: string): 'PENDIENTE' | 'APROBADO' | 'RECHAZADO' {
+  private mapearEstado(estado: string): 'PENDIENTE' | 'APROBADO' | 'RECHAZADO' | 'APERTURADA' | 'CANCELADA' {
     const estadoUpper = estado.toUpperCase();
     if (estadoUpper === 'PENDIENTE') return 'PENDIENTE';
     if (estadoUpper === 'APROBADA' || estadoUpper === 'APROBADO') return 'APROBADO';
     if (estadoUpper === 'RECHAZADA' || estadoUpper === 'RECHAZADO') return 'RECHAZADO';
+    if (estadoUpper === 'APERTURADA' || estadoUpper === 'APERTURADA') return 'APERTURADA';
+    if (estadoUpper === 'CANCELADA' || estadoUpper === 'CANCELADA') return 'CANCELADA';
     return 'PENDIENTE';
   }
 
+  // Permite solamente caracteres numéricos
   soloNumeros(event: KeyboardEvent): void {
     const pattern = /^[0-9]$/;
     const inputChar = event.key;
@@ -183,4 +186,5 @@ export class SolicitudesRadicadasComponent {
       event.preventDefault();
     }
   }
+
 }

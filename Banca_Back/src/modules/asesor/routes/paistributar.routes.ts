@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { PaistributarController } from '../controllers/paistributarController';
+import { PaistributarController } from '../controllers/paistributar.controller';
 import { authMiddleware, requireRole } from '../../../shared/middleware/authMiddleware';
 
 

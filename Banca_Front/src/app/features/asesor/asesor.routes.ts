@@ -54,13 +54,6 @@ export const ASESOR_ROUTES: Routes = [
           ),
       },
       {
-        path: 'solicitar-producto-juridico',
-        loadComponent: () =>
-          import('./components/solicitar-producto-juridico/solicitar-producto-juridico.component').then(
-            (m) => m.SolicitarProductoJuridicoComponent
-          ),
-      },
-      {
         path: 'movimientos-cuenta',
         loadComponent: () =>
           import('./components/movimientos-cuenta/movimientos-cuenta.component').then(

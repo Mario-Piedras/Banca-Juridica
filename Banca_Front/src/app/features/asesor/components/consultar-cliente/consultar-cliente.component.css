@@ -19,3 +19,18 @@
     display: none !important;
   }
 }
+
+/* Botón de editar */
+.btn-editar {
+  padding: 0.5rem 1.25rem;
+  background-color: #1c398e;
+  color: white;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s ease-in-out;
+}
+
+.btn-editar:hover {
+  background-color: #1e40af;
+}

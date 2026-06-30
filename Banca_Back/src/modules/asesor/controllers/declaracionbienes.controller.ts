@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { CrudController } from './crudController';
+import { CrudController } from './crud.controller';
 
 const crudController = new CrudController();
 const TABLE_NAME = 'declaracion_bienes';
