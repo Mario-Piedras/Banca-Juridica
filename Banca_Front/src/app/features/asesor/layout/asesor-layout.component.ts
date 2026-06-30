@@ -37,6 +37,7 @@ export class AsesorLayoutComponent {
         { label: 'Registrar Cliente Jurídico', ruta: '/asesor/registrar-cliente-juridico' },
         { label: 'Solicitar Producto Natural', ruta: '/asesor/solicitar-producto' },
         { label: 'Solicitar Producto Juridico', ruta: '/asesor/solicitar-producto-juridico' },
+        { label:'Movimientos de Cuenta',ruta:'/asesor/movimientos-cuenta' },
         { label: 'Solicitudes Radicadas', ruta: '/asesor/solicitudes-radicadas' },
       ],
     },

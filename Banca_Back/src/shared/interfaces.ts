@@ -423,7 +423,10 @@ export interface AplicarNotaDebitoResponse {
     saldoAnterior: number;
     saldoNuevo: number;
     valor: number;
+    numeroDocumento: string;
     fechaTransaccion: Date;
+    nombreTitular: string;
+    tipoCuenta: string;
   };
 }
 

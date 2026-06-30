@@ -5,6 +5,7 @@ import { ClienteController } from './controllers/consultarController';
 import { RegistrarClienteController } from './controllers/registrarClienteController';
 import solicitudController from './controllers/solicitudController';
 import consultarController from './controllers/consultarSolicitudController';
+import movimientosCuentaController from './controllers/movimientosCuentaController';
 
 // const router = Router();
 const router: Router = Router();
@@ -28,7 +29,7 @@ const upload = multer({
       'application/msword',
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
     ];
-    
+
     if (allowedTypes.includes(file.mimetype)) {
       cb(null, true);
     } else {
@@ -86,36 +87,51 @@ router.put('/actualizar-cliente/:id', (req, res) =>
   clienteController.actualizarCliente(req, res)
 );
 
+// ========== MOVIMIENTOS ==========
+router.get(
+  '/movimientos/cuenta/:numeroCuenta',
+  requireRole('Asesor'),
+  movimientosCuentaController.buscarCuenta
+);
+
+router.get(
+  '/movimientos/:numeroCuenta',
+  requireRole('Asesor'),
+  movimientosCuentaController.consultar
+);
+
 // ========== RUTAS PARA SOLICITUDES ==========
 router.post(
-  '/solicitudes', 
-  requireRole('Asesor'), 
-  upload.single('archivo'), 
+  '/solicitudes',
+  requireRole('Asesor'),
+  upload.single('archivo'),
   solicitudController.crearSolicitud
 );
 
 router.get(
-  '/solicitudes', 
-  requireRole('Asesor', 'Director-operativo'), 
+  '/solicitudes',
+  requireRole('Asesor', 'Director-operativo'),
   solicitudController.obtenerSolicitudes
 );
 
 router.put(
-  '/solicitudes/:id/estado', 
-  requireRole('Director-operativo'), 
+  '/solicitudes/:id/estado',
+  requireRole('Director-operativo'),
   solicitudController.actualizarEstado
 );
 
 router.delete(
-  '/solicitudes/:id', 
-  requireRole('Asesor', 'Administrador'), 
+  '/solicitudes/:id',
+  requireRole('Asesor', 'Administrador'),
   solicitudController.eliminarSolicitud
 );
 
 router.get(
-  '/solicitudes/:id/archivo', 
-  requireRole('Asesor', 'Director-operativo'), 
+  '/solicitudes/:id/archivo',
+  requireRole('Asesor', 'Director-operativo'),
   solicitudController.descargarArchivo
 );
+
+
 
 export default router;
