@@ -19,6 +19,7 @@ export interface BuscarCuentaResponse {
     estadoCuenta: string;
     idCuenta: number;
     idCliente: number;
+    tipoTitular?: string;
   };
 }
 

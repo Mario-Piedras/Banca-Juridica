@@ -29,7 +29,8 @@ export class NotaDebitoComponent {
     valor: 0,
     saldoAnterior: 0,
     saldoNuevo: 0,
-    fecha: new Date()
+    fecha: new Date(),
+    tipoTitular: 'Natural'
   };
 
   constructor(
@@ -68,6 +69,16 @@ export class NotaDebitoComponent {
     input.value = valorFormateado;
   }
 
+  onInputNumeroCuenta(event: Event) {
+    const input = event.target as HTMLInputElement;
+
+    input.value = input.value.replace(/[^0-9]/g, '');
+
+    this.notaDebitoForm.patchValue({
+      numeroCuenta: input.value
+    });
+  }
+
   buscarCuenta() {
     const numeroCuenta = this.notaDebitoForm.get('numeroCuenta')?.value;
     if (!numeroCuenta) {
@@ -80,6 +91,13 @@ export class NotaDebitoComponent {
         if (response.existe && response.datos) {
           this.cuentaEncontrada = true;
           this.idCuenta = response.datos.idCuenta;
+
+          const tipoTitular =
+            response.datos.idCliente
+              ? 'Natural'
+              : 'Juridica';
+
+          this.datosComprobante.tipoTitular = tipoTitular;
 
           // Habilitar campo valor
           this.notaDebitoForm.get('valor')?.enable();
@@ -131,16 +149,21 @@ export class NotaDebitoComponent {
         if (response.exito && response.datos) {
           alert(`✅ ${response.mensaje}\n\nSaldo anterior: $${response.datos.saldoAnterior.toLocaleString()}\nValor debitado: $${response.datos.valor.toLocaleString()}\nSaldo nuevo: $${response.datos.saldoNuevo.toLocaleString()}`);
 
-          this.datosComprobante = {
-            idTransaccion: response.datos.idTransaccion,
-            numeroCuenta: numeroCuenta,
-            numeroDocumento: numeroDocumento,
-            titular: titular,
-            valor: response.datos.valor,
-            saldoAnterior: response.datos.saldoAnterior,
-            saldoNuevo: response.datos.saldoNuevo,
-            fecha: new Date(response.datos.fechaTransaccion)
-          };
+        this.datosComprobante = {
+          idTransaccion: response.datos.idTransaccion,
+          numeroCuenta,
+          numeroDocumento:
+            response.datos.numeroDocumento || numeroDocumento,
+          titular:
+            response.datos.nombreTitular || titular,
+          valor: response.datos.valor,
+          saldoAnterior: response.datos.saldoAnterior,
+          saldoNuevo: response.datos.saldoNuevo,
+          fecha: new Date(response.datos.fechaTransaccion),
+          tipoTitular:
+            response.datos.tipoCuenta ||
+            this.datosComprobante.tipoTitular
+        };
 
           this.notaDebitoRealizada = true;
         } else {
@@ -169,6 +192,7 @@ export class NotaDebitoComponent {
     this.notaDebitoForm.get('titular')?.disable();
     this.notaDebitoForm.get('saldoDisponible')?.disable();
     this.notaDebitoForm.get('valor')?.disable();
+    this.datosComprobante.tipoTitular = 'Natural';
   }
 
   limpiarDatosCuenta() {

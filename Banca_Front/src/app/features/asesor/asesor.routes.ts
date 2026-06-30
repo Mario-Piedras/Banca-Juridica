@@ -54,6 +54,13 @@ export const ASESOR_ROUTES: Routes = [
           ),
       },
       {
+        path: 'movimientos-cuenta',
+        loadComponent: () =>
+          import('./components/movimientos-cuenta/movimientos-cuenta.component').then(
+              (m) => m.MovimientosCuentaComponent
+            )
+      },
+      {
         path: 'solicitudes-radicadas',
         loadComponent: () =>
           import('./components/solicitudes-radicadas/solicitudes-radicadas.component').then(

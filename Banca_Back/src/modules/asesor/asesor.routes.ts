@@ -5,6 +5,7 @@ import { ClienteController } from './controllers/consultarController';
 import { RegistrarClienteController } from './controllers/registrarClienteController';
 import solicitudController from './controllers/solicitudController';
 import consultarController from './controllers/consultarSolicitudController';
+import movimientosCuentaController from './controllers/movimientosCuentaController';
 
 // const router = Router();
 const router: Router = Router();
@@ -94,6 +95,18 @@ router.get('/empresa-id/:id', (req, res) =>
 // Actualizar cliente existente
 router.put('/actualizar-empresa/:id', (req, res) =>
   clienteController.actualizarEmpresa(req, res)
+);
+
+// ========== MOVIMIENTOS ==========
+router.get(
+  '/movimientos/cuenta/:numeroCuenta',
+  requireRole('Asesor'),
+  movimientosCuentaController.buscarCuenta
+);
+router.get(
+  '/movimientos/:numeroCuenta',
+  requireRole('Asesor'),
+  movimientosCuentaController.consultar
 );
 
 // ========== RUTAS PARA SOLICITUDES ==========
