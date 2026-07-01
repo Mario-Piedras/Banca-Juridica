@@ -40,6 +40,7 @@ export class RetiroVentanillaComponent {
   modalMessage = '';
   modalType: ConfirmModalType = 'success';
   modalConfirmText = 'Aceptar';
+  private pendingAction: (() => void) | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -54,11 +55,18 @@ export class RetiroVentanillaComponent {
     });
   }
 
-  private mostrarModal(type: ConfirmModalType, title: string, message: string): void {
+  private mostrarModal(
+    type: ConfirmModalType,
+    title: string,
+    message: string,
+    confirmText = 'Aceptar',
+    action?: () => void
+  ): void {
     this.modalType = type;
     this.modalTitle = title;
     this.modalMessage = message;
-    this.modalConfirmText = 'Aceptar';
+    this.modalConfirmText = confirmText;
+    this.pendingAction = action ?? null;
     this.modalVisible = true;
   }
 
@@ -114,23 +122,24 @@ export class RetiroVentanillaComponent {
     this.retiroService.buscarCuenta({ numeroCuenta }).subscribe({
       next: (response) => {
         if (response.existe && response.datos) {
-          this.cuentaEncontrada = true;
-          this.idCuenta = response.datos.idCuenta;
+          const datos = response.datos;
+          this.mostrarModal('success', 'Éxito', response.mensaje, 'Aceptar', () => {
+            this.cuentaEncontrada = true;
+            this.idCuenta = datos.idCuenta;
+            const tipoTitular = datos.idCliente
+              ? 'Natural'
+              : 'Juridica';
+            this.datosComprobante.tipoTitular = tipoTitular;
+            this.retiroForm.get('montoRetirar')?.enable();
+            this.retiroForm.patchValue({
+              numeroDocumento: datos.numeroDocumento,
+              titular: datos.titular,
+              saldoDisponible: `$${datos.saldo.toLocaleString()}`
+            });
 
-          const tipoTitular = response.datos.idCliente
-            ? 'Natural'
-            : 'Juridica';
-          this.datosComprobante.tipoTitular = tipoTitular;
+          }
 
-          this.retiroForm.get('montoRetirar')?.enable();
-
-          this.retiroForm.patchValue({
-            numeroDocumento: response.datos.numeroDocumento,
-            titular: response.datos.titular,
-            saldoDisponible: `$${response.datos.saldo.toLocaleString()}`
-          });
-
-          this.mostrarModal('success', 'Éxito', response.mensaje);
+          );
         } else {
           this.mostrarModal('error', 'Error', response.mensaje);
           this.limpiarDatosCuenta();
@@ -171,25 +180,28 @@ export class RetiroVentanillaComponent {
     this.retiroService.procesarRetiro(datosRetiro).subscribe({
       next: (response) => {
         if (response.exito && response.datos) {
-          this.mostrarModal(
-            'success',
-            'Éxito',
-            `${response.mensaje}\n\nSaldo anterior: $${response.datos.saldoAnterior.toLocaleString()}\nMonto retirado: $${response.datos.montoRetirado.toLocaleString()}\nSaldo nuevo: $${response.datos.saldoNuevo.toLocaleString()}`
+          const datos = response.datos;
+          this.mostrarModal('success', 'Éxito', `${response.mensaje}
+Saldo anterior: $${datos.saldoAnterior.toLocaleString()}
+Monto retirado: $${datos.montoRetirado.toLocaleString()}
+Saldo nuevo: $${datos.saldoNuevo.toLocaleString()}`,
+            'Aceptar',
+            () => {
+              this.datosComprobante = {
+                idTransaccion: datos.idTransaccion,
+                numeroCuenta,
+                numeroDocumento: datos.numeroDocumento || numeroDocumento,
+                titular: datos.nombreTitular || titular,
+                montoRetirado: datos.montoRetirado,
+                saldoAnterior: datos.saldoAnterior,
+                saldoNuevo: datos.saldoNuevo,
+                fecha: new Date(datos.fechaTransaccion),
+                tipoTitular:
+                  datos.tipoCuenta || this.datosComprobante.tipoTitular
+              };
+              this.retiroRealizado = true;
+            }
           );
-          this.datosComprobante = {
-            idTransaccion: response.datos.idTransaccion,
-            numeroCuenta,
-            numeroDocumento: response.datos.numeroDocumento || numeroDocumento,
-            titular: response.datos.nombreTitular || titular,
-            montoRetirado: response.datos.montoRetirado,
-            saldoAnterior: response.datos.saldoAnterior,
-            saldoNuevo: response.datos.saldoNuevo,
-            fecha: new Date(response.datos.fechaTransaccion),
-            tipoTitular:
-              response.datos.tipoCuenta || this.datosComprobante.tipoTitular
-          };
-
-          this.retiroRealizado = true;
         } else {
           this.mostrarModal('error', 'Error', response.mensaje);
         }
@@ -241,6 +253,15 @@ export class RetiroVentanillaComponent {
     this.retiroForm.get('titular')?.disable();
     this.retiroForm.get('saldoDisponible')?.disable();
     this.retiroForm.get('montoRetirar')?.disable();
+  }
+
+  onConfirmModal(): void {
+    this.modalVisible = false;
+
+    if (this.pendingAction) {
+      this.pendingAction();
+      this.pendingAction = null;
+    }
   }
 
 }

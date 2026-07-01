@@ -114,25 +114,30 @@ export class NotaDebitoComponent {
     this.retiroService.buscarCuenta({ numeroCuenta }).subscribe({
       next: (response) => {
         if (response.existe && response.datos) {
-          this.cuentaEncontrada = true;
-          this.idCuenta = response.datos.idCuenta;
+          const datos = response.datos;
+          this.mostrarModal('Éxito', response.mensaje, 'success', 'Aceptar',
+            () => {
 
-          const tipoTitular =
-            response.datos.idCliente
-              ? 'Natural'
-              : 'Juridica';
+              this.cuentaEncontrada = true;
+              this.idCuenta = datos.idCuenta;
 
-          this.datosComprobante.tipoTitular = tipoTitular;
+              const tipoTitular =
+                datos.idCliente
+                  ? 'Natural'
+                  : 'Juridica';
 
-          // Habilitar campo valor
-          this.notaDebitoForm.get('valor')?.enable();
+              this.datosComprobante.tipoTitular = tipoTitular;
 
-          this.notaDebitoForm.patchValue({
-            numeroDocumento: response.datos.numeroDocumento,
-            titular: response.datos.titular,
-            saldoDisponible: `$${response.datos.saldo.toLocaleString('es-CO')}`
-          });
-          this.mostrarModal('Éxito', response.mensaje, 'success');
+              // Habilitar campo valor
+              this.notaDebitoForm.get('valor')?.enable();
+
+              this.notaDebitoForm.patchValue({
+                numeroDocumento: datos.numeroDocumento,
+                titular: datos.titular,
+                saldoDisponible: `$${datos.saldo.toLocaleString('es-CO')}`
+              });
+            }
+          );
         } else {
           this.mostrarModal('Error', response.mensaje, 'error');
           this.limpiarDatosCuenta();
@@ -172,25 +177,23 @@ export class NotaDebitoComponent {
     this.notaDebitoService.aplicarNotaDebito(datosNotaDebito).subscribe({
       next: (response) => {
         if (response.exito && response.datos) {
-          alert(`✅ ${response.mensaje}\n\nSaldo anterior: $${response.datos.saldoAnterior.toLocaleString()}\nValor debitado: $${response.datos.valor.toLocaleString()}\nSaldo nuevo: $${response.datos.saldoNuevo.toLocaleString()}`);
-
-          this.datosComprobante = {
-            idTransaccion: response.datos.idTransaccion,
-            numeroCuenta,
-            numeroDocumento:
-              response.datos.numeroDocumento || numeroDocumento,
-            titular:
-              response.datos.nombreTitular || titular,
-            valor: response.datos.valor,
-            saldoAnterior: response.datos.saldoAnterior,
-            saldoNuevo: response.datos.saldoNuevo,
-            fecha: new Date(response.datos.fechaTransaccion),
-            tipoTitular:
-              response.datos.tipoCuenta ||
-              this.datosComprobante.tipoTitular
-          };
-
-          this.notaDebitoRealizada = true;
+          const datos = response.datos;
+          this.mostrarModal('Éxito', `${response.mensaje} Saldo anterior: $${datos.saldoAnterior.toLocaleString()} Valor debitado: $${datos.valor.toLocaleString()} Saldo nuevo: $${datos.saldoNuevo.toLocaleString()}`, 'success', 'Aceptar',
+            () => {
+              this.datosComprobante = {
+                idTransaccion: datos.idTransaccion,
+                numeroCuenta,
+                numeroDocumento: datos.numeroDocumento || numeroDocumento,
+                titular: datos.nombreTitular || titular,
+                valor: datos.valor,
+                saldoAnterior: datos.saldoAnterior,
+                saldoNuevo: datos.saldoNuevo,
+                fecha: new Date(datos.fechaTransaccion),
+                tipoTitular: datos.tipoCuenta || this.datosComprobante.tipoTitular
+              };
+              this.notaDebitoRealizada = true;
+            }
+          );
         } else {
           this.mostrarModal('Error', response.mensaje, 'error');
         }
@@ -249,6 +252,8 @@ export class NotaDebitoComponent {
   }
 
   onConfirmModal(): void {
+    this.modalVisible = false;
+
     if (this.pendingAction) {
       this.pendingAction();
       this.pendingAction = null;

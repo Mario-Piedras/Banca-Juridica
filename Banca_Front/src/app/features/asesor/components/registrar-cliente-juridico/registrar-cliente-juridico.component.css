@@ -46,12 +46,15 @@
   border: 1px solid #d1d5db;
   border-radius: 8px;
   box-sizing: border-box;
-  cursor: pointer;
 }
 
 .input-field:focus {
   outline: none;
   box-shadow: 0 0 0 2px #3b82f6;
+}
+
+.input-select {
+  cursor: pointer;
 }
 
 /* Espaciado de las opciones de radio */

@@ -8,7 +8,7 @@
             <label class="label">Número de Cuenta <span class="required">*</span></label>
             <div class="acciones">
                 <input type="text" formControlName="numeroCuenta" maxlength="20" (input)="onInputNumeroCuenta($event)"
-                    class="input-box" [readonly]="cuentaEncontrada" placeholder="Ej. 1234567890" />
+                    class="input-box" [readonly]="cuentaEncontrada" placeholder="Ingrese el número de cuenta" />
                 <button type="button" (click)="buscarCuenta()" [disabled]="cuentaEncontrada"
                     class="form-btn">Buscar</button>
                 <button type="button" (click)="onCancelar()" class="form-cancel-btn">Limpiar</button>

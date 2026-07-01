@@ -43,6 +43,7 @@ export class ConsignacionComponent {
   modalMessage = '';
   modalType: ConfirmModalType = 'success';
   modalConfirmText = 'Aceptar';
+  private pendingAction: (() => void) | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -88,11 +89,18 @@ export class ConsignacionComponent {
     });
   }
 
-  private mostrarModal(type: ConfirmModalType, title: string, message: string): void {
+  private mostrarModal(
+    type: ConfirmModalType,
+    title: string,
+    message: string,
+    confirmText = 'Aceptar',
+    action?: () => void
+  ): void {
     this.modalType = type;
     this.modalTitle = title;
     this.modalMessage = message;
-    this.modalConfirmText = 'Aceptar';
+    this.modalConfirmText = confirmText;
+    this.pendingAction = action ?? null;
     this.modalVisible = true;
   }
 
@@ -154,23 +162,21 @@ export class ConsignacionComponent {
     this.retiroService.buscarCuenta({ numeroCuenta }).subscribe({
       next: (response) => {
         if (response.existe && response.datos) {
-          this.cuentaEncontrada = true;
-          this.idCuenta = response.datos.idCuenta;
-
-          const tipoTitular = response.datos.idCliente ? 'Natural' : 'Juridica';
-          this.datosComprobante.tipoTitular = tipoTitular;
-
-          // Habilitar campos cuando se encuentra la cuenta
-          this.consignacionForm.get('tipoConsignacion')?.enable();
-          this.consignacionForm.get('valor')?.enable();
-
-          this.consignacionForm.patchValue({
-            numeroDocumento: response.datos.numeroDocumento,
-            titular: response.datos.titular,
-            saldoDisponible: `$${response.datos.saldo.toLocaleString('es-CO')}`
-          });
-
-          this.mostrarModal('success', 'Éxito', response.mensaje);
+          const datos = response.datos;
+          this.mostrarModal('success', 'Éxito', response.mensaje, 'Aceptar', () => {
+            this.cuentaEncontrada = true;
+            this.idCuenta = datos.idCuenta;
+            const tipoTitular = datos.idCliente ? 'Natural' : 'Juridica';
+            this.datosComprobante.tipoTitular = tipoTitular;
+            this.consignacionForm.get('tipoConsignacion')?.enable();
+            this.consignacionForm.get('valor')?.enable();
+            this.consignacionForm.patchValue({
+              numeroDocumento: datos.numeroDocumento,
+              titular: datos.titular,
+              saldoDisponible: `$${datos.saldo.toLocaleString('es-CO')}`
+            });
+          }
+          );
         } else {
           this.mostrarModal('error', 'Error', response.mensaje);
           this.limpiarDatosCuenta();
@@ -227,29 +233,29 @@ export class ConsignacionComponent {
     this.consignacionService.procesarConsignacion(datosConsignacion).subscribe({
       next: (response) => {
         if (response.exito && response.datos) {
-          this.mostrarModal(
-            'success',
-            'Éxito',
-            `${response.mensaje}\n\nSaldo anterior: $${response.datos.saldoAnterior.toLocaleString()}\nValor consignado: $${response.datos.valorConsignado.toLocaleString()}\nSaldo nuevo: $${response.datos.saldoNuevo.toLocaleString()}`
+          const datos = response.datos;
+          this.mostrarModal('success', 'Éxito', `${response.mensaje}
+Saldo anterior: $${datos.saldoAnterior.toLocaleString()}
+Valor consignado: $${datos.valorConsignado.toLocaleString()}
+Saldo nuevo: $${datos.saldoNuevo.toLocaleString()}`, 'Aceptar', () => {
+            this.datosComprobante = {
+              idTransaccion: datos.idTransaccion,
+              numeroCuenta,
+              numeroDocumento,
+              titular,
+              valorConsignado: datos.valorConsignado,
+              tipoConsignacion,
+              codigoCheque: datos.codigoCheque || '',
+              numeroCheque: datos.numeroCheque || '',
+              saldoAnterior: datos.saldoAnterior,
+              saldoNuevo: datos.saldoNuevo,
+              fecha: new Date(datos.fechaTransaccion),
+              nombreCajero: this.datosComprobante.nombreCajero,
+              tipoTitular: datos.tipoTitular || this.datosComprobante.tipoTitular
+            };
+            this.consignacionRealizada = true;
+          }
           );
-
-          this.datosComprobante = {
-            idTransaccion: response.datos.idTransaccion,
-            numeroCuenta: numeroCuenta,
-            numeroDocumento: numeroDocumento,
-            titular: titular,
-            valorConsignado: response.datos.valorConsignado,
-            tipoConsignacion: tipoConsignacion,
-            codigoCheque: response.datos.codigoCheque || '',
-            numeroCheque: response.datos.numeroCheque || '',
-            saldoAnterior: response.datos.saldoAnterior,
-            saldoNuevo: response.datos.saldoNuevo,
-            fecha: new Date(response.datos.fechaTransaccion),
-            nombreCajero: this.datosComprobante.nombreCajero,
-            tipoTitular: response.datos.tipoTitular || this.datosComprobante.tipoTitular
-          };
-
-          this.consignacionRealizada = true;
         } else {
           this.mostrarModal('error', 'Error', response.mensaje);
         }
@@ -314,6 +320,15 @@ export class ConsignacionComponent {
     this.consignacionForm.get('valor')?.disable();
     this.consignacionForm.get('codigoCheque')?.disable();
     this.consignacionForm.get('numeroCheque')?.disable();
+  }
+
+  onConfirmModal(): void {
+    this.modalVisible = false;
+
+    if (this.pendingAction) {
+      this.pendingAction();
+      this.pendingAction = null;
+    }
   }
 
 }

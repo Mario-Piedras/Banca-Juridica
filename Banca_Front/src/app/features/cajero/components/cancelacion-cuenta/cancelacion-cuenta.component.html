@@ -99,7 +99,7 @@
               }" [readonly]="cuentaEncontrada" />
 
             <button type="button" (click)="buscarCuenta()" [disabled]="cuentaEncontrada"
-              class="px-4 md:px-6 py-1.5 md:py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-700 font-medium transition-colors text-xs md:text-sm disabled:bg-gray-300 disabled:cursor-not-allowed whitespace-nowrap">
+              class="px-4 md:px-6 py-1.5 md:py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-700 font-medium transition-colors text-xs md:text-sm cursor-pointer disabled:bg-gray-300 disabled:cursor-not-allowed whitespace-nowrap">
               Buscar
             </button>
           </div>
@@ -176,12 +176,12 @@
         <!-- Botones -->
         <div *ngIf="cuentaEncontrada" class="flex flex-col sm:flex-row gap-2 md:gap-3 mt-4 md:mt-6">
           <button type="submit" [disabled]="!cuentaEncontrada"
-            class="flex-1 px-4 md:px-6 py-2 md:py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium transition-colors text-xs md:text-sm disabled:bg-gray-300 disabled:cursor-not-allowed">
+            class="flex-1 px-4 md:px-6 py-2 md:py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium transition-colors text-xs md:text-sm cursor-pointer disabled:bg-gray-300 disabled:cursor-not-allowed">
             Cancelar Cuenta
           </button>
 
           <button type="button" (click)="onCancelar()"
-            class="px-4 md:px-6 py-2 md:py-2.5 bg-gray-600 text-white rounded-lg hover:bg-gray-500 font-medium transition-colors text-xs md:text-sm">
+            class="px-4 md:px-6 py-2 md:py-2.5 bg-gray-600 text-white rounded-lg hover:bg-gray-500 font-medium transition-colors text-xs md:text-sm cursor-pointer">
             Cancelar
           </button>
         </div>
