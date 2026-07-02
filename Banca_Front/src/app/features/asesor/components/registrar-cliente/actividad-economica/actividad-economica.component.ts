@@ -13,6 +13,12 @@ export class ActividadEconomicaComponent implements OnInit, OnChanges {
   @Output() formChange = new EventEmitter();
   @Input() datosIniciales: any;
   @Output() nextTab = new EventEmitter();
+  @Output() mostrarModal = new EventEmitter<{
+    type: 'success' | 'error' | 'confirm';
+    title: string;
+    message: string;
+    confirmText?: string;
+  }>();
 
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
@@ -83,14 +89,27 @@ export class ActividadEconomicaComponent implements OnInit, OnChanges {
     if (this.form.valid) {
       this.formChange.emit(this.form.value);
       this.nextTab.emit();
-      alert('✅ Datos de actividad económica guardados correctamente');
+      this.mostrarModal.emit({
+        type: 'success',
+        title: 'Información guardada',
+        message: 'Datos de actividad económica guardados correctamente.',
+        confirmText: 'Aceptar'
+      });
     } else {
       this.form.markAllAsTouched();
       const errores = this.obtenerErroresFormulario();
       if (errores.length > 0) {
-        alert('⚠️ Por favor corrige los siguientes errores:\n\n' + errores.join('\n'));
+        this.mostrarModal.emit({
+          type: 'error',
+          title: 'Formulario inválido',
+          message: 'Por favor corrige los siguientes errores:\n\n' + errores.join('<br>')
+        });
       } else {
-        alert('⚠️ Por favor completa los campos obligatorios.');
+        this.mostrarModal.emit({
+          type: 'error',
+          title: 'Formulario inválido',
+          message: 'Por favor completa todos los campos obligatorios.'
+        });
       }
     }
   }

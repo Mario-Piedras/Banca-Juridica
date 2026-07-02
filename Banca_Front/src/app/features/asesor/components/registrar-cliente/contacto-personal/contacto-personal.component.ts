@@ -15,6 +15,12 @@ export class ContactoPersonalComponent implements OnInit, OnChanges {
   @Input() datosIniciales: any;
   @Output() formChange = new EventEmitter();
   @Output() nextTab = new EventEmitter();
+  @Output() mostrarModal = new EventEmitter<{
+    type: 'success' | 'error' | 'confirm';
+    title: string;
+    message: string;
+    confirmText?: string;
+  }>();
 
   // 🗺️ Datos
   tipoPais: string = 'Colombia'; // Nuevo
@@ -165,10 +171,19 @@ export class ContactoPersonalComponent implements OnInit, OnChanges {
     if (this.form.valid) {
       this.formChange.emit(this.form.value);
       this.nextTab.emit();
-      alert('✅ Datos de contacto guardados correctamente');
+      this.mostrarModal.emit({
+        type: 'success',
+        title: 'Información guardada',
+        message: 'Datos de contacto guardados correctamente.',
+        confirmText: 'Aceptar'
+      });
     } else {
       this.form.markAllAsTouched();
-      alert('⚠️ Por favor completa todos los campos obligatorios.');
+      this.mostrarModal.emit({
+          type: 'error',
+          title: 'Formulario inválido',
+          message: 'Por favor completa todos los campos obligatorios.'
+        });
     }
   }
 

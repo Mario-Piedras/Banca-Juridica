@@ -12,6 +12,12 @@ export class InformacionPersonalComponent implements OnInit, OnChanges {
   @Input() datosIniciales: any;
   @Output() formChange = new EventEmitter();
   @Output() nextTab = new EventEmitter();
+  @Output() mostrarModal = new EventEmitter<{
+    type: 'success' | 'error' | 'confirm';
+    title: string;
+    message: string;
+    confirmText?: string;
+  }>();
 
   form: FormGroup;
   fechaHoy: string;
@@ -177,14 +183,27 @@ export class InformacionPersonalComponent implements OnInit, OnChanges {
       this.formChange.emit(this.form.value);
       this.nextTab.emit();
       console.log('Datos personales guardados correctamente');
-      alert('Sección de Información Personal guardada correctamente');
+      this.mostrarModal.emit({
+        type: 'success',
+        title: 'Información guardada',
+        message: 'Sección información personal fue guardada correctamente.',
+        confirmText: 'Aceptar'
+      });
     } else {
       this.form.markAllAsTouched();
       const errores = this.obtenerErroresFormulario();
       if (errores.length > 0) {
-        alert('Por favor corrige los siguientes errores:\n\n' + errores.join('\n'));
+        this.mostrarModal.emit({
+          type: 'error',
+          title: 'Formulario inválido',
+          message: 'Por favor corrige los siguientes errores:\n\n' + errores.join('<br>')
+        });
       } else {
-        alert('Por favor completa todos los campos obligatorios.');
+        this.mostrarModal.emit({
+          type: 'error',
+          title: 'Formulario inválido',
+          message: 'Por favor completa todos los campos obligatorios.'
+        });
       }
     }
   }
