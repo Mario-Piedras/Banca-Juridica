@@ -2,14 +2,12 @@
   <!-- Header -->
   <div class="mb-6">
     <div class="flex items-center gap-3 mb-2">
-      <button 
-        (click)="volver()" 
+      <button (click)="volver()"
         class="px-4 py-2 text-gray-700 rounded-md hover:bg-gray-50 transition-colors font-medium cursor-pointer"
-        title="Volver"
-      >
-         <span class="material-icons">arrow_back</span>
+        title="Volver">
+        <span class="material-icons">arrow_back</span>
       </button>
-      <h1 class="text-2xl font-bold text-blue-900 mb-2"  >
+      <h1 class="text-2xl font-bold text-blue-900 mb-2">
         Solicitud jurídica
       </h1>
     </div>
@@ -25,43 +23,37 @@
 
         <div>
           <label class="text-sm font-medium">NIT</label>
-          <input readonly
-            class="w-full mt-1 border border-gray-200 rounded-lg p-3 text-gray-500"
+          <input readonly class="w-full mt-1 border border-gray-200 rounded-lg p-3 text-gray-500"
             [value]="solicitud.nit">
         </div>
 
         <div>
           <label class="text-sm font-medium">Razón Social</label>
-          <input readonly
-            class="w-full mt-1 border border-gray-200 rounded-lg p-3 text-gray-500"
+          <input readonly class="w-full mt-1 border border-gray-200 rounded-lg p-3 text-gray-500"
             [value]="solicitud.razon_social">
         </div>
 
         <div>
           <label class="text-sm font-medium">Nombre Corto</label>
-          <input readonly
-            class="w-full mt-1 border border-gray-200 rounded-lg p-3 text-gray-500"
+          <input readonly class="w-full mt-1 border border-gray-200 rounded-lg p-3 text-gray-500"
             [value]="solicitud.nombre_corto || 'No registrado'">
         </div>
 
         <div>
           <label class="text-sm font-medium">Fecha Constitución</label>
-          <input readonly
-            class="w-full mt-1 border border-gray-200 rounded-lg p-3 text-gray-500"
+          <input readonly class="w-full mt-1 border border-gray-200 rounded-lg p-3 text-gray-500"
             [value]="solicitud.fecha_constitucion">
         </div>
 
         <div>
           <label class="text-sm font-medium">Ciudad Constitución</label>
-          <input readonly
-            class="w-full mt-1 border border-gray-200 rounded-lg p-3 text-gray-500"
+          <input readonly class="w-full mt-1 border border-gray-200 rounded-lg p-3 text-gray-500"
             [value]="solicitud.ciudad_constitucion">
         </div>
 
         <div>
           <label class="text-sm font-medium">País Constitución</label>
-          <input readonly
-            class="w-full mt-1 border border-gray-200 rounded-lg p-3 text-gray-500"
+          <input readonly class="w-full mt-1 border border-gray-200 rounded-lg p-3 text-gray-500"
             [value]="solicitud.pais_constitucion">
         </div>
 
@@ -78,57 +70,49 @@
 
         <div>
           <label class="text-sm font-medium">Dirección Sede Principal</label>
-          <input readonly
-            class="w-full mt-1 border border-gray-200 rounded-lg p-3 text-gray-500"
+          <input readonly class="w-full mt-1 border border-gray-200 rounded-lg p-3 text-gray-500"
             [value]="solicitud.dir_sede_principal">
         </div>
 
         <div>
           <label class="text-sm font-medium">Barrio</label>
-          <input readonly
-            class="w-full mt-1 border border-gray-200 rounded-lg p-3 text-gray-500"
+          <input readonly class="w-full mt-1 border border-gray-200 rounded-lg p-3 text-gray-500"
             [value]="solicitud.barrio">
         </div>
 
         <div>
           <label class="text-sm font-medium">Ciudad / Municipio</label>
-          <input readonly
-            class="w-full mt-1 border border-gray-200 rounded-lg p-3 text-gray-500"
+          <input readonly class="w-full mt-1 border border-gray-200 rounded-lg p-3 text-gray-500"
             [value]="solicitud.ciudad_municipio">
         </div>
 
         <div>
           <label class="text-sm font-medium">Departamento</label>
-          <input readonly
-            class="w-full mt-1 border border-gray-200 rounded-lg p-3 text-gray-500"
+          <input readonly class="w-full mt-1 border border-gray-200 rounded-lg p-3 text-gray-500"
             [value]="solicitud.departamento">
         </div>
 
         <div>
           <label class="text-sm font-medium">País</label>
-          <input readonly
-            class="w-full mt-1 border border-gray-200 rounded-lg p-3 text-gray-500"
+          <input readonly class="w-full mt-1 border border-gray-200 rounded-lg p-3 text-gray-500"
             [value]="solicitud.pais">
         </div>
 
         <div>
           <label class="text-sm font-medium">Correo</label>
-          <input readonly
-            class="w-full mt-1 border border-gray-200 rounded-lg p-3 text-gray-500"
+          <input readonly class="w-full mt-1 border border-gray-200 rounded-lg p-3 text-gray-500"
             [value]="solicitud.correo">
         </div>
 
         <div>
           <label class="text-sm font-medium">Teléfono</label>
-          <input readonly
-            class="w-full mt-1 border border-gray-200 rounded-lg p-3 text-gray-500"
+          <input readonly class="w-full mt-1 border border-gray-200 rounded-lg p-3 text-gray-500"
             [value]="solicitud.telefono || 'No registrado'">
         </div>
 
         <div>
           <label class="text-sm font-medium">Extensión</label>
-          <input readonly
-            class="w-full mt-1 border border-gray-200 rounded-lg p-3 text-gray-500"
+          <input readonly class="w-full mt-1 border border-gray-200 rounded-lg p-3 text-gray-500"
             [value]="solicitud.ext || 'No registrada'">
         </div>
 
@@ -152,85 +136,80 @@
   </ng-template>
   <div class="flex justify-center md:justify-end mt-10 gap-4">
 
-  <button
-    (click)="abrirModalRechazo()"
-    class="bg-red-100 text-red-600 px-6 py-3 rounded-lg font-medium hover:bg-red-200 cursor-pointer"
-  >
-    Rechazar Solicitud
-  </button>
+    <button (click)="abrirModalRechazo()"
+      class="bg-red-100 text-red-600 px-6 py-3 rounded-lg font-medium hover:bg-red-200 cursor-pointer">
+      Rechazar Solicitud
+    </button>
 
-  <button
-    (click)="abrirModalAprobacion()"
-    class="bg-green-100 text-green-700 px-6 py-3 rounded-lg font-medium hover:bg-green-200 cursor-pointer"
-  >
-    Aprobar Solicitud
-  </button>
-</div>
+    <button (click)="abrirModalAprobacion()"
+      class="bg-green-100 text-green-700 px-6 py-3 rounded-lg font-medium hover:bg-green-200 cursor-pointer">
+      Aprobar Solicitud
+    </button>
+  </div>
 
-<div *ngIf="mostrarModalRechazo"
-  class="fixed inset-0 z-50 flex items-center justify-center bg-blue bg-opacity-60 backdrop-blur-sm">
+  <div *ngIf="mostrarModalRechazo"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-blue bg-opacity-60 backdrop-blur-sm">
 
-  <div class="bg-white w-[90%] max-w-lg p-6 rounded-xl shadow-xl">
+    <div class="bg-white w-[90%] max-w-lg p-6 rounded-xl shadow-xl">
 
-    <h2 class="text-xl font-semibold mb-4">
-      Motivo rechazo
-    </h2>
+      <h2 class="text-xl font-semibold mb-4">
+        Motivo rechazo
+      </h2>
 
-    <textarea
-      [(ngModel)]="motivoRechazo"
-      class="w-full border border-gray-300 rounded-lg p-3 h-32 resize-none"
-      placeholder="Escribe el motivo del rechazo aquí..."
-    ></textarea>
+      <textarea [(ngModel)]="motivoRechazo" class="w-full border border-gray-300 rounded-lg p-3 h-32 resize-none"
+        placeholder="Escribe el motivo del rechazo aquí..."></textarea>
 
-    <div class="flex justify-end gap-4 mt-6">
+      <div class="flex justify-end gap-4 mt-6">
 
-      <button
-        (click)="cerrarModalRechazo()"
-        class="px-4 py-2 bg-gray-200 rounded-lg font-medium hover:bg-gray-300">
-        Cancelar
-      </button>
+        <button (click)="cerrarModalRechazo()" class="px-4 py-2 bg-gray-200 rounded-lg font-medium hover:bg-gray-300">
+          Cancelar
+        </button>
 
-      <button
-        (click)="confirmarRechazo()"
-        class="px-4 py-2 bg-red-500 text-white rounded-lg font-medium hover:bg-red-600">
-        Rechazar solicitud
-      </button>
+        <button (click)="confirmarRechazo()"
+          class="px-4 py-2 bg-red-500 text-white rounded-lg font-medium hover:bg-red-600">
+          Rechazar solicitud
+        </button>
+
+      </div>
 
     </div>
 
   </div>
 
-</div>
+  <div *ngIf="mostrarModalAprobacion"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-blue bg-opacity-60 backdrop-blur-sm">
 
-<div *ngIf="mostrarModalAprobacion"
-  class="fixed inset-0 z-50 flex items-center justify-center bg-blue bg-opacity-60 backdrop-blur-sm">
+    <div class="bg-white w-[90%] max-w-lg p-6 rounded-xl shadow-xl">
 
-  <div class="bg-white w-[90%] max-w-lg p-6 rounded-xl shadow-xl">
+      <h2 class="text-xl font-semibold mb-4">
+        Confirmar aprobación
+      </h2>
 
-    <h2 class="text-xl font-semibold mb-4">
-      Confirmar aprobación
-    </h2>
+      <p class="text-gray-700 mb-6">
+        ¿Deseas aprobar esta solicitud?
+      </p>
 
-    <p class="text-gray-700 mb-6">
-      ¿Deseas aprobar esta solicitud?
-    </p>
+      <div class="flex justify-end gap-4">
 
-    <div class="flex justify-end gap-4">
+        <button (click)="cerrarModalAprobacion()"
+          class="px-4 py-2 bg-gray-200 rounded-lg font-medium hover:bg-gray-300">
+          Cancelar
+        </button>
 
-      <button
-        (click)="cerrarModalAprobacion()"
-        class="px-4 py-2 bg-gray-200 rounded-lg font-medium hover:bg-gray-300">
-        Cancelar
-      </button>
+        <button (click)="confirmarAprobacion()"
+          class="px-4 py-2 bg-green-500 text-white rounded-lg font-medium hover:bg-green-600">
+          Aprobar solicitud
+        </button>
 
-      <button
-        (click)="confirmarAprobacion()"
-        class="px-4 py-2 bg-green-500 text-white rounded-lg font-medium hover:bg-green-600">
-        Aprobar solicitud
-      </button>
+      </div>
 
     </div>
 
   </div>
+
+  <!-- Modal de confirmación -->
+  <app-confirm-modal [visible]="modalVisible" [title]="modalTitle" [message]="modalMessage" [type]="modalType"
+    (confirm)="onConfirmModal()" (closed)="cerrarModal()">
+  </app-confirm-modal>
 
 </div>

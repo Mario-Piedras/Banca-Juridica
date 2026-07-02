@@ -3,30 +3,37 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SolicitudClienteService, SolicitudDetalleCompleta, SolicitudDetalleResponse, AccionSolicitudResponse } from './services/solicitud.service';
+import { ConfirmModalComponent, ConfirmModalType } from '../../../../../shared/components/modals/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-solicitud-cliente',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ConfirmModalComponent],
   templateUrl: './solicitud-cliente.component.html',
   styleUrls: ['./solicitud-cliente.component.css']
 })
 export class SolicitudClienteComponent implements OnInit {
   solicitud?: SolicitudDetalleCompleta;
-  
+
   mostrarModalRechazo: boolean = false;
   mostrarModalAprobacion: boolean = false;
   motivoRechazo: string = '';
-  
+
   cargando: boolean = false;
   error: string = '';
   procesando: boolean = false;
+
+  // Modal de mensajes
+  modalVisible = false;
+  modalTitle = '';
+  modalMessage = '';
+  modalType: ConfirmModalType = 'success';
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private solicitudService: SolicitudClienteService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.cargarSolicitud();
@@ -38,7 +45,7 @@ export class SolicitudClienteComponent implements OnInit {
       this.error = 'ID de solicitud no proporcionado';
       return;
     }
-    
+
     const id = Number(idParam);
     if (isNaN(id)) {
       this.error = 'ID de solicitud inválido';
@@ -67,6 +74,37 @@ export class SolicitudClienteComponent implements OnInit {
     this.router.navigate(['/director-operativo/consultar-solicitudes']);
   }
 
+  modalAction: (() => void) | null = null;
+  mostrarModal(
+    type: ConfirmModalType,
+    title: string,
+    message: string,
+    action?: () => void
+  ): void {
+
+    // Cerrar los modales propios del formulario
+    this.mostrarModalRechazo = false;
+    this.mostrarModalAprobacion = false;
+
+    this.modalType = type;
+    this.modalTitle = title;
+    this.modalMessage = message;
+    this.modalVisible = true;
+    this.modalAction = action || null;
+  }
+
+  onConfirmModal(): void {
+    if (this.modalAction) {
+      this.modalAction();
+      this.modalAction = null;
+    }
+  }
+
+  cerrarModal(): void {
+    this.modalVisible = false;
+    this.modalAction = null;
+  }
+
   abrirModalRechazo(): void {
     this.mostrarModalRechazo = true;
     this.motivoRechazo = '';
@@ -79,7 +117,11 @@ export class SolicitudClienteComponent implements OnInit {
 
   confirmarRechazo(): void {
     if (!this.motivoRechazo.trim()) {
-      alert('Por favor ingrese el motivo del rechazo');
+      this.mostrarModal(
+        'error',
+        'Error',
+        'Por favor ingrese el motivo del rechazo.'
+      );
       return;
     }
 
@@ -89,17 +131,29 @@ export class SolicitudClienteComponent implements OnInit {
     this.solicitudService.rechazarSolicitud(this.solicitud.id_solicitud, this.motivoRechazo).subscribe({
       next: (resp: AccionSolicitudResponse) => {
         if (resp.success) {
-          alert('Solicitud rechazada exitosamente');
           this.mostrarModalRechazo = false;
-          this.volver();
+          this.mostrarModal(
+            'success',
+            'Solicitud rechazada',
+            'La solicitud fue rechazada exitosamente.',
+            () => this.volver()
+          );
         } else {
-          alert(resp.message || 'Error al rechazar la solicitud');
+          this.mostrarModal(
+            'error',
+            'Error',
+            resp.message || 'Error al rechazar la solicitud.'
+          );
         }
         this.procesando = false;
       },
       error: (err: any) => {
         console.error('Error al rechazar solicitud:', err);
-        alert('Error al conectar con el servidor');
+        this.mostrarModal(
+          'error',
+          'Error',
+          'Error al conectar con el servidor.'
+        );
         this.procesando = false;
       }
     });
@@ -120,17 +174,29 @@ export class SolicitudClienteComponent implements OnInit {
     this.solicitudService.aprobarSolicitud(this.solicitud.id_solicitud).subscribe({
       next: (resp: AccionSolicitudResponse) => {
         if (resp.success) {
-          alert('Solicitud aprobada exitosamente');
           this.mostrarModalAprobacion = false;
-          this.volver();
+          this.mostrarModal(
+            'success',
+            'Solicitud aprobada',
+            'La solicitud fue aprobada exitosamente.',
+            () => this.volver()
+          );
         } else {
-          alert(resp.message || 'Error al aprobar la solicitud');
+          this.mostrarModal(
+            'error',
+            'Error',
+            resp.message || 'Error al aprobar la solicitud.'
+          );
         }
         this.procesando = false;
       },
       error: (err: any) => {
         console.error('Error al aprobar solicitud:', err);
-        alert('Error al conectar con el servidor');
+        this.mostrarModal(
+          'error',
+          'Error',
+          'Error al conectar con el servidor.'
+        );
         this.procesando = false;
       }
     });
@@ -141,11 +207,11 @@ export class SolicitudClienteComponent implements OnInit {
     const nacimiento = new Date(fechaNacimiento);
     let edad = hoy.getFullYear() - nacimiento.getFullYear();
     const mes = hoy.getMonth() - nacimiento.getMonth();
-    
+
     if (mes < 0 || (mes === 0 && hoy.getDate() < nacimiento.getDate())) {
       edad--;
     }
-    
+
     return edad;
   }
 
@@ -163,7 +229,7 @@ export class SolicitudClienteComponent implements OnInit {
         // Detectar tipo de archivo por content-type o extensión
         const contentType = response.type;
         let extension = 'pdf';
-        
+
         // Mapeo de content-type a extensión
         if (contentType.includes('png')) {
           extension = 'png';
@@ -176,22 +242,22 @@ export class SolicitudClienteComponent implements OnInit {
         } else if (contentType.includes('pdf')) {
           extension = 'pdf';
         }
-        
+
         // Crear blob con el tipo correcto
         const blob = new Blob([response], { type: contentType });
-        
+
         // Crear URL temporal
         const url = window.URL.createObjectURL(blob);
-        
+
         // Crear elemento <a> para descargar
         const link = document.createElement('a');
         link.href = url;
         link.download = `solicitud_${this.solicitud!.id_solicitud}_archivo.${extension}`;
-        
+
         // Simular click
         document.body.appendChild(link);
         link.click();
-        
+
         // Limpiar
         document.body.removeChild(link);
         window.URL.revokeObjectURL(url);
@@ -199,9 +265,17 @@ export class SolicitudClienteComponent implements OnInit {
       error: (err: any) => {
         console.error('Error al descargar archivo:', err);
         if (err.status === 404) {
-          alert('No hay archivo adjunto en esta solicitud');
+          this.mostrarModal(
+            'error',
+            'Archivo no disponible',
+            'No hay archivo adjunto en esta solicitud.'
+          );
         } else {
-          alert('Error al descargar el archivo');
+          this.mostrarModal(
+            'error',
+            'Error',
+            'Error al descargar el archivo.'
+          );
         }
       }
     });
@@ -210,4 +284,5 @@ export class SolicitudClienteComponent implements OnInit {
   tieneArchivo(): boolean {
     return this.solicitud?.tiene_archivo || false;
   }
+
 }

@@ -4,7 +4,7 @@
   </h1>
 
   <p class="text-sm text-gray-600 mb-6">
-    Ingrese el NIT o razón social
+    Ingrese el NIT/razón social y presione buscar
   </p>
 
   <!-- Formulario -->
@@ -17,30 +17,18 @@
       <div class="flex items-center gap-3">
 
         <div class="relative flex-1">
-          <input
-            type="text"
-            [(ngModel)]="nitRazonSocial"
-            placeholder="Ej: 900123456 o Empresa SAS"
-            [disabled]="cargando"
-            (keyup.enter)="buscarSolicitudes()"
-            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+          <input type="text" [(ngModel)]="nitRazonSocial" placeholder="Ej: 900123456 o Empresa SAS"
+            [disabled]="cargando" (keyup.enter)="buscarSolicitudes()"
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
 
-          <button
-            *ngIf="busquedaRealizada && nitRazonSocial"
-            type="button"
-            (click)="limpiarBusqueda()"
-            class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-          >
+          <button *ngIf="busquedaRealizada && nitRazonSocial" type="button" (click)="limpiarBusqueda()"
+            class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
             ✕
           </button>
         </div>
 
-        <button
-          (click)="buscarSolicitudes()"
-          [disabled]="cargando"
-          class="flex items-center gap-2 px-6 py-2 bg-blue-900 text-white  font-medium cursor-pointer rounded-md hover:bg-blue-800"
-        >
+        <button (click)="buscarSolicitudes()" [disabled]="cargando"
+          class="flex items-center gap-2 px-6 py-2 bg-blue-900 text-white  font-medium cursor-pointer rounded-md hover:bg-blue-800">
           🔎 {{ cargando ? 'Buscando...' : 'Buscar' }}
         </button>
 
@@ -61,10 +49,7 @@
       Solicitudes jurídicas radicadas
     </h2>
 
-    <div
-      *ngIf="solicitudes.length === 0 && !cargando && busquedaRealizada && !error"
-      class="text-center py-8"
-    >
+    <div *ngIf="solicitudes.length === 0 && !cargando && busquedaRealizada && !error" class="text-center py-8">
       <p class="text-gray-500">
         No se encontraron solicitudes
       </p>
@@ -90,10 +75,7 @@
         </thead>
 
         <tbody>
-          <tr
-            *ngFor="let solicitud of solicitudes"
-            class="border-b border-gray-200 hover:bg-gray-50"
-          >
+          <tr *ngFor="let solicitud of solicitudes" class="border-b border-gray-200 hover:bg-gray-50">
 
             <td class="py-4 px-3 text-sm">
               {{ solicitud.id_solicitud }}
@@ -112,10 +94,7 @@
             </td>
 
             <td class="py-4 px-3">
-              <span
-                class="px-3 py-1 rounded-full text-xs font-medium"
-                [ngClass]="obtenerClaseEstado(solicitud.estado)"
-              >
+              <span class="px-3 py-1 rounded-full text-xs font-medium" [ngClass]="obtenerClaseEstado(solicitud.estado)">
                 {{ solicitud.estado }}
               </span>
             </td>
@@ -125,10 +104,8 @@
             </td>
 
             <td class="py-4 px-3">
-              <button
-                (click)="verDetalle(solicitud)"
-                class="px-4 py-1.5 border-2 border-blue-900 text-blue-900 rounded-md text-sm font-medium hover:bg-blue-50"
-              >
+              <button (click)="verDetalle(solicitud)"
+                class="px-4 py-1.5 border-2 border-blue-900 text-blue-900 rounded-md text-sm font-medium hover:bg-blue-50">
                 Ver
               </button>
             </td>
