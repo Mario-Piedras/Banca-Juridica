@@ -13,7 +13,7 @@
     <select class="w-full max-w-md px-4 py-2 border border-gray-300 rounded-md
             focus:outline-none focus:ring-2 focus:ring-blue-500
             focus:border-transparent text-gray-700" [(ngModel)]="tipoClienteSeleccionado"
-      name="tipoClienteSeleccionado" required>
+      (ngModelChange)="onTipoClienteChange($event)" name="tipoClienteSeleccionado" required>
       <option value="" selected disabled>Seleccione el tipo de cliente</option>
       <option value="Natural">Persona Natural</option>
       <option value="Jurídica">Persona Jurídica</option>
@@ -78,7 +78,7 @@
       <label class="block text-sm font-semibold text-gray-800 mb-2">
         Producto <span class="text-red-600">*</span>
       </label>
-      <select [(ngModel)]="tipo_cuenta" name="tipo_cuenta" class="input-field" disabled>
+      <select [(ngModel)]="tipo_cuenta" name="tipo_cuenta" class="input-field">
         <option value="Ahorros" selected>{{ tipoClienteSeleccionado === 'Natural'
           ? 'Cuenta de Ahorros (Persona Natural)'
           : 'Cuenta de Ahorros (Persona Jurídica)' }}</option>

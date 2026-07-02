@@ -285,8 +285,9 @@ export class SolicitarProductoComponent implements OnInit {
   }
 
   // Limpieza del formulario
-  private limpiarFormulario(): void {
-    this.tipoClienteSeleccionado = '';
+  private limpiarFormulario(conservarTipo = false): void {
+    const tipo = this.tipoClienteSeleccionado;
+    this.tipoClienteSeleccionado = conservarTipo ? tipo : '';
     this.cedula = '';
     this.nit = '';
     this.proposito_cuenta = '';
@@ -294,6 +295,11 @@ export class SolicitarProductoComponent implements OnInit {
     this.estadoBusqueda = { encontrado: false, noEncontrado: false, nombre: '' };
     this.archivoFile = null;
     this.archivoSeleccionadoNombre = '';
+  }
+
+  onTipoClienteChange(tipo: TipoCliente | ''): void {
+    this.tipoClienteSeleccionado = tipo;
+    this.limpiarFormulario(true); // limpia todo excepto el tipo de cliente
   }
 
   onConfirmModal(): void {
