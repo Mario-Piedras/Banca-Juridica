@@ -1,7 +1,7 @@
 .bb-modal-backdrop {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, .45);
+    background: rgba(0, 0, 0, .50);
     z-index: 1000;
 }
 
@@ -14,7 +14,7 @@
     border-radius: 12px;
     width: min(520px, calc(100vw - 24px));
     z-index: 1001;
-    box-shadow: 0 16px 50px rgba(0, 0, 0, .25);
+    box-shadow: 0 16px 50px rgba(0, 0, 0, .30);
     overflow: hidden;
 }
 
@@ -32,12 +32,12 @@
 
 .bb-modal-body {
     padding: 16px 18px;
+    width: fit-content;
 }
 
 .bb-modal-message {
     margin: 0;
-    color: #222;
-    white-space: pre-wrap;
+    width: fit-content;
 }
 
 .bb-modal-footer {
@@ -55,7 +55,7 @@
     width: 26px;
     height: 26px;
     border-radius: 999px;
-    font-weight: 800;
+    font-weight: medium;
     color: #fff;
 }
 
@@ -68,23 +68,39 @@
 }
 
 .bb-badge-confirm {
-    background: #2563eb;
+    background-color: #f59e0b;
 }
 
-.bb-btn {
+.btn-accept {
     border: none;
-    border-radius: 10px;
     padding: 10px 14px;
-    font-weight: 600;
+    background-color: #1c398e;
     cursor: pointer;
-}
-
-.bb-btn-primary {
-    background: #2563eb;
+    font-weight: medium;
     color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 2px 4px -2px rgb(0 0 0 / 0.1);
+    transition: background-color 0.15s ease-in-out;
 }
 
-.bb-btn-secondary {
-    background: #f3f4f6;
-    color: #111827;
+.btn-accept:hover {
+    background-color: #1e40af;
+}
+
+.btn-cancel {
+    border: none;
+    padding: 10px 14px;
+    background-color: #d1d5db;
+    cursor: pointer;
+    font-weight: medium;
+    color: #1f2937;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 2px 4px -2px rgb(0 0 0 / 0.1);
+    transition: background-color 0.15s ease-in-out;
+}
+
+.btn-cancel:hover {
+    background-color: #d1d5db;
 }

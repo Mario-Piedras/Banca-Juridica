@@ -16,8 +16,15 @@ export class InformacionLaboralComponent implements OnInit, OnChanges {
   @Input() datosIniciales: any;
   @Output() formChange = new EventEmitter();
   @Output() nextTab = new EventEmitter();
+  @Output() mostrarModal = new EventEmitter<{
+    type: 'success' | 'error' | 'confirm';
+    title: string;
+    message: string;
+    confirmText?: string;
+  }>();
 
-  // Datos para los selectores (igual que contacto-personal)
+  // 🗺️ Datos
+  tipoPaisEmpresa: string = 'Colombia'; // Nuevo
   departamentosEmpresa: string[] = [];
   ciudadesEmpresa: string[] = [];
   colombiaData: any[] = [];
@@ -29,8 +36,8 @@ export class InformacionLaboralComponent implements OnInit, OnChanges {
     this.form = this.fb.group({
       nombreEmpresa: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(200)]],
       direccionEmpresa: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(200)]],
-      tipoPaisEmpresa: ['Colombia', Validators.required],
-      paisEmpresa: ['Colombia'],
+      tipoPaisEmpresa: ['Colombia', Validators.required], // Colombiano u Otro
+      paisEmpresa: ['Colombia'], // Nombre del país
       departamentoEmpresa: ['', Validators.required],
       ciudadEmpresa: ['', Validators.required],
       telefonoEmpresa: ['', [Validators.required, Validators.minLength(7), Validators.maxLength(15), Validators.pattern(/^[0-9]+$/)]],
@@ -47,19 +54,21 @@ export class InformacionLaboralComponent implements OnInit, OnChanges {
     // Desactivar ciudad al inicio
     this.form.get('ciudadEmpresa')?.disable();
 
-    // Cascada: Tipo de País → Departamento → Ciudad
+    // 🔗 Cascada según tipo de país
     this.form.get('tipoPaisEmpresa')?.valueChanges.subscribe(tipo => {
       console.log('🌍 Tipo de país empresa:', tipo);
+
       if (tipo === 'Colombia') {
         this.form.get('paisEmpresa')?.setValue('Colombia');
         this.cargarDepartamentosColombia();
       } else {
+        // Si es "Otro", limpiar todo
         this.departamentosEmpresa = [];
         this.ciudadesEmpresa = [];
         this.form.get('paisEmpresa')?.setValue('');
+        this.form.get('departamentoEmpresa')?.setValue('');
+        this.form.get('ciudadEmpresa')?.setValue('');
       }
-      this.form.get('departamentoEmpresa')?.setValue('');
-      this.form.get('ciudadEmpresa')?.setValue('');
     });
 
     this.form.get('departamentoEmpresa')?.valueChanges.subscribe(departamento => {
@@ -78,15 +87,14 @@ export class InformacionLaboralComponent implements OnInit, OnChanges {
 
     // Cargar datos iniciales
     if (this.datosIniciales) {
-      console.log('📥 Cargando datos iniciales en Información Laboral:', this.datosIniciales);
+      console.log('📥 Cargando datos:', this.datosIniciales);
       this.form.patchValue(this.datosIniciales);
-
       if (this.datosIniciales.paisEmpresa === 'Colombia') {
         this.form.get('tipoPaisEmpresa')?.setValue('Colombia');
         if (this.datosIniciales.departamentoEmpresa) {
           this.actualizarCiudades(this.datosIniciales.departamentoEmpresa);
         }
-      } else if (this.datosIniciales.paisEmpresa) {
+      } else {
         this.form.get('tipoPaisEmpresa')?.setValue('Otro');
       }
     }
@@ -94,7 +102,6 @@ export class InformacionLaboralComponent implements OnInit, OnChanges {
     // Auto-guardado
     this.form.valueChanges.subscribe(valores => {
       this.formChange.emit(valores);
-      console.log('💾 Auto-guardando información laboral...');
     });
   }
 
@@ -114,10 +121,9 @@ export class InformacionLaboralComponent implements OnInit, OnChanges {
 
       if (datos.paisEmpresa === 'Colombia') {
 
-        this.form.get('tipoPaisEmpresa')?.setValue(
-          'Colombia',
-          { emitEvent: false }
-        );
+        this.form.get('tipoPaisEmpresa')?.setValue('Colombia', {
+          emitEvent: false
+        });
 
         if (datos.departamentoEmpresa) {
           this.actualizarCiudades(datos.departamentoEmpresa);
@@ -125,55 +131,60 @@ export class InformacionLaboralComponent implements OnInit, OnChanges {
 
         this.form.get('ciudadEmpresa')?.enable();
 
-      } else if (datos.paisEmpresa) {
+      } else {
 
-        this.form.get('tipoPaisEmpresa')?.setValue(
-          'Otro',
-          { emitEvent: false }
-        );
-
-        this.form.get('ciudadEmpresa')?.enable();
+        this.form.get('tipoPaisEmpresa')?.setValue('Otro', {
+          emitEvent: false
+        });
 
       }
     }
   }
 
-  // Cargar desde colombia-data.json (igual que contacto-personal)
+  // Cargar desde colombia-data.json
   cargarDepartamentosColombia() {
-    console.log('📡 Cargando archivo colombia-data.json para empresa...');
+    console.log('📡 Cargando archivo...');
+    // Cambiar la ruta - SIN el prefijo /assets/
     this.http.get<any[]>('colombia-data.json').subscribe({
       next: (data) => {
-        console.log('✅ Datos recibidos para empresa:', data);
+        console.log('✅ Datos recibidos:', data);
         this.colombiaData = data;
         this.departamentosEmpresa = data.map(d => d.departamento);
-        console.log('✅ Departamentos de empresa cargados:', this.departamentosEmpresa);
+        console.log('✅ Departamentos cargados:', this.departamentosEmpresa);
       },
       error: (err) => {
-        console.error('❌ Error al cargar departamentos de empresa:', err);
-        alert('❌ Error: No se pudo cargar colombia-data.json');
+        console.error('❌ Error:', err);
       }
     });
   }
 
   actualizarCiudades(departamento: string) {
-    console.log('🔍 Buscando ciudades de empresa para:', departamento);
     const deptoData = this.colombiaData.find(d => d.departamento === departamento);
     this.ciudadesEmpresa = deptoData ? deptoData.ciudades : [];
-    console.log('🏙️ Ciudades de empresa disponibles:', this.ciudadesEmpresa);
+    console.log('🏙️ Ciudades disponibles:', this.ciudadesEmpresa);
   }
 
   esColombiaEmpresa(): boolean {
-    return this.form.get('tipoPaisEmpresa')?.value === 'Colombia';
+    return this.form.get('paisEmpresa')?.value === 'Colombia';
   }
 
   guardarSeccion() {
     if (this.form.valid) {
       this.formChange.emit(this.form.value);
       this.nextTab.emit();
-      alert('✅ Datos laborales guardados correctamente');
+      this.mostrarModal.emit({
+        type: 'success',
+        title: 'Información guardada',
+        message: 'Datos laborales guardados correctamente.',
+        confirmText: 'Aceptar'
+      });
     } else {
       this.form.markAllAsTouched();
-      alert('⚠️ Por favor completa todos los campos obligatorios.');
+      this.mostrarModal.emit({
+          type: 'error',
+          title: 'Formulario inválido',
+          message: 'Por favor completa todos los campos obligatorios.'
+        });
     }
   }
 

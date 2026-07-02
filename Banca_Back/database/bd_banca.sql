@@ -673,7 +673,7 @@ CREATE TABLE tipo_entidad (
 	otra_asociacion VARCHAR(100),
     ent_estatal ENUM('Nación', 'Departamento', 'Municipio', 'Otra'),
     otra_ent_estatal VARCHAR(100),
-    ent_estatal_descentralizada ENUM('Naciónal', 'Departamental', 'Municipal')
+    ent_estatal_descentralizada ENUM('Nacional', 'Departamental', 'Municipal')
 );
 
 CREATE TABLE declaracion_bienes (
@@ -693,7 +693,7 @@ CREATE TABLE info_financiera_emp (
   ingresos_op DECIMAL(15,2) DEFAULT 0.0,
   ingresos_no_op DECIMAL(15,2) DEFAULT 0.0,
   detalle_ingresos VARCHAR(100),
-    ventas_anuales DECIMAL(15,2) DEFAULT 0.00,
+    ventas_mensuales DECIMAL(15,2) DEFAULT 0.00,
     fecha_cierre_ventas DATE NOT NULL,
     egresos_mensuales DECIMAL(15,2) DEFAULT 0.00,
     utilidad_neta DECIMAL(15,2) DEFAULT 0.00,
@@ -794,7 +794,7 @@ VALUES
 	("Aporte de socios", "Desarrollo del objeto social", "Colombia", "Palmira");
     
 INSERT INTO info_financiera_emp
-	(ventas_anuales, fecha_cierre_ventas, egresos_mensuales, utilidad_neta, 
+	(ventas_mensuales, fecha_cierre_ventas, egresos_mensuales, utilidad_neta, 
     total_activos, total_pasivos, total_patrimonio) 
 VALUES 
 	(100000000, "2000-12-31", 5000000, 3333333, 500000000, 150000000, 150000000);

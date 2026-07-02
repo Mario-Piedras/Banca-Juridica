@@ -1,7 +1,7 @@
 <div class="max-w-4xl p-6 bg-white rounded-lg">
-  <h1 class="text-2xl font-bold text-blue-900 mb-2">Consultar solicitudes radicadas</h1>
+  <h1 class="text-2xl font-bold text-blue-900 mb-2">Consultar solicitudes naturales radicadas</h1>
   <p class="text-sm text-gray-600 mb-6">
-    Ingrese la cedula o nombre del cliente y presione buscar
+    Ingrese la cédula/nombre del cliente y presione buscar
   </p>
 
   <!-- Formulario de búsqueda -->
@@ -12,33 +12,20 @@
     <div class="relative">
       <div class="flex items-center gap-3">
         <div class="relative flex-1">
-          <input
-            type="text"
-            [(ngModel)]="cedulaNombre"
-            placeholder="Ej: 1012345678 o Juan"
-            [disabled]="cargando"
+          <input type="text" [(ngModel)]="cedulaNombre" placeholder="Ej: 1012345678 o Juan" [disabled]="cargando"
             (keyup.enter)="buscarSolicitudes()"
-            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-400 disabled:bg-gray-100"
-          />
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-400 disabled:bg-gray-100" />
 
           <!-- X para limpiar dentro del input -->
-          <button
-            *ngIf="busquedaRealizada && cedulaNombre"
-            type="button"
-            (click)="limpiarBusqueda()"
+          <button *ngIf="busquedaRealizada && cedulaNombre" type="button" (click)="limpiarBusqueda()"
             class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer"
-            title="Limpiar"
-            [disabled]="cargando"
-          >
+            title="Limpiar" [disabled]="cargando">
             ✕
           </button>
         </div>
 
-        <button
-          (click)="buscarSolicitudes()"
-          [disabled]="cargando"
-          class="flex items-center gap-2 px-6 py-2 bg-blue-900 text-white rounded-md hover:bg-blue-800 transition-colors font-medium cursor-pointer disabled:bg-gray-400 disabled:cursor-not-allowed"
-        >
+        <button (click)="buscarSolicitudes()" [disabled]="cargando"
+          class="flex items-center gap-2 px-6 py-2 bg-blue-900 text-white rounded-md hover:bg-blue-800 transition-colors font-medium cursor-pointer disabled:bg-gray-400 disabled:cursor-not-allowed">
           <span aria-hidden="true">🔎</span>
           {{ cargando ? 'Buscando...' : 'Buscar' }}
         </button>
@@ -48,7 +35,9 @@
     <!-- Mensaje de error -->
     <div *ngIf="error" class="mt-2 p-3 bg-red-50 border border-red-200 rounded-md flex items-center gap-2">
       <svg class="w-5 h-5 text-red-600" fill="currentColor" viewBox="0 0 20 20">
-        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+        <path fill-rule="evenodd"
+          d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+          clip-rule="evenodd" />
       </svg>
       <span class="text-sm text-red-800 font-medium">{{ error }}</span>
     </div>
@@ -57,7 +46,7 @@
   <!-- Tabla de solicitudes -->
   <div>
     <h2 class="text-xl font-bold text-blue-900 mb-6">Solicitudes radicadas</h2>
-    
+
     <!-- Mensaje cuando no hay solicitudes -->
     <div *ngIf="solicitudes.length === 0 && !cargando && busquedaRealizada && !error" class="text-center py-8">
       <p class="text-gray-500">No se encontraron solicitudes para este asesor</p>
@@ -79,9 +68,9 @@
       <table class="w-full">
         <thead>
           <tr class="border-b-2 border-gray-200">
-            <th class="text-left py-3 px-3 font-semibold text-sm text-blue-900">ID Asesor</th>
             <th class="text-left py-3 px-3 font-semibold text-sm text-blue-900">ID solicitud</th>
             <th class="text-left py-3 px-3 font-semibold text-sm text-blue-900">Cédula</th>
+            <th class="text-left py-3 px-3 font-semibold text-sm text-blue-900">Nombre completo</th>
             <th class="text-left py-3 px-3 font-semibold text-sm text-blue-900">Fecha</th>
             <th class="text-left py-3 px-3 font-semibold text-sm text-blue-900">Estado</th>
             <th class="text-left py-3 px-3 font-semibold text-sm text-blue-900">Producto</th>
@@ -90,24 +79,19 @@
         </thead>
         <tbody>
           <tr *ngFor="let solicitud of solicitudes" class="border-b border-gray-200 hover:bg-gray-50">
-            <td class="py-4 px-3 text-sm text-gray-800">{{ solicitud.id_asesor }}</td>
             <td class="py-4 px-3 text-sm text-gray-800 font-medium">{{ solicitud.id_solicitud }}</td>
             <td class="py-4 px-3 text-sm text-gray-800">{{ solicitud.cedula }}</td>
+            <td class="py-4 px-3 text-sm text-gray-800">{{ solicitud.nombre_completo }}</td>
             <td class="py-4 px-3 text-sm text-gray-800">{{ solicitud.fecha }}</td>
             <td class="py-4 px-3">
-              <span 
-                class="px-3 py-1 rounded-full text-xs font-medium"
-                [ngClass]="obtenerClaseEstado(solicitud.estado)"
-              >
+              <span class="px-3 py-1 rounded-full text-xs font-medium" [ngClass]="obtenerClaseEstado(solicitud.estado)">
                 {{ solicitud.estado }}
               </span>
             </td>
             <td class="py-4 px-3 text-sm text-gray-800">{{ solicitud.producto }}</td>
             <td class="py-4 px-3">
-              <button 
-                (click)="verDetalle(solicitud)"
-                class="px-4 py-1.5 border-2 border-blue-900 text-blue-900 rounded-md text-sm font-medium hover:bg-blue-50 transition-colors cursor-pointer"
-              >
+              <button (click)="verDetalle(solicitud)"
+                class="px-4 py-1.5 border-2 border-blue-900 text-blue-900 rounded-md text-sm font-medium hover:bg-blue-50 transition-colors cursor-pointer">
                 Ver
               </button>
             </td>

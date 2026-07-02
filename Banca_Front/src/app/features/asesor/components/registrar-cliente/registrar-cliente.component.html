@@ -37,37 +37,46 @@
     <!-- Pestaña 1: Información Personal -->
     <div *ngIf="pestanaActiva === 'datos-personales'">
       <app-informacion-personal [datosIniciales]="clienteData.datosPersonales"
-        (formChange)="actualizarDatos('datosPersonales', $event)"
-        (nextTab)="manejarNextTab()"></app-informacion-personal>
+        (formChange)="actualizarDatos('datosPersonales',$event)" (nextTab)="manejarNextTab()"
+        (mostrarModal)="abrirModalGuardado($event)">
+      </app-informacion-personal>
     </div>
 
     <!-- Pestaña 2: Contacto y Actividad -->
     <div *ngIf="pestanaActiva === 'contacto-personal'" class="space-y-6">
-      <app-contacto-personal [datosIniciales]="clienteData.contacto" (formChange)="actualizarDatos('contacto', $event)"></app-contacto-personal>
-
+      <app-contacto-personal [datosIniciales]="clienteData.contacto" (formChange)="actualizarDatos('contacto', $event)"
+        (mostrarModal)="abrirModalGuardado($event)">
+      </app-contacto-personal>
       <app-actividad-economica [datosIniciales]="clienteData.actividad"
-        (formChange)="actualizarDatos('actividad', $event)" (nextTab)="manejarNextTab()"></app-actividad-economica>
+        (formChange)="actualizarDatos('actividad', $event)" (nextTab)="manejarNextTab()"
+        (mostrarModal)="abrirModalGuardado($event)">
+      </app-actividad-economica>
     </div>
 
     <!-- Pestaña 3: Laboral y Financiera -->
     <div *ngIf="pestanaActiva === 'info-laboral'" class="space-y-6">
-      <app-informacion-laboral [datosIniciales]="clienteData.laboral" (formChange)="actualizarDatos('laboral', $event)"></app-informacion-laboral>
+      <app-informacion-laboral [datosIniciales]="clienteData.laboral" (formChange)="actualizarDatos('laboral', $event)"
+        (mostrarModal)="abrirModalGuardado($event)">
+      </app-informacion-laboral>
 
       <app-informacion-financiera [datosIniciales]="clienteData.financiera"
-        (formChange)="actualizarDatos('financiera', $event)" (nextTab)="manejarNextTab()"></app-informacion-financiera>
+        (formChange)="actualizarDatos('financiera', $event)" (nextTab)="manejarNextTab()"
+        (mostrarModal)="abrirModalGuardado($event)">
+      </app-informacion-financiera>
     </div>
 
-    <!-- Pestaña 4: FACTA y CRS -->
+    <!-- Pestaña 4: FACTCA y CRS -->
     <div *ngIf="pestanaActiva === 'facta'" class="space-y-6">
       <app-facta [datosIniciales]="clienteData.facta" (formChange)="actualizarDatos('facta', $event)"
-        (nextTab)="manejarNextTab()"></app-facta>
+        (nextTab)="manejarNextTab()" (mostrarModal)="abrirModalGuardado($event)">
+      </app-facta>
 
       <!-- Botón de Registrar/Actualizar -->
       <div class="text-center mt-8">
         <button (click)="registrarCliente()" [disabled]="!datosCompletos()"
-          class="px-8 py-3 font-semibold rounded-lg shadow-md transition-all" [class]="modo === 'nuevo' 
-            ? 'bg-green-600 hover:bg-green-700 text-white disabled:bg-gray-300'
-            : 'bg-blue-600 hover:bg-blue-700 text-white disabled:bg-gray-300'">
+          class="px-8 py-3 font-semibold rounded-lg shadow-md transition-all" [class]="modo === 'nuevo'
+        ? 'bg-green-600 hover:bg-green-700 text-white disabled:bg-gray-300'
+        : 'bg-blue-600 hover:bg-blue-700 text-white disabled:bg-gray-300'">
           {{ modo === 'nuevo' ? 'Registrar Cliente' : 'Actualizar Cliente' }}
         </button>
 
@@ -78,5 +87,12 @@
         </button>
       </div>
     </div>
+
+    <!-- Modal de confirmación -->
+    <app-confirm-modal [visible]="modalVisible" [title]="modalTitle" [message]="modalMessage" [type]="modalType"
+      [confirmText]="modalConfirmText" (confirm)="onModalConfirm()" (cancel)="onModalCancel()"
+      (closed)="onModalClosed()">
+    </app-confirm-modal>
+
   </div>
 </div>

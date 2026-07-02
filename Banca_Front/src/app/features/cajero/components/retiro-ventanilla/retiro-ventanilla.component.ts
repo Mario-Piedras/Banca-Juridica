@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RetiroService } from '../../services/retiro.service';
+import { ConfirmModalComponent, ConfirmModalType } from '../../../../shared/components/modals/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-retiro-ventanilla',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, ConfirmModalComponent],
   templateUrl: './retiro-ventanilla.component.html',
   styleUrls: ['./retiro-ventanilla.component.css']
 })
@@ -33,6 +34,14 @@ export class RetiroVentanillaComponent {
     tipoTitular: 'Natural'
   };
 
+  // Modal de confirmación
+  modalVisible = false;
+  modalTitle = '';
+  modalMessage = '';
+  modalType: ConfirmModalType = 'success';
+  modalConfirmText = 'Aceptar';
+  private pendingAction: (() => void) | null = null;
+
   constructor(
     private fb: FormBuilder,
     private retiroService: RetiroService
@@ -44,6 +53,21 @@ export class RetiroVentanillaComponent {
       saldoDisponible: [{ value: '', disabled: true }],
       montoRetirar: [{ value: '', disabled: true }, [Validators.required, Validators.min(this.MONTO_MINIMO)]]  // ✅ disabled
     });
+  }
+
+  private mostrarModal(
+    type: ConfirmModalType,
+    title: string,
+    message: string,
+    confirmText = 'Aceptar',
+    action?: () => void
+  ): void {
+    this.modalType = type;
+    this.modalTitle = title;
+    this.modalMessage = message;
+    this.modalConfirmText = confirmText;
+    this.pendingAction = action ?? null;
+    this.modalVisible = true;
   }
 
   // Validar monto en tiempo real
@@ -86,42 +110,44 @@ export class RetiroVentanillaComponent {
     );
   }
 
+  // Búsqueda de la cuenta
   buscarCuenta() {
     const numeroCuenta = this.retiroForm.get('numeroCuenta')?.value;
 
     if (!numeroCuenta) {
-      alert('Por favor ingrese un número de cuenta');
+      this.mostrarModal('error', 'Error', 'Por favor ingrese un número de cuenta');
       return;
     }
 
     this.retiroService.buscarCuenta({ numeroCuenta }).subscribe({
       next: (response) => {
         if (response.existe && response.datos) {
-          this.cuentaEncontrada = true;
-          this.idCuenta = response.datos.idCuenta;
+          const datos = response.datos;
+          this.mostrarModal('success', 'Éxito', response.mensaje, 'Aceptar', () => {
+            this.cuentaEncontrada = true;
+            this.idCuenta = datos.idCuenta;
+            const tipoTitular = datos.idCliente
+              ? 'Natural'
+              : 'Juridica';
+            this.datosComprobante.tipoTitular = tipoTitular;
+            this.retiroForm.get('montoRetirar')?.enable();
+            this.retiroForm.patchValue({
+              numeroDocumento: datos.numeroDocumento,
+              titular: datos.titular,
+              saldoDisponible: `$${datos.saldo.toLocaleString()}`
+            });
 
-          const tipoTitular = response.datos.idCliente 
-          ? 'Natural' 
-          : 'Juridica';
-          this.datosComprobante.tipoTitular = tipoTitular;
+          }
 
-          this.retiroForm.get('montoRetirar')?.enable();
-
-          this.retiroForm.patchValue({
-            numeroDocumento: response.datos.numeroDocumento,
-            titular: response.datos.titular,
-            saldoDisponible: `$${response.datos.saldo.toLocaleString()}`
-          });
-
-          alert(response.mensaje);
+          );
         } else {
-          alert(response.mensaje);
+          this.mostrarModal('error', 'Error', response.mensaje);
           this.limpiarDatosCuenta();
         }
       },
       error: (error) => {
         console.error('Error al buscar cuenta:', error);
-        alert('Error al buscar la cuenta. Intente nuevamente.');
+        this.mostrarModal('error', 'Error', 'Error al buscar la cuenta. Intente nuevamente.');
         this.limpiarDatosCuenta();
       }
     });
@@ -129,7 +155,7 @@ export class RetiroVentanillaComponent {
 
   onRetirar() {
     if (this.retiroForm.invalid || !this.cuentaEncontrada) {
-      alert('Por favor complete todos los campos requeridos');
+      this.mostrarModal('error', 'Error', 'Por favor complete todos los campos requeridos');
       return;
     }
 
@@ -141,7 +167,7 @@ export class RetiroVentanillaComponent {
     // Validar monto máximo
     const monto = parseFloat(montoRetirar);
     if (monto > this.MONTO_MAXIMO) {
-      alert(`⚠️ El monto máximo permitido es $9,999,999,999,999`);
+      this.mostrarModal('error', 'Error', '⚠️ El valor máximo permitido es $9,999,999,999,999');
       return;
     }
 
@@ -154,37 +180,45 @@ export class RetiroVentanillaComponent {
     this.retiroService.procesarRetiro(datosRetiro).subscribe({
       next: (response) => {
         if (response.exito && response.datos) {
-          alert(`${response.mensaje}\n\nSaldo anterior: $${response.datos.saldoAnterior.toLocaleString()}\nMonto retirado: $${response.datos.montoRetirado.toLocaleString()}\nSaldo nuevo: $${response.datos.saldoNuevo.toLocaleString()}`);
-
-          this.datosComprobante = {
-            idTransaccion: response.datos.idTransaccion,
-            numeroCuenta,
-            numeroDocumento: response.datos.numeroDocumento || numeroDocumento,
-            titular: response.datos.nombreTitular || titular,
-            montoRetirado: response.datos.montoRetirado,
-            saldoAnterior: response.datos.saldoAnterior,
-            saldoNuevo: response.datos.saldoNuevo,
-            fecha: new Date(response.datos.fechaTransaccion),
-            tipoTitular:
-              response.datos.tipoCuenta || this.datosComprobante.tipoTitular
-          };
-
-          this.retiroRealizado = true;
+          const datos = response.datos;
+          this.mostrarModal('success', 'Éxito', `${response.mensaje}
+Saldo anterior: $${datos.saldoAnterior.toLocaleString()}
+Monto retirado: $${datos.montoRetirado.toLocaleString()}
+Saldo nuevo: $${datos.saldoNuevo.toLocaleString()}`,
+            'Aceptar',
+            () => {
+              this.datosComprobante = {
+                idTransaccion: datos.idTransaccion,
+                numeroCuenta,
+                numeroDocumento: datos.numeroDocumento || numeroDocumento,
+                titular: datos.nombreTitular || titular,
+                montoRetirado: datos.montoRetirado,
+                saldoAnterior: datos.saldoAnterior,
+                saldoNuevo: datos.saldoNuevo,
+                fecha: new Date(datos.fechaTransaccion),
+                tipoTitular:
+                  datos.tipoCuenta || this.datosComprobante.tipoTitular
+              };
+              this.retiroRealizado = true;
+            }
+          );
         } else {
-          alert(response.mensaje);
+          this.mostrarModal('error', 'Error', response.mensaje);
         }
       },
       error: (error) => {
         console.error('Error al procesar retiro:', error);
-        alert('Error al procesar el retiro. Intente nuevamente.');
+        this.mostrarModal('error', 'Error', 'Error al procesar el retiro. Intente nuevamente.');
       }
     });
   }
 
+  // Impresión del comprobante
   imprimirComprobante() {
     window.print();
   }
 
+  // Limpieza del formulario
   limpiarFormulario() {
     this.retiroForm.reset();
     this.cuentaEncontrada = false;
@@ -203,7 +237,7 @@ export class RetiroVentanillaComponent {
     this.retiroForm.get('montoRetirar')?.disable();
 
     this.datosComprobante.tipoTitular = 'Natural';
-    
+
     this.retiroForm.patchValue({
       numeroDocumento: '',
       titular: '',
@@ -220,4 +254,14 @@ export class RetiroVentanillaComponent {
     this.retiroForm.get('saldoDisponible')?.disable();
     this.retiroForm.get('montoRetirar')?.disable();
   }
+
+  onConfirmModal(): void {
+    this.modalVisible = false;
+
+    if (this.pendingAction) {
+      this.pendingAction();
+      this.pendingAction = null;
+    }
+  }
+
 }

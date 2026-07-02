@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Output, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -15,7 +15,8 @@ import { switchMap } from 'rxjs';
     './origenbienes-infosocios.component.css'
   ]
 })
-export class DeclaracionBienesInfoSociosComponent implements OnInit {
+export class DeclaracionBienesInfoSociosComponent implements OnInit, OnChanges {
+  @Input() modo: 'nuevo' | 'editar' = 'nuevo';
   @Input() datosIniciales: any;
   @Output() formChange = new EventEmitter();
   @Output() prevTab = new EventEmitter<void>();
@@ -63,6 +64,22 @@ export class DeclaracionBienesInfoSociosComponent implements OnInit {
       personas_expuestas: ['', Validators.required],
       bolsa_valores: ['', Validators.required]
     });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (
+      changes['datosIniciales'] &&
+      changes['datosIniciales'].currentValue
+    ) {
+      console.log(
+        '📥 Datos recibidos para edición:',
+        changes['datosIniciales'].currentValue
+      );
+      this.form.patchValue(
+        changes['datosIniciales'].currentValue,
+        { emitEvent: true }
+      );
+    }
   }
 
   ngOnInit() {
@@ -215,9 +232,11 @@ export class DeclaracionBienesInfoSociosComponent implements OnInit {
         console.log('Datos guardados:', res);
         this.formChange.emit(this.form.value);
         this.saved.emit('final');
-        this.nextTab.emit();
+        // El padre controlará la navegación hasta que el usuario acepte el modal.
+        // this.nextTab.emit();
 
         // No navegar aquí: el padre controla el modal "Guardar y finalizar" y la navegación tras Aceptar.
+
       },
 
       error: (err) => {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'; // ← AÑADIR OnInit
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -32,11 +32,11 @@ export class RegistrarClienteJuridicoComponent implements OnInit {
   // 🌐 Control de pestañas
   pestanaActiva: string = 'informacion-general';
   modo: 'nuevo' | 'editar' = 'nuevo';
-  idCliente: number | null = null;
+  idEmpresa: number | null = null;
   cargando: boolean = false;
 
   // 🧠 Datos temporales de todos los subformularios
-  clienteData: any = {
+  empresaData: any = {
     infoGeneral: null,
     representanteLegal: null,
     naturalezaEntidad: null,
@@ -53,12 +53,12 @@ export class RegistrarClienteJuridicoComponent implements OnInit {
     declaracionBienesInfoSocios: null,
   };
 
-  // Estado modal confirmación
-  confirmVisible = false;
-  confirmTitle = '';
-  confirmMessage = '';
-  confirmType: 'success' | 'error' | 'confirm' = 'success';
-  confirmButtonText = 'Aceptar';
+  // Modal de confirmación
+  modalVisible = false;
+  modalTitle = '';
+  modalMessage = '';
+  modalType: 'success' | 'error' | 'confirm' = 'success';
+  modalConfirmText = 'Aceptar';
 
   // Orden de las pestañas para moverse automáticamente
   ordenPestanas = [ // ← AÑADIR ESTA VARIABLE
@@ -71,33 +71,55 @@ export class RegistrarClienteJuridicoComponent implements OnInit {
 
   // Mostrar modal de confirmación (para guardar exitosamente)
   abrirModalGuardado(modulo: 'parcial' | 'final' | string): void {
-    this.confirmVisible = true;
-    this.confirmType = 'success';
+    this.modalVisible = true;
+    this.modalType = 'success';
 
     if (modulo === 'final') {
-      this.confirmTitle = 'Registro finalizado';
-      this.confirmMessage = 'El registro finalizo correctamente.';
-      this.confirmButtonText = 'Aceptar';
+      this.modalTitle = 'Registro finalizado';
+      this.modalMessage = 'El registro finalizo correctamente.';
+      this.modalConfirmText = 'Aceptar';
       return;
     }
 
-    this.confirmTitle = 'Información guardada';
-    this.confirmMessage = 'Los campos se guardaron correctamente.';
-    this.confirmButtonText = 'Aceptar';
+    this.modalTitle = 'Información guardada';
+    this.modalMessage = 'Los campos se guardaron correctamente.';
+    this.modalConfirmText = 'Aceptar';
   }
 
   onModalConfirm(): void {
-    // Cerrar modal y en caso de "final" redirigir a consultar-cliente
-    this.confirmVisible = false;
+    // Cerrar modal
+    this.modalVisible = false;
 
-    if (this.confirmType === 'success' && this.confirmTitle === 'Registro finalizado') {
+    // Cancelar edición
+    if (this.modalType === 'confirm') {
       this.router.navigate(['/asesor/consultar-cliente']);
+      return;
+    }
+
+    // “Registro finalizado” => redirigir a consultar-cliente.
+    if (
+      this.modalType === 'success' &&
+      this.modalTitle === 'Registro finalizado'
+    ) {
+      this.router.navigate(['/asesor/consultar-cliente']);
+      return;
+    }
+
+    // Para guardados parciales: avanzar exactamente a la siguiente pestaña.
+    if (
+      this.modalType === 'success' &&
+      this.modalTitle === 'Información guardada'
+    ) {
+      this.irASiguientePestanaActual();
     }
   }
 
+  onModalCancel(): void {
+    this.modalVisible = false;
+  }
 
   onModalClosed(): void {
-    this.confirmVisible = false;
+    this.modalVisible = false;
   }
 
   constructor(
@@ -111,37 +133,41 @@ export class RegistrarClienteJuridicoComponent implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
     if (id && !isNaN(Number(id))) {
       this.modo = 'editar';
-      this.idCliente = parseInt(id, 10);
-      this.cargarClienteExistente(this.idCliente);
+      this.idEmpresa = parseInt(id, 10);
+      this.cargarEmpresaExistente(this.idEmpresa);
     }
   }
 
-  cargarClienteExistente(idCliente: number) {
+  cargarEmpresaExistente(idEmpresa: number) {
     this.cargando = true;
     // Primero necesitas agregar este método al AsesorService
     // Voy a mostrarte cómo modificarlo después
-    this.asesorService.obtenerClientePorId(idCliente).subscribe({
+    this.asesorService.obtenerEmpresaPorId(idEmpresa).subscribe({
       next: (respuesta) => {
         if (respuesta.success && respuesta.data) {
-          const cliente = respuesta.data;
+          const empresa = respuesta.data;
 
           // Organizar datos en la estructura esperada por los subcomponentes
           this.datosIniciales = {
-            infoGeneral: {},
-            representanteLegal: cliente.representanteLegal || {},
-            naturalezaEntidad: cliente.naturalezaEntidad || {},
-            infoFinancieraTributaria: cliente.infoFinancieraTributaria || {},
-            declaracionBienesInfoSocios: cliente.declaracionBienesInfoSocios || {}
+            infoGeneral: empresa.infoGeneral || {},
+            representanteLegal: empresa.representanteLegal || {},
+            naturalezaEntidad: empresa.naturalezaEntidad || {},
+            infoFinancieraTributaria: empresa.infoFinancieraTributaria || {},
+            declaracionBienesInfoSocios: empresa.declaracionBienesInfoSocios || {}
           };
 
-          // También actualizar clienteData para validaciones
-          this.clienteData = { ...this.datosIniciales };
+          // También actualizar empresaData para validaciones
+          this.empresaData = { ...this.datosIniciales };
         }
         this.cargando = false;
       },
       error: (err) => {
         console.error('Error al cargar cliente:', err);
-        alert('No se pudo cargar el cliente para edición');
+        this.modalVisible = true;
+        this.modalTitle = 'Error';
+        this.modalMessage = 'No se pudo cargar el cliente para edición';
+        this.modalConfirmText = 'Aceptar';
+        this.modalType = 'error';
         this.router.navigate(['/asesor/consultar-cliente']);
         this.cargando = false;
       }
@@ -149,9 +175,12 @@ export class RegistrarClienteJuridicoComponent implements OnInit {
   }
 
   cancelarEdicion() {
-    if (confirm('¿Estás seguro de que quieres cancelar la edición? Los cambios no guardados se perderán.')) {
-      this.router.navigate(['/asesor/consultar-cliente']);
-    }
+    this.modalVisible = true;
+    this.modalTitle = '¿Estás seguro de que quieres cancelar la edición?';
+    this.modalMessage =
+      'Los cambios no guardados se perderán.';
+    this.modalType = 'confirm';
+    this.modalConfirmText = 'Aceptar';
   }
   // 🔁 Cambiar pestaña manualmente
   cambiarPestana(nombre: string) {
@@ -168,7 +197,7 @@ export class RegistrarClienteJuridicoComponent implements OnInit {
 
   // 📥 Recibir datos desde los subcomponentes
   actualizarDatos(nombre: string, data: any) {
-    this.clienteData[nombre] = data;
+    this.empresaData[nombre] = data;
     console.log(`✅ Datos actualizados (${nombre}):`, data);
   }
 
@@ -192,7 +221,7 @@ export class RegistrarClienteJuridicoComponent implements OnInit {
 
   // ✅ Validar que todo esté diligenciado antes de registrar
   datosCompletos(): boolean {
-    return Object.values(this.clienteData).every((seccion) =>
+    return Object.values(this.empresaData).every((seccion) =>
       seccion && Object.keys(seccion).length > 0
     );
   }
@@ -206,35 +235,51 @@ export class RegistrarClienteJuridicoComponent implements OnInit {
     }
 
     const payload = {
-      ...this.clienteData.infoGeneral,
-      representanteLegal: this.clienteData.representanteLegal,
-      naturalezaEntidad: this.clienteData.naturalezaEntidad,
-      infoFinancieraTributaria: this.clienteData.infoFinancieraTributaria,
-      declaracionBienesInfoSocios: this.clienteData.declaracionBienesInfoSocios
+      infoGeneral: this.empresaData.infoGeneral,
+      representanteLegal: this.empresaData.representanteLegal,
+      naturalezaEntidad: this.empresaData.naturalezaEntidad,
+      infoFinancieraTributaria: this.empresaData.infoFinancieraTributaria,
+      declaracionBienesInfoSocios: this.empresaData.declaracionBienesInfoSocios
     };
 
     if (this.modo === 'nuevo') {
       this.asesorService.registrarCliente(payload).subscribe({
         next: (res) => {
           console.log('✅ Cliente registrado con éxito:', res);
-          alert('Cliente registrado correctamente');
-          this.router.navigate(['/asesor/consultar-cliente']);
+          this.modalVisible = true;
+          this.modalTitle = 'Registro finalizado';
+          this.modalMessage = 'El registro finalizo correctamente.';
+          this.modalConfirmText = 'Aceptar';
+          this.modalType = 'success';
         },
         error: (err) => {
           console.error('❌ Error al registrar cliente:', err);
-          alert('Error al registrar el cliente: ' + (err.error?.message || err.message));
+          const errorMessage = err.error?.message || err.message || 'Error al registrar el cliente';
+          this.modalVisible = true;
+          this.modalTitle = 'Error';
+          this.modalMessage = errorMessage;
+          this.modalConfirmText = 'Aceptar';
+          this.modalType = 'error';
         },
       });
-    } else if (this.modo === 'editar' && this.idCliente) {
-      this.asesorService.actualizarCliente(this.idCliente, payload).subscribe({
+    } else if (this.modo === 'editar' && this.idEmpresa) {
+      this.asesorService.actualizarEmpresa(this.idEmpresa, payload).subscribe({
         next: (res) => {
-          console.log('✅ Cliente actualizado con éxito:', res);
-          alert('Cliente actualizado correctamente');
-          this.router.navigate(['/asesor/consultar-cliente']);
+          console.log('✅ Empresa actualizada con éxito:', res);
+          this.modalVisible = true;
+          this.modalTitle = 'Registro finalizado';
+          this.modalMessage = 'Empresa actualizada correctamente.';
+          this.modalConfirmText = 'Aceptar';
+          this.modalType = 'success';
         },
         error: (err) => {
           console.error('❌ Error al actualizar cliente:', err);
-          alert('Error al actualizar el cliente: ' + (err.error?.message || err.message));
+          const errorMessage = err.error?.message || err.message || 'Error al actualizar el cliente';
+          this.modalVisible = true;
+          this.modalTitle = 'Error';
+          this.modalMessage = errorMessage;
+          this.modalConfirmText = 'Aceptar';
+          this.modalType = 'error';
         },
       });
     }
@@ -244,4 +289,5 @@ export class RegistrarClienteJuridicoComponent implements OnInit {
   obtenerDatosIniciales(nombre: string): any {
     return this.datosIniciales[nombre];
   }
+
 }

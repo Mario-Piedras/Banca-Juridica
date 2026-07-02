@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { PersonasasoController } from '../controllers/personasasoController';
+import { PersonasasoController } from '../controllers/personasaso.controller';
 import { authMiddleware, requireRole } from '../../../shared/middleware/authMiddleware';
 
 

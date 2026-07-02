@@ -1,0 +1,151 @@
+.white-box {
+    max-width: 42rem;
+    padding: 1.5rem;
+    background-color: #ffffff;
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    border-radius: 0.5rem;
+}
+
+.titulo {
+    margin-bottom: .5rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #1e3a8a;
+}
+
+.descripcion {
+    margin-bottom: 1.5rem;
+    font-size: .9rem;
+    color: #6b7280;
+}
+
+.form-group {
+    max-width: 500px;
+    margin-bottom: 1rem;
+}
+
+.label {
+    display: block;
+    margin-bottom: .5rem;
+    font-size: .9rem;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.label-simple {
+    display: block;
+    margin-bottom: .3rem;
+    font-size: .9rem;
+    font-weight: 500;
+}
+
+.required {
+    color: #ef4444;
+}
+
+.acciones {
+    display: flex;
+    gap: .5rem;
+    align-items: center;
+}
+
+/* Datos de cuenta */
+.datos-cuenta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.tabla-responsive {
+    overflow-x: auto;
+}
+
+.tabla-movimientos {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tabla-movimientos thead tr {
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.tabla-movimientos th {
+    padding: .75rem;
+    text-align: left;
+}
+
+.tabla-movimientos td {
+    padding: 1rem .75rem;
+}
+
+.tabla-movimientos tbody tr {
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.tabla-movimientos tbody tr:hover {
+    background: #f9fafb;
+}
+
+/* Inputs */
+.input-box {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+}
+
+.input-box:focus {
+    outline: none;
+    border-color: transparent;
+    box-shadow: 0 0 0 2px #3b82f6;
+}
+
+.input-box:disabled {
+    background-color: #f3f4f6;
+}
+
+.input-box-readonly {
+    width: 100%;
+    padding: .6rem .8rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: #f9fafb;
+}
+
+/* Botones */
+.form-btn {
+    padding: 0.5rem 1.5rem;
+    background-color: #1e3a8a;
+    color: white;
+    font-weight: 500;
+    border-radius: 0.4rem;
+    cursor: pointer;
+    transition: background-color 0.15s ease-in-out;
+    border: none;
+}
+
+.form-btn:hover {
+    background-color: #1e40af;
+}
+
+.form-btn:disabled {
+    background-color: #d1d5dc;
+    color: #6a7282;
+    cursor: not-allowed;
+}
+
+.form-cancel-btn {
+    padding: 0.5rem 1.5rem;
+    background-color: white;
+    color: #364153;
+    font-weight: 500;
+    border-radius: 0.4rem;
+    cursor: pointer;
+    transition: background-color 0.15s ease-in-out;
+    border: solid 1px #d1d5dc;
+}
+
+.form-cancel-btn:hover {
+    background-color: #f9fafb;
+}

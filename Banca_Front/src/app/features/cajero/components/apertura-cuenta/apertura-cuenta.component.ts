@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AperturaService, VerificarClienteResponse, AperturarCuentaResponse } from '../../services/apertura.service';
+import { ConfirmModalComponent, ConfirmModalType } from '../../../../shared/components/modals/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-apertura-cuenta',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ConfirmModalComponent],
   templateUrl: './apertura-cuenta.component.html',
   styleUrls: ['./apertura-cuenta.component.css']
 })
@@ -52,7 +53,27 @@ export class AperturaCuentaComponent {
   // Datos del comprobante
   datosComprobante: any = null;
 
+  // Modal de confirmación
+  modalVisible = false;
+  modalTitle = '';
+  modalMessage = '';
+  modalType: ConfirmModalType = 'success';
+  modalConfirmText = 'Aceptar';
+
   constructor(private aperturaService: AperturaService) { }
+
+  private mostrarModal(params: {
+    title: string;
+    message: string;
+    type: ConfirmModalType;
+    confirmText?: string;
+  }): void {
+    this.modalTitle = params.title;
+    this.modalMessage = params.message;
+    this.modalType = params.type;
+    this.modalConfirmText = params.confirmText ?? 'Aceptar';
+    this.modalVisible = true;
+  }
 
   // Validar número de documento en tiempo real
   onInputDocumento(event: Event) {
@@ -79,6 +100,7 @@ export class AperturaCuentaComponent {
     this.numeroDocumento = valor;
   }
 
+  // Validar número de nit en tiempo real
   onInputNit(event: Event) {
     const input = event.target as HTMLInputElement;
 
@@ -89,7 +111,6 @@ export class AperturaCuentaComponent {
 
     // Solo permitir un guion
     const partes = valor.split('-');
-
     if (partes.length > 2) {
       valor = partes[0] + '-' + partes.slice(1).join('');
     }
@@ -110,47 +131,33 @@ export class AperturaCuentaComponent {
   onTipoClienteChange() {
     this.limpiarFormulario();
 
-    // Mantener seleccionado el tipo
     const tipo = this.tipoCliente;
-
     this.tipoCliente = tipo;
   }
 
+  // Búsqueda del cliente
   buscarCliente() {
-    if (
-      this.tipoCliente === 'Natural'
-      &&
-      (!this.tipoDocumento || !this.numeroDocumento)
-    ) {
-
-      alert(
-        'Por favor ingrese tipo y número de documento'
-      );
-
+    if (this.tipoCliente === 'Natural' && (!this.tipoDocumento || !this.numeroDocumento)) {
+      this.mostrarModal({
+        title: 'Validación',
+        message: 'Por favor ingrese tipo y número de documento',
+        type: 'error'
+      });
       return;
 
     }
 
-    if (
-      this.tipoCliente === 'Juridica'
-      &&
-      !this.nit
-    ) {
-
-      alert(
-        'Por favor ingrese el NIT'
-      );
-
+    if (this.tipoCliente === 'Juridica' && !this.nit) {
+      this.mostrarModal({
+        title: 'Validación',
+        message: 'Por favor ingrese el NIT',
+        type: 'error'
+      });
       return;
-
     }
 
     // Validación adicional antes de enviar
-    if (
-      this.tipoCliente === 'Natural'
-      &&
-      !this.validarDocumento()
-    ) {
+    if (this.tipoCliente === 'Natural' && !this.validarDocumento()) {
       return;
     }
 
@@ -163,42 +170,31 @@ export class AperturaCuentaComponent {
         tipoDocumento: this.tipoDocumento,
         numeroDocumento: this.numeroDocumento
       };
-
-    }
-
-    else {
-
+    } else {
       datosBusqueda = {
         tipoCliente: 'Juridica',
         nit: this.nit
       };
-
     }
 
-    this.aperturaService
-    .verificarCliente(datosBusqueda)
-    .subscribe({
+    this.aperturaService.verificarCliente(datosBusqueda).subscribe({
       next: (respuesta: VerificarClienteResponse) => {
         this.clienteVerificado = true;
         this.estadoSolicitud = respuesta.estado;
         this.mensajeEstado = respuesta.mensaje;
-        if (this.tipoCliente === 'Juridica') {
-          this.razonSocial = respuesta.nombreCompleto || '';
-        } else {
-          this.nombreCompleto = respuesta.nombreCompleto || '';
-        }
+        this.nombreCompleto = respuesta.nombreCompleto || '';
         this.idSolicitud = respuesta.idSolicitud || null;
         this.iconoEstado = respuesta.icono || 'info';
 
-        if (respuesta.estado === 'Aprobada') {
-          this.mostrarFormularioDeposito = true;
-        } else {
-          this.mostrarFormularioDeposito = false;
-        }
+        this.mostrarFormularioDeposito = respuesta.estado === 'Aprobada';
       },
       error: (error: any) => {
         console.error('Error al verificar cliente:', error);
-        alert('Error al conectar con el servidor. Verifique que el backend esté corriendo.');
+        this.mostrarModal({
+          title: 'Error',
+          message: 'Error al conectar con el servidor. Verifique que el backend esté corriendo.',
+          type: 'error'
+        });
       }
     });
   }
@@ -208,51 +204,81 @@ export class AperturaCuentaComponent {
     const valor = this.numeroDocumento;
     const tipo = this.tipoDocumento;
 
-    if (!valor || !tipo) {
-      return false;
-    }
+    if (!valor || !tipo) return false;
 
     switch (tipo) {
       case 'CC':
         if (valor.length < 6 || valor.length > 10) {
-          alert('⚠️ La Cédula de Ciudadanía debe tener entre 6 y 10 dígitos');
+          this.mostrarModal({
+            title: 'Validación',
+            message: '⚠️ La Cédula de Ciudadanía debe tener entre 6 y 10 dígitos',
+            type: 'error'
+          });
           return false;
         }
         if (!/^\d+$/.test(valor)) {
-          alert('⚠️ La Cédula de Ciudadanía solo puede contener números');
+          this.mostrarModal({
+            title: 'Validación',
+            message: '⚠️ La Cédula de Ciudadanía solo puede contener números',
+            type: 'error'
+          });
           return false;
         }
         break;
 
       case 'CE':
         if (valor.length < 6 || valor.length > 7) {
-          alert('⚠️ La Cédula de Extranjería debe tener entre 6 y 7 dígitos');
+          this.mostrarModal({
+            title: 'Validación',
+            message: '⚠️ La Cédula de Extranjería debe tener entre 6 y 7 dígitos',
+            type: 'error'
+          });
           return false;
         }
         if (!/^\d+$/.test(valor)) {
-          alert('⚠️ La Cédula de Extranjería solo puede contener números');
+          this.mostrarModal({
+            title: 'Validación',
+            message: '⚠️ La Cédula de Extranjería solo puede contener números',
+            type: 'error'
+          });
           return false;
         }
         break;
 
       case 'TI':
         if (valor.length < 10 || valor.length > 11) {
-          alert('⚠️ La Tarjeta de Identidad debe tener entre 10 y 11 dígitos');
+          this.mostrarModal({
+            title: 'Validación',
+            message: '⚠️ La Tarjeta de Identidad debe tener entre 10 y 11 dígitos',
+            type: 'error'
+          });
           return false;
         }
         if (!/^\d+$/.test(valor)) {
-          alert('⚠️ La Tarjeta de Identidad solo puede contener números');
+          this.mostrarModal({
+            title: 'Validación',
+            message: '⚠️ La Tarjeta de Identidad solo puede contener números',
+            type: 'error'
+          });
           return false;
         }
         break;
 
       case 'PA':
         if (valor.length < 6 || valor.length > 9) {
-          alert('⚠️ El Pasaporte debe tener entre 6 y 9 caracteres');
+          this.mostrarModal({
+            title: 'Validación',
+            message: '⚠️ El Pasaporte debe tener entre 6 y 9 caracteres',
+            type: 'error'
+          });
           return false;
         }
         if (!/^[A-Z0-9]+$/.test(valor)) {
-          alert('⚠️ El Pasaporte solo puede contener letras y números');
+          this.mostrarModal({
+            title: 'Validación',
+            message: '⚠️ El Pasaporte solo puede contener letras y números',
+            type: 'error'
+          });
           return false;
         }
         break;
@@ -262,69 +288,81 @@ export class AperturaCuentaComponent {
   }
 
   // Validar en tiempo real monto
-onInputMonto(event: Event) {
-  const input = event.target as HTMLInputElement;
-  // Remover puntos para trabajar con números puros
-  let valor = input.value.replace(/\./g, '');
-  // Solo números
-  valor = valor.replace(/[^0-9]/g, '');
+  onInputMonto(event: Event) {
+    const input = event.target as HTMLInputElement;
+    // Remover puntos para trabajar con números puros
+    let valor = input.value.replace(/\./g, '');
+    // Solo números
+    valor = valor.replace(/[^0-9]/g, '');
 
-  // Limitar a MAX_DIGITOS
-  if (valor.length > this.MAX_DIGITOS) {
-    valor = valor.substring(0, this.MAX_DIGITOS);
+    // Limitar a MAX_DIGITOS
+    if (valor.length > this.MAX_DIGITOS) {
+      valor = valor.substring(0, this.MAX_DIGITOS);
+    }
+
+    const valorFormateado = valor.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    input.value = valorFormateado;
+
+    this.valorDeposito = valor ? Number(valor) : 0;
   }
 
-  // Formatear con puntos cada 3 dígitos
-  const valorFormateado = valor.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-
-  // Actualizar el input con formato
-  input.value = valorFormateado;
-
-  // Guardar el valor sin formato en el modelo
-  this.valorDeposito = valor ? Number(valor) : 0;
-}
-
-
+  // Valida el monto
   validarMonto() {
     const monto = Number(this.valorDeposito);
 
-    if (monto > this.MONTO_MAXIMO) {
-      this.valorDeposito = this.MONTO_MAXIMO;
-    }
-
-    if (monto < 0) {
-      this.valorDeposito = 0;
-    }
+    if (monto > this.MONTO_MAXIMO) this.valorDeposito = this.MONTO_MAXIMO;
+    if (monto < 0) this.valorDeposito = 0;
 
     this.valorDeposito = Math.floor(monto);
   }
 
+  // Apertura de cuenta
   abrirCuenta() {
     if (!this.idSolicitud) {
-      alert('No hay una solicitud válida para aperturar');
+      this.mostrarModal({
+        title: 'Validación',
+        message: 'No hay una solicitud válida para aperturar',
+        type: 'error'
+      });
       return;
     }
 
     if (!this.depositoInicial) {
-      alert('Seleccione el tipo de depósito inicial');
+      this.mostrarModal({
+        title: 'Validación',
+        message: 'Seleccione el tipo de depósito inicial',
+        type: 'error'
+      });
       return;
     }
 
     const monto = Math.floor(Number(this.valorDeposito));
 
     if (isNaN(monto) || monto < 0) {
-      alert('⚠️ El valor del depósito no puede ser negativo');
+      this.mostrarModal({
+        title: 'Validación',
+        message: '⚠️ El valor del depósito no puede ser negativo',
+        type: 'error'
+      });
       return;
     }
 
     if (monto > this.MONTO_MAXIMO) {
-      alert(`⚠️ El monto máximo permitido es $9,999,999,999,999`);
+      this.mostrarModal({
+        title: 'Validación',
+        message: '⚠️ El monto máximo permitido es $9,999,999,999,999',
+        type: 'error'
+      });
       return;
     }
 
     if (this.depositoInicial === 'Cheque') {
       if (!this.codigoCheque || !this.numeroCheque) {
-        alert('⚠️ Para depósito con cheque debe ingresar código y número de cheque');
+        this.mostrarModal({
+          title: 'Validación',
+          message: '⚠️ Para depósito con cheque debe ingresar código y número de cheque',
+          type: 'error'
+        });
         return;
       }
     }
@@ -338,8 +376,6 @@ onInputMonto(event: Event) {
       numeroCheque: this.depositoInicial === 'Cheque' ? this.numeroCheque : undefined
     };
 
-    console.log(datosApertura);
-
     this.aperturaService.aperturarCuenta(datosApertura).subscribe({
       next: (respuesta: AperturarCuentaResponse) => {
         if (respuesta.exito) {
@@ -348,47 +384,46 @@ onInputMonto(event: Event) {
 
           this.datosComprobante = {
             numeroCuenta: respuesta.numeroCuenta,
-
             tipoCliente: this.tipoCliente,
-
-            nombreCliente:
-              this.tipoCliente === 'Juridica'
-                ? this.razonSocial
-                : this.nombreCompleto,
-
-            tipoDocumento:
-              this.tipoCliente === 'Natural'
-                ? this.tipoDocumento
-                : 'NIT',
-
-            numeroDocumento:
-              this.tipoCliente === 'Natural'
-                ? this.numeroDocumento
-                : this.nit,
-
+            nombreCliente: this.nombreCompleto,
+            tipoDocumento: this.tipoCliente === 'Natural' ? this.tipoDocumento : 'NIT',
+            numeroDocumento: this.tipoCliente === 'Natural' ? this.numeroDocumento : this.nit,
             tipoDeposito: this.depositoInicial,
             valorDeposito: monto,
             fecha: new Date(),
             idTransaccion: respuesta.idTransaccion
           };
 
-          alert('✅ ' + respuesta.mensaje + '\nNúmero de cuenta: ' + respuesta.numeroCuenta);
+          this.mostrarModal({
+            title: 'Éxito',
+            message: `${respuesta.mensaje}`,
+            type: 'success'
+          });
         } else {
-          alert('❌ ' + respuesta.mensaje);
+          this.mostrarModal({
+            title: 'Error',
+            message: `❌ ${respuesta.mensaje}`,
+            type: 'error'
+          });
         }
       },
       error: (error: any) => {
         console.error('Error al aperturar cuenta:', error);
-        alert('Error al procesar la apertura. Intente nuevamente.');
+        this.mostrarModal({
+          title: 'Error',
+          message: 'Error al procesar la apertura. Intente nuevamente.',
+          type: 'error'
+        });
       }
     });
   }
 
+  // Limpieza del formulario
   limpiarFormulario() {
     this.tipoDocumento = '';
     this.numeroDocumento = '';
     this.nit = '';
-    this.razonSocial = ''; 
+    this.razonSocial = '';
     this.nombreCompleto = '';
     this.depositoInicial = '';
     this.valorDeposito = 0;
@@ -404,7 +439,9 @@ onInputMonto(event: Event) {
     this.idSolicitud = null;
   }
 
+  // Impresión del comprobante
   imprimirComprobante() {
     window.print();
   }
+
 }

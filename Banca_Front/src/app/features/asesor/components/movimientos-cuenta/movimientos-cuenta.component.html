@@ -1,0 +1,70 @@
+<div class="white-box">
+    <h1 class="titulo">Movimientos de Cuenta</h1>
+    <p class="descripcion">Consulte el historial de transacciones de una cuenta.</p>
+    <form [formGroup]="form">
+
+        <!-- Consulta de cuenta -->
+        <div class="form-group">
+            <label class="label">Número de Cuenta <span class="required">*</span></label>
+            <div class="acciones">
+                <input type="text" formControlName="numeroCuenta" maxlength="20" (input)="onInputNumeroCuenta($event)"
+                    class="input-box" [readonly]="cuentaEncontrada" placeholder="Ingrese el número de cuenta" />
+                <button type="button" (click)="buscarCuenta()" [disabled]="cuentaEncontrada"
+                    class="form-btn">Buscar</button>
+                <button type="button" (click)="onCancelar()" class="form-cancel-btn">Limpiar</button>
+            </div>
+        </div>
+
+        <!-- Titular + Documento -->
+        <div *ngIf="cuentaEncontrada" class="datos-cuenta">
+            <div>
+                <label class="label-simple">Titular</label>
+                <input readonly formControlName="titular" class="input-box-readonly" />
+            </div>
+            <div>
+                <label class="label-simple">{{ tipoTitular==='Juridica' ? 'NIT' : 'Documento' }}</label>
+                <input readonly formControlName="numeroDocumento" class="input-box-readonly" />
+            </div>
+        </div>
+
+        <!-- Tabla -->
+        <div *ngIf="movimientos.length" class="tabla-responsive">
+            <table class="tabla-movimientos">
+                <thead>
+                    <tr>
+                        <th>Transacción</th>
+                        <th>Monto</th>
+                        <th>Saldo Anterior</th>
+                        <th>Saldo Actual</th>
+                        <th>Fecha</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let m of movimientos">
+                        <td>{{m.tipoTransaccion}}</td>
+                        <td [ngClass]="obtenerClaseMonto(m.tipoTransaccion, m.monto)">
+                            ${{m.monto | number:'1.0-0'}}
+                        </td>
+                        <td>
+                            ${{m.saldoAnterior | number:'1.0-0'}}
+                        </td>
+                        <td>
+                            ${{m.saldoActual | number:'1.0-0'}}
+                        </td>
+                        <td>
+                            {{m.fecha | date:'dd/MM/yyyy HH:mm'}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </form>
+
+    <!-- Modal de confirmación -->
+    <app-confirm-modal [visible]="modalVisible" [title]="modalTitle" [message]="modalMessage" [type]="modalType"
+        [confirmText]="modalConfirmText" (confirm)="onConfirmModal()" (closed)="modalVisible = false">
+    </app-confirm-modal>
+
+</div>

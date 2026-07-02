@@ -3,7 +3,8 @@
         <div class="bb-modal-header">
             <div class="bb-modal-title">
                 <span *ngIf="type === 'success'" class="bb-badge bb-badge-success">✓</span>
-                <span *ngIf="type === 'error'" class="bb-badge bb-badge-error">!</span>
+                <span *ngIf="type === 'error'" class="bb-badge bb-badge-error">X</span>
+                <span *ngIf="type === 'confirm'" class="bb-badge bb-badge-confirm">!</span>
                 <span>{{ title }}</span>
             </div>
         </div>
@@ -13,9 +14,13 @@
         </div>
 
         <div class="bb-modal-footer">
-            <button type="button" class="bb-btn bb-btn-primary" (click)="onConfirm()">
+            <button *ngIf="type === 'confirm'" type="button" class="btn-cancel" (click)="onCancel()">
+                Cancelar
+            </button>
+            <button type="button" class="btn-accept" (click)="onConfirm()">
                 {{ confirmText }}
             </button>
+
         </div>
     </div>
 </div>

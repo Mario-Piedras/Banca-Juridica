@@ -1,129 +1,154 @@
-<div class="max-w-2xl p-6 bg-white shadow-sm rounded-lg">
+<div class="white-box">
   <h1 class="text-2xl font-bold text-blue-900 mb-2">Solicitud de producto</h1>
   <p class="text-sm text-gray-600 mb-6">
-    Seleccione cliente (por cédula) y genere la solicitud de Cuenta de Ahorros
+    Seleccione el cliente y genere la solicitud de Cuenta de Ahorros.
   </p>
 
+  <!-- Tipo de cliente -->
+  <div class="mb-6">
+    <label class="block text-sm font-semibold text-gray-800 mb-2">
+      Seleccione el tipo de cliente <span class="text-red-600">*</span>
+    </label>
+
+    <select class="w-full max-w-md px-4 py-2 border border-gray-300 rounded-md
+            focus:outline-none focus:ring-2 focus:ring-blue-500
+            focus:border-transparent text-gray-700" [(ngModel)]="tipoClienteSeleccionado"
+      (ngModelChange)="onTipoClienteChange($event)" name="tipoClienteSeleccionado" required>
+      <option value="" selected disabled>Seleccione el tipo de cliente</option>
+      <option value="Natural">Persona Natural</option>
+      <option value="Jurídica">Persona Jurídica</option>
+    </select>
+
+    <p class="text-xs text-gray-500 mt-1">La selección determina si se busca por cédula o por NIT.</p>
+  </div>
+
   <form (ngSubmit)="enviarSolicitud()">
-    <!-- Cédula del titular -->
-    <div class="mb-6">
+    <!-- Entrada del titular (cedula o NIT) -->
+    <div class="mb-6" *ngIf="tipoClienteSeleccionado">
       <label class="block text-sm font-semibold text-gray-800 mb-2">
-        Cédula del titular <span class="text-red-600">*</span>
+        {{ tipoClienteSeleccionado === 'Natural' ? 'Cédula del titular' : 'NIT del titular' }} <span
+          class="text-red-600">*</span>
       </label>
+
       <div class="flex gap-3">
-        <input
-          type="text"
-          [(ngModel)]="cedula"
-          (input)="onCedulaInput($event)"
-          name="cedula"
-          placeholder="Ej: 12345678"
-          maxlength="11"
-          class="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-400"
-        />
-        <button
-          type="button"
-          (click)="buscarCliente()"
-          class="px-6 py-2 bg-blue-900 text-white rounded-md hover:bg-blue-800 transition-colors font-medium cursor-pointer"
-        >
-          Buscar cliente
-        </button>
+        <input *ngIf="tipoClienteSeleccionado === 'Natural'" type="text" [(ngModel)]="cedula" name="cedula" required
+          #cedulaControl="ngModel" (input)="onCedulaInput($event)" placeholder="Ej: 1234567890" maxlength="15"
+          class="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-400" />
+
+        <input *ngIf="tipoClienteSeleccionado === 'Jurídica'" type="text" [(ngModel)]="nit" name="nit" required
+          #nitControl="ngModel" (input)="onNitInput($event)" placeholder="Ej: 1234567890" maxlength="15"
+          class="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-400" />
+
+        <button type="button" (click)="buscarClienteOVerificar()" class="form-btn">Buscar</button>
       </div>
 
-      <!-- Mensaje de confirmación - Cliente encontrado -->
-      <div *ngIf="clienteEncontrado" class="mt-2 p-3 bg-green-50 border border-green-200 rounded-md flex items-center gap-2">
+      <!-- Mensaje de confirmación - Encontrado -->
+      <div *ngIf="estadoBusqueda.encontrado"
+        class="status-success mt-2 p-3 bg-green-50 border border-green-200 rounded-md flex items-center gap-2">
         <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+          <path fill-rule="evenodd"
+            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+            clip-rule="evenodd" />
         </svg>
         <span class="text-sm text-green-800 font-medium">
-          Cliente encontrado: {{ nombreCliente }}
+          {{ tipoClienteSeleccionado === 'Natural' ? 'Cliente' : 'Empresa' }} encontrado: {{ estadoBusqueda.nombre }}
         </span>
       </div>
 
-      <!-- Mensaje de error - Cliente no encontrado -->
-      <div *ngIf="clienteNoEncontrado" class="mt-2 p-3 bg-red-50 border border-red-200 rounded-md flex items-center gap-2">
+      <!-- Mensaje de error - No encontrado -->
+      <div *ngIf="estadoBusqueda.noEncontrado"
+        class="status-error mt-2 p-3 bg-red-50 border border-red-200 rounded-md flex items-center gap-2">
         <svg class="w-5 h-5 text-red-600" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+          <path fill-rule="evenodd"
+            d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+            clip-rule="evenodd" />
         </svg>
         <span class="text-sm text-red-800 font-medium">
-          Cliente no registrado
+          {{ tipoClienteSeleccionado === 'Natural' ? 'Cliente no registrado' : 'Empresa no registrada' }}
         </span>
       </div>
-
-      <p class="text-xs text-gray-500 mt-1">Ingrese la cédula del cliente</p>
+      <p class="text-xs text-gray-500 mt-1">
+        Ingrese la información del {{ tipoClienteSeleccionado === 'Natural' ?
+        'cliente' : 'empresa' }}
+      </p>
     </div>
 
     <!-- Producto -->
-    <div class="mb-6">
+    <div class="mb-6" *ngIf="tipoClienteSeleccionado">
       <label class="block text-sm font-semibold text-gray-800 mb-2">
         Producto <span class="text-red-600">*</span>
       </label>
-      <select
-        [(ngModel)]="producto"
-        name="producto"
-        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
-      >
-        <option value="Cuenta de Ahorros (Persona natural)">Cuenta de Ahorros (Persona natural)</option>
+      <select [(ngModel)]="tipo_cuenta" name="tipo_cuenta" class="input-field">
+        <option value="Ahorros" selected>{{ tipoClienteSeleccionado === 'Natural'
+          ? 'Cuenta de Ahorros (Persona Natural)'
+          : 'Cuenta de Ahorros (Persona Jurídica)' }}</option>
       </select>
       <p class="text-xs text-gray-500 mt-1">Actualmente solo disponible Cuenta de Ahorros</p>
     </div>
 
+    <!-- Justificación o razón -->
+    <div class="mb-6" *ngIf="tipoClienteSeleccionado">
+      <label class="block text-sm font-semibold text-gray-800 mb-2">
+        Proposito de cuenta <span class="text-red-600">*</span>
+      </label>
+      <select [(ngModel)]="proposito_cuenta" name="proposito_cuenta" required #propositoControl="ngModel"
+        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+        [ngClass]="{ 'border-red-500': propositoControl.invalid && propositoControl.touched }">
+        <option value="" disabled selected>Seleccione el propósito de la cuenta</option>
+        <option value="Ahorrar">Ahorrar</option>
+        <option value="Invertir">Invertir</option>
+        <option value="Servicios financieros en negocios fiduciarios">Servicios financieros en negocios fiduciarios
+        </option>
+        <option value="Realizar transacciones">Realizar transacciones</option>
+        <option value="Financiacion">Financiacion</option>
+        <option value="Recibir servicios especializados Banca de inversion">Recibir servicios especializados Banca de
+          inversion</option>
+      </select>
+      <p class="text-xs text-gray-500 mt-1">El proposito de la cuenta</p>
+      <p *ngIf="propositoControl.invalid && propositoControl.touched" class="text-xs text-red-600 mt-1">
+        Campo obligatorio
+      </p>
+    </div>
+
     <!-- Comentario / Observaciones -->
-    <div class="mb-6">
+    <div class="mb-6" *ngIf="tipoClienteSeleccionado">
       <label class="block text-sm font-semibold text-gray-800 mb-2">
         Comentario / Observaciones
       </label>
-      <textarea
-        [(ngModel)]="comentario"
-        name="comentario"
-        placeholder="Observaciones opcionales sobre la solicitud..."
-        rows="4"
-        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none placeholder:text-gray-400"
-      ></textarea>
+      <textarea [(ngModel)]="comentario" name="comentario" placeholder="Observaciones opcionales sobre la solicitud..."
+        rows="4" class="textarea"></textarea>
       <p class="text-xs text-gray-500 mt-1">Información adicional sobre la solicitud</p>
     </div>
 
-    <!-- Adjuntar documento -->
-    <div class="mb-6">
+    <!-- Adjuntar documento (solo Natural) -->
+    <div class="mb-6" *ngIf="tipoClienteSeleccionado === 'Natural'">
       <label class="block text-sm font-semibold text-gray-800 mb-2">
         Adjuntar documento
       </label>
       <div class="flex items-center gap-2">
-        <input
-          type="file"
-          (change)="onFileSelected($event)"
-          #fileInput
-          class="hidden"
-          accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
-        />
-        <button
-          type="button"
-          (click)="fileInput.click()"
-          class="px-4 py-1.5 border border-gray-400 rounded text-sm bg-gray-50 hover:bg-gray-100 transition-colors"
-        >
+        <input type="file" (change)="onFileSelected($event)" #fileInput class="hidden"
+          accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" />
+        <button type="button" (click)="fileInput.click()"
+          class="px-4 py-1.5 border border-gray-400 rounded text-sm bg-gray-50 hover:bg-gray-100 transition-colors">
           Seleccionar archivo
         </button>
         <span class="text-sm text-gray-600">
-          {{ archivoSeleccionado ? archivoSeleccionado : 'Sin archivos seleccionados' }}
+          {{ archivoSeleccionadoNombre ? archivoSeleccionadoNombre : 'Sin archivos seleccionados' }}
         </span>
       </div>
       <p class="text-xs text-gray-500 mt-1">Documentos de soporte (PDF, imágenes, Word)</p>
     </div>
 
     <!-- Botones -->
-    <div class="flex gap-3">
-      <button
-        type="submit"
-        class="px-6 py-2 bg-blue-900 text-white rounded-md hover:bg-blue-800 transition-colors font-medium"
-      >
-        Enviar solicitud
-      </button>
-      <button
-        type="button"
-        (click)="cancelar()"
-        class="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors font-medium"
-      >
-        Cancelar
-      </button>
+    <div class="flex gap-3" *ngIf="tipoClienteSeleccionado">
+      <button type="submit" [disabled]="!formularioValido" class="form-btn">Enviar solicitud</button>
+      <button type="button" (click)="cancelar()" class="form-cancel-btn">Cancelar</button>
     </div>
   </form>
+
+  <!-- Modal de confirmación -->
+  <app-confirm-modal [visible]="modalVisible" [title]="modalTitle" [message]="modalMessage" [type]="modalType"
+    [confirmText]="modalConfirmText" (confirm)="onConfirmModal()" (closed)="modalVisible = false">
+  </app-confirm-modal>
+
 </div>

@@ -12,6 +12,7 @@ import { InformacionLaboralComponent } from './informacion-laboral/informacion-l
 import { InformacionFinancieraComponent } from './informacion-financiera/informacion-financiera.component';
 import { ActividadEconomicaComponent } from './actividad-economica/actividad-economica.component';
 import { FactaComponent } from './informacion-factca/informacion-factac.component';
+import { ConfirmModalComponent } from '../../../../shared/components/modals/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-registrar-cliente',
@@ -26,8 +27,10 @@ import { FactaComponent } from './informacion-factca/informacion-factac.componen
     InformacionFinancieraComponent,
     ActividadEconomicaComponent,
     FactaComponent,
+    ConfirmModalComponent,
   ],
   templateUrl: './registrar-cliente.component.html',
+  styleUrls: ['./registrar-cliente.component.css']
 })
 export class RegistrarClienteComponent implements OnInit { // ← IMPLEMENTAR OnInit
   // 🌐 Control de pestañas
@@ -56,6 +59,13 @@ export class RegistrarClienteComponent implements OnInit { // ← IMPLEMENTAR On
     facta: null,
   };
 
+  // Modal de confirmación
+  modalVisible = false;
+  modalTitle = '';
+  modalMessage = '';
+  modalType: 'success' | 'error' | 'confirm' = 'success';
+  modalConfirmText = 'Aceptar';
+
   // Orden de las pestañas para moverse automáticamente
   ordenPestanas = [ // ← AÑADIR ESTA VARIABLE
     'datos-personales',
@@ -63,6 +73,41 @@ export class RegistrarClienteComponent implements OnInit { // ← IMPLEMENTAR On
     'info-laboral',
     'facta',
   ];
+
+  // Mostrar modal de confirmación (para guardar exitosamente)
+  abrirModalGuardado(config: {
+    type: 'success' | 'error' | 'confirm';
+    title: string;
+    message: string;
+    confirmText?: string;
+    navigateOnConfirm?: boolean;
+  }): void {
+    this.modalVisible = true;
+    this.modalType = config.type;
+    this.modalTitle = config.title;
+    this.modalMessage = config.message;
+    this.modalConfirmText = config.confirmText ?? 'Aceptar';
+    // Bandera interna por si se requiere navegación post-confirm
+    (this as any)._navigateOnConfirm = !!config.navigateOnConfirm;
+  }
+
+  onModalConfirm(): void {
+    const navigate = (this as any)._navigateOnConfirm as boolean | undefined;
+    this.modalVisible = false;
+
+    if (navigate) {
+      this.router.navigate(['/asesor/consultar-cliente']);
+      return;
+    }
+  }
+
+  onModalCancel(): void {
+    this.modalVisible = false;
+  }
+
+  onModalClosed(): void {
+    this.modalVisible = false;
+  }
 
   constructor(
     private asesorService: AsesorService,
@@ -122,18 +167,29 @@ export class RegistrarClienteComponent implements OnInit { // ← IMPLEMENTAR On
       },
       error: (err) => {
         console.error('Error al cargar cliente:', err);
-        alert('No se pudo cargar el cliente para edición');
-        this.router.navigate(['/asesor/consultar-cliente']);
+        const errorMessage = 'No se pudo cargar el cliente para edición';
+        this.abrirModalGuardado({
+          type: 'error',
+          title: 'Error',
+          message: errorMessage,
+          confirmText: 'Aceptar',
+          navigateOnConfirm: true,
+        });
         this.cargando = false;
       }
     });
   }
 
   cancelarEdicion() {
-    if (confirm('¿Estás seguro de que quieres cancelar la edición? Los cambios no guardados se perderán.')) {
-      this.router.navigate(['/asesor/consultar-cliente']);
-    }
+    this.abrirModalGuardado({
+      type: 'confirm',
+      title: 'Cancelar edición',
+      message: '¿Estás seguro de que quieres cancelar la edición? Los cambios no guardados se perderán.',
+      confirmText: 'Aceptar',
+      navigateOnConfirm: true,
+    });
   }
+
   // 🔁 Cambiar pestaña manualmente
   cambiarPestana(nombre: string) {
     this.pestanaActiva = nombre;
@@ -168,8 +224,14 @@ export class RegistrarClienteComponent implements OnInit { // ← IMPLEMENTAR On
   // 🚀 Registrar o actualizar cliente
   registrarCliente() {
     if (!this.datosCompletos()) {
-      alert('⚠️ Debes completar todos los módulos antes de ' +
-        (this.modo === 'nuevo' ? 'registrar' : 'actualizar') + ' el cliente.');
+      this.abrirModalGuardado({
+        type: 'error',
+        title: 'Faltan módulos por completar',
+        message: '⚠️ Debes completar todos los módulos antes de ' +
+          (this.modo === 'nuevo' ? 'registrar' : 'actualizar') + ' el cliente.',
+        confirmText: 'Aceptar',
+        navigateOnConfirm: false,
+      });
       return;
     }
 
@@ -186,24 +248,48 @@ export class RegistrarClienteComponent implements OnInit { // ← IMPLEMENTAR On
       this.asesorService.registrarCliente(payload).subscribe({
         next: (res) => {
           console.log('✅ Cliente registrado con éxito:', res);
-          alert('Cliente registrado correctamente');
-          this.router.navigate(['/asesor/consultar-cliente']);
+          this.abrirModalGuardado({
+            type: 'success',
+            title: 'Registro finalizado',
+            message: 'Cliente registrado correctamente.',
+            confirmText: 'Aceptar',
+            navigateOnConfirm: true,
+          });
         },
         error: (err) => {
           console.error('❌ Error al registrar cliente:', err);
-          alert('Error al registrar el cliente: ' + (err.error?.message || err.message));
+          const errorMessage = err.error?.message || err.message || 'Error al registrar el cliente';
+          this.abrirModalGuardado({
+            type: 'error',
+            title: 'Error',
+            message: errorMessage,
+            confirmText: 'Aceptar',
+            navigateOnConfirm: false,
+          });
         },
       });
     } else if (this.modo === 'editar' && this.idCliente) {
       this.asesorService.actualizarCliente(this.idCliente, payload).subscribe({
         next: (res) => {
           console.log('✅ Cliente actualizado con éxito:', res);
-          alert('Cliente actualizado correctamente');
-          this.router.navigate(['/asesor/consultar-cliente']);
+          this.abrirModalGuardado({
+            type: 'success',
+            title: 'Registro finalizado',
+            message: 'Cliente actualizado correctamente.',
+            confirmText: 'Aceptar',
+            navigateOnConfirm: true,
+          });
         },
         error: (err) => {
           console.error('❌ Error al actualizar cliente:', err);
-          alert('Error al actualizar el cliente: ' + (err.error?.message || err.message));
+          const errorMessage = err.error?.message || err.message || 'Error al actualizar el cliente';
+          this.abrirModalGuardado({
+            type: 'error',
+            title: 'Error',
+            message: errorMessage,
+            confirmText: 'Aceptar',
+            navigateOnConfirm: false,
+          });
         },
       });
     }

@@ -5,30 +5,37 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {SolicitudJuridicaService, SolicitudJuridicaDetalle,
   SolicitudJuridicaDetalleResponse, AccionSolicitudResponse
 } from './services/solicitud-juridica.service';
+import { ConfirmModalComponent, ConfirmModalType } from '../../../../../shared/components/modals/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-solicitud-juridica',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ConfirmModalComponent],
   templateUrl: './solicitud-juridica.component.html',
   styleUrls: ['./solicitud-juridica.component.css']
 })
-export class SolicitudJuridicaComponent  implements OnInit {
+export class SolicitudJuridicaComponent implements OnInit {
   solicitud?: SolicitudJuridicaDetalle;
-  
+
   mostrarModalRechazo: boolean = false;
   mostrarModalAprobacion: boolean = false;
   motivoRechazo: string = '';
-  
+
   cargando: boolean = false;
   error: string = '';
   procesando: boolean = false;
+
+  // Modal de mensajes
+  modalVisible = false;
+  modalTitle = '';
+  modalMessage = '';
+  modalType: ConfirmModalType = 'success';
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private solicitudService: SolicitudJuridicaService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.cargarSolicitud();
@@ -40,7 +47,7 @@ export class SolicitudJuridicaComponent  implements OnInit {
       this.error = 'ID de solicitud no proporcionado';
       return;
     }
-    
+
     const id = Number(idParam);
     if (isNaN(id)) {
       this.error = 'ID de solicitud inválido';
@@ -70,6 +77,37 @@ export class SolicitudJuridicaComponent  implements OnInit {
     this.router.navigate(['/director-operativo/consultar-solicitudes-juridicas']);
   }
 
+  modalAction: (() => void) | null = null;
+  mostrarModal(
+    type: ConfirmModalType,
+    title: string,
+    message: string,
+    action?: () => void
+  ): void {
+
+    // Cerrar los modales propios del formulario
+    this.mostrarModalRechazo = false;
+    this.mostrarModalAprobacion = false;
+
+    this.modalType = type;
+    this.modalTitle = title;
+    this.modalMessage = message;
+    this.modalVisible = true;
+    this.modalAction = action || null;
+  }
+
+  onConfirmModal(): void {
+    if (this.modalAction) {
+      this.modalAction();
+      this.modalAction = null;
+    }
+  }
+
+  cerrarModal(): void {
+    this.modalVisible = false;
+    this.modalAction = null;
+  }
+
   abrirModalRechazo(): void {
     this.mostrarModalRechazo = true;
     this.motivoRechazo = '';
@@ -82,7 +120,11 @@ export class SolicitudJuridicaComponent  implements OnInit {
 
   confirmarRechazo(): void {
     if (!this.motivoRechazo.trim()) {
-      alert('Por favor ingrese el motivo del rechazo');
+      this.mostrarModal(
+        'error',
+        'Error',
+        'Por favor ingrese el motivo del rechazo.'
+      );
       return;
     }
 
@@ -92,17 +134,28 @@ export class SolicitudJuridicaComponent  implements OnInit {
     this.solicitudService.rechazarSolicitud(this.solicitud.id_solicitud, this.motivoRechazo).subscribe({
       next: (resp: AccionSolicitudResponse) => {
         if (resp.success) {
-          alert('Solicitud rechazada exitosamente');
-          this.mostrarModalRechazo = false;
-          this.volver();
+          this.mostrarModal(
+            'success',
+            'Solicitud rechazada',
+            'La solicitud fue rechazada exitosamente.',
+            () => this.volver()
+          );
         } else {
-          alert(resp.message || 'Error al rechazar la solicitud');
+          this.mostrarModal(
+            'error',
+            'Error',
+            resp.message || 'Error al rechazar la solicitud.'
+          );
         }
         this.procesando = false;
       },
       error: (err: any) => {
         console.error('Error al rechazar solicitud:', err);
-        alert('Error al conectar con el servidor');
+        this.mostrarModal(
+          'error',
+          'Error',
+          'Error al conectar con el servidor.'
+        );
         this.procesando = false;
       }
     });
@@ -123,17 +176,29 @@ export class SolicitudJuridicaComponent  implements OnInit {
     this.solicitudService.aprobarSolicitud(this.solicitud.id_solicitud).subscribe({
       next: (resp: AccionSolicitudResponse) => {
         if (resp.success) {
-          alert('Solicitud aprobada exitosamente');
           this.mostrarModalAprobacion = false;
-          this.volver();
+          this.mostrarModal(
+            'success',
+            'Solicitud aprobada',
+            'La solicitud fue aprobada exitosamente.',
+            () => this.volver()
+          );
         } else {
-          alert(resp.message || 'Error al aprobar la solicitud');
+          this.mostrarModal(
+            'error',
+            'Error',
+            resp.message || 'Error al aprobar la solicitud.'
+          );
         }
         this.procesando = false;
       },
       error: (err: any) => {
         console.error('Error al aprobar solicitud:', err);
-        alert('Error al conectar con el servidor');
+        this.mostrarModal(
+          'error',
+          'Error',
+          'Error al conectar con el servidor.'
+        );
         this.procesando = false;
       }
     });

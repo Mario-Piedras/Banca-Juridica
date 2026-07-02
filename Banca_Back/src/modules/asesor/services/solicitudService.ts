@@ -77,6 +77,7 @@ export class SolicitudService {
     comentarioAsesor?: string,
     tipo_cliente?: string,
     proposito_cuenta?: string,
+    tipo_cuenta?: string,
     archivo?: Buffer
   ): Promise<number> {
     console.log('Creando solicitud con:', {
@@ -85,8 +86,8 @@ export class SolicitudService {
       const [result] = await pool.query<ResultSetHeader>(
         `INSERT INTO solicitudes_apertura 
         (id_cliente, id_empresa, id_usuario_rol, tipo_cuenta, estado, comentario_asesor, archivo, tipo_cliente, proposito_cuenta) 
-        VALUES (?, ?, ?, 'Ahorros', 'Pendiente', ?, ?, ?, ?)`,
-        [idCliente, idEmpresa, idUsuarioRol, comentarioAsesor || null, archivo || null, tipo_cliente || 'Natural', proposito_cuenta || null]
+        VALUES (?, ?, ?, ?, 'Pendiente', ?, ?, ?, ?)`,
+        [idCliente, idEmpresa, idUsuarioRol, tipo_cuenta || 'Ahorros', comentarioAsesor || null, archivo || null, tipo_cliente || 'Natural', proposito_cuenta || null]
       );
 
       console.log(` Solicitud creada con ID: ${result.insertId} por usuario_rol: ${idUsuarioRol}`);

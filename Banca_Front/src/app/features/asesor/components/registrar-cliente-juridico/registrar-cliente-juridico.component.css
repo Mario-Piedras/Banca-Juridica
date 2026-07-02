@@ -46,12 +46,15 @@
   border: 1px solid #d1d5db;
   border-radius: 8px;
   box-sizing: border-box;
-  cursor: pointer;
 }
 
 .input-field:focus {
   outline: none;
   box-shadow: 0 0 0 2px #3b82f6;
+}
+
+.input-select {
+  cursor: pointer;
 }
 
 /* Espaciado de las opciones de radio */
@@ -78,7 +81,7 @@
 /* Estilos de botones del formulario */
 .form-btn {
   padding: 0.5rem 1.5rem;
-  background-color: #2563eb;
+  background-color: #1c398e;
   color: white;
   font-weight: 500;
   border-radius: 0.5rem;
@@ -88,12 +91,13 @@
 }
 
 .form-btn:hover {
-  background-color: #1d4ed8;
+  background-color: #1e40af;
 }
 
 .form-btn:disabled {
   background-color: #d1d5dc;
   color: #6a7282;
+  cursor: not-allowed;
 }
 
 /* Display de los botones del formulario */
@@ -103,4 +107,46 @@
   margin-top: calc(var(--spacing) * 6)
     /* 1.5rem = 24px */
   ;
+}
+
+/* Botones de edición */
+.display-edit-btns {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.update-edit-btn {
+  padding: 0.75rem 2rem;
+  background-color: #1c398e;
+  cursor: pointer;
+  color: white;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1),
+    0 2px 4px -2px rgb(0 0 0 / 0.1);
+  transition: background-color 0.15s ease-in-out;
+}
+
+.update-edit-btn:hover {
+  background-color: #1e40af;
+}
+
+.update-edit-btn:disabled {
+  background-color: #d1d5db;
+  cursor: not-allowed;
+}
+
+.cancel-edit-btn {
+  margin-left: 1rem;
+  padding: 0.75rem 1.5rem;
+  background-color: #d1d5db;
+  cursor: pointer;
+  color: #1f2937;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  transition: background-color 0.15s ease-in-out;
+}
+
+.cancel-edit-btn:hover {
+  background-color: #a6aebd;
 }

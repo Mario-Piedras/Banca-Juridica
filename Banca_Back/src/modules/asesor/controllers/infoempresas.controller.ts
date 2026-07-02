@@ -1,11 +1,20 @@
 import { Request, Response } from 'express';
-import { CrudController } from './crudController';
+import { CrudController } from './crud.controller';
 
 const crudController = new CrudController();
-const TABLE_NAME = 'info_socios';
-const ID_FIELD = 'id_info_socios';
+const TABLE_NAME = 'info_empresas';
+const ID_FIELD = 'id_info_empresas';
 
-export class InfosociosController {
+// Llaves foráneas relacionadas
+const FK_INFO_FINANCIERA = 'id_info_financiera';
+const FK_INFO_REPRE_LEGAL = 'id_info_repre_legal';
+const FK_CONT_ENTIDAD = 'id_cont_entidad';
+const FK_INFO_SOCIOS = 'id_info_socios';
+const FK_TIPO_ENTIDAD = 'id_tipo_entidad';
+const FK_DECLARACION = 'id_declaracion';
+const FK_INFO_TRIBUTARIA = 'id_info_tributaria';
+
+export class InfoempresasController {
     async obtenerTodos(req: Request, res: Response): Promise<Response> {
         try {
             const rows = await crudController.obtenerTodos(TABLE_NAME);
@@ -39,13 +48,22 @@ export class InfosociosController {
             const body = req.body;
 
             const data = {
-                rnve: body.rnve,
-                hay_socios_accionistas: body.hay_socios_accionistas,
-                personas_control: body.personas_control,
-                personas_expuestas: body.personas_expuestas,
-                bolsa_valores: body.bolsa_valores
+                nit: body.nit,
+                razon_social: body.razon_social,
+                nombre_corto: body.nombre_corto,
+                fecha_constitución: body.fecha_constitución,
+                ciudad_constitución: body.ciudad_constitución,
+                pais_constitucion: body.pais_constitucion,
+                dir_sede_principal: body.dir_sede_principal,
+                barrio: body.barrio,
+                ciudad_municipio: body.ciudad_municipio,
+                departamento: body.departamento,
+                pais: body.pais,
+                telefono: body.telefono,
+                ext: body.ext,
+                correo: body.correo
             };
-
+            
             if (!data || Object.keys(data).length === 0) {
                 return res.status(400).json({ mensaje: 'Los datos son obligatorios' });
             }
