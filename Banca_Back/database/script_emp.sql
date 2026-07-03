@@ -163,24 +163,24 @@ VALUES
 INSERT INTO pais_tributar (pais,tin,id_info_tributaria)
 VALUES
 -- Para ID 1 (3 registros)
-	('Estados Unidos','TIN-US-458712',2),
-	('México','RFC-MX-985421',2),
-	('España','NIF-ES-332145',2),
+	('Estados Unidos','TIN-US-458712',1),
+	('México','RFC-MX-985421',1),
+	('España','NIF-ES-332145',1),
 -- Para ID 4 (2 registros)
-	('Chile','TIN-CL-754896',5),
-	('Perú','RUC-PE-412578',5),
+	('Chile','TIN-CL-754896',4),
+	('Perú','RUC-PE-412578',4),
 
 -- Para ID 5 (3 registros)
-	('Canadá','TIN-CA-896532',6),
-	('Panamá','RUC-PA-225478',6),
-	('Argentina','CUIT-AR-774125',6),
+	('Canadá','TIN-CA-896532',5),
+	('Panamá','RUC-PA-225478',5),
+	('Argentina','CUIT-AR-774125',5),
 
 -- Para ID 7 (1 registro)
-	('Brasil','CPF-BR-663214',8),
+	('Brasil','CPF-BR-663214',7),
 
 -- Para ID 9 (2 registros)
-	('Alemania','TIN-DE-336985',10),
-	('Francia','TIN-FR-845217',10);
+	('Alemania','TIN-DE-336985',9),
+	('Francia','TIN-FR-845217',9);
     
 INSERT INTO info_empresas (
     nit,razon_social,nombre_corto,fecha_constitución,ciudad_constitución,pais_constitucion,dir_sede_principal,
@@ -189,28 +189,28 @@ INSERT INTO info_empresas (
 VALUES
 -- Registro 1 → Desarrollo de software
 	('901234567','Soluciones Integrales de Software S.A.S','SOFTINT','2012-03-14','Cali','Colombia','Cra 45 #12-80',
-	'Granada','Cali','Valle del Cauca','Colombia','6024567810','101','contacto@softintegral.com', 2, 2, NULL, 2, 2, 2, 2),
+	'Granada','Cali','Valle del Cauca','Colombia','6024567810','101','contacto@softintegral.com', 1, 1, NULL, 1, 1, 1, 1),
 -- Registro 2 → Administración pública
 	('800112233','Entidad Administrativa Territorial del Valle','EAT VALLE','2005-07-21','Cali','Colombia','Av 4 Norte #8-45',
-	'Versalles','Cali','Valle del Cauca','Colombia','6025547789','220','gestion@eatvalle.gov.co', 3, 3, 11, 3, 3, 3, 3),
+	'Versalles','Cali','Valle del Cauca','Colombia','6025547789','220','gestion@eatvalle.gov.co', 2, 2, 10, 2, 2, 2, 2),
 -- Registro 3 → Generación de energía eléctrica
 	('890456789','Generadora Energética Nacional Ltda','GENERGIA','2008-11-08','Medellín','Colombia','Cl 20 #65-90','El Poblado',
-	'Medellín','Antioquia','Colombia','6044478890','315','info@genergia.com', 4, 4, 12, 4, 4, 4, 4),
+	'Medellín','Antioquia','Colombia','6044478890','315','info@genergia.com', 3, 3, 11, 3, 3, 3, 3),
 -- Registro 4 → Comercio al por menor
 	('901555321','Comercializadora Punto Retail','PUNTORET','2018-01-17','Bogotá','Colombia','Cra 14 #98-22','Chapinero','Bogotá',
-	'Cundinamarca','Colombia','6014123678','180','ventas@puntoretail.com', 5, 5, NULL, 5, 5, 5, 5),
+	'Cundinamarca','Colombia','6014123678','180','ventas@puntoretail.com', 4, 4, NULL, 4, 4, 4, 4),
 -- Registro 5 → Servicios contables
 	('900678123','Asesorías Contables Empresariales','ASECONT','2016-05-04','Barranquilla','Colombia','Cl 75 #42-18','El Prado',
-	'Barranquilla','Atlántico','Colombia','6053214455','110','servicio@asecont.com', 6, 6, NULL, 6, 6, 6, 6),
+	'Barranquilla','Atlántico','Colombia','6053214455','110','servicio@asecont.com', 5, 5, NULL, 5, 5, 5, 5),
 -- Registro 6 → Servicios hospitalarios
 	('890987654','Corporación Integral Hospitalaria','CORPHOSP','2001-09-10','Bucaramanga','Colombia','Av Quebradaseca #28-60',
-	'Cabecera','Bucaramanga','Santander','Colombia','6076542231','420','contacto@corphospitalaria.org', 7, 7, 13, 7, 7, 7, 7),
+	'Cabecera','Bucaramanga','Santander','Colombia','6076542231','420','contacto@corphospitalaria.org', 6, 6, 12, 6, 6, 6, 6),
 -- Registro 7 → Construcción de edificios
 	('900741852','Constructora Infraestructura Urbana S.A.','CIURBANA','2014-06-12','Bogotá','Colombia','Cl 127 #18-70','Usaquén',
-	'Bogotá','Cundinamarca','Colombia','6015789632','510','proyectos@ciurbana.com', 8, 8, NULL, 8, 8, 8, 8),
+	'Bogotá','Cundinamarca','Colombia','6015789632','510','proyectos@ciurbana.com', 7, 7, NULL, 7, 7, 7, 7),
 -- Registro 8 → Publicidad y mercadeo
 	('901369258','Grupo Estratégico de Publicidad y Mercadeo','GEPM','2019-02-25','Cali','Colombia','Cra 100 #16-55','Ciudad Jardín',
-	'Cali','Valle del Cauca','Colombia','6023987412','105','info@gepm.com', 9, 9, 14, 9, 9, 9, 9),
+	'Cali','Valle del Cauca','Colombia','6023987412','105','info@gepm.com', 8, 8, NULL, 8, 8, 8, 8),
 -- Registro 9 → Edición de programas informáticos
 	('900852741','Editora Digital de Sistemas e Innovación','EDSI','2017-08-30','Medellín','Colombia','Cl 33 #74-19','Laureles',
-	'Medellín','Antioquia','Colombia','6047845632','240','contacto@edsi.com', 10, 10, NULL, 10, 10, 10, 10);
+	'Medellín','Antioquia','Colombia','6047845632','240','contacto@edsi.com', 9, 9, NULL, 9, 9, 9, 9);
