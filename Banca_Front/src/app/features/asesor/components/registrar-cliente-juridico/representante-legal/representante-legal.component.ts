@@ -21,15 +21,12 @@ export class RepresentanteLegalComponent implements OnInit, OnChanges {
   @Output() nextTab = new EventEmitter();
   @Output() saved = new EventEmitter<'parcial'>();
 
-
   form: FormGroup;
   constructor(private fb: FormBuilder, private http: HttpClient) {
-
     this.form = this.fb.group({
       representantes: this.fb.array([]),
       contacto_adicional: ['No', Validators.required]
     });
-
   }
 
   // Getter para usar en HTML
@@ -39,7 +36,7 @@ export class RepresentanteLegalComponent implements OnInit, OnChanges {
 
   // Crear formulario individual
   crearRepresentante(): FormGroup {
-    return this.fb.group({
+    const grupo = this.fb.group({
       tipo_documento: ['', Validators.required],
       num_documento: ['', [
         Validators.required,
@@ -124,6 +121,9 @@ export class RepresentanteLegalComponent implements OnInit, OnChanges {
         Validators.maxLength(100)
       ]]
     });
+    // Carga de validaciones dinámicas para el tipo de documento y número de documento
+    this.configurarDocumento(grupo);
+    return grupo;
   }
 
   private cargandoEdicion = false;
@@ -149,6 +149,36 @@ export class RepresentanteLegalComponent implements OnInit, OnChanges {
     );
 
     this.cargandoEdicion = false;
+  }
+
+  // Carga de validaciones dinámicas para el tipo de documento y número de documento
+  private configurarDocumento(grupo: FormGroup): void {
+    const tipoCtrl = grupo.get('tipo_documento');
+    const numCtrl = grupo.get('num_documento');
+
+    tipoCtrl?.valueChanges.subscribe(tipo => {
+      numCtrl?.reset('', { emitEvent: false });
+      if (!tipo) {
+        numCtrl?.disable({ emitEvent: false });
+        return;
+      }
+      numCtrl?.enable({ emitEvent: false });
+      const validators = tipo === 'Pasaporte'
+        ? [
+          Validators.required,
+          Validators.minLength(6),
+          Validators.maxLength(12),
+          Validators.pattern(/^[a-zA-Z0-9]+$/)
+        ]
+        : [
+          Validators.required,
+          Validators.minLength(6),
+          Validators.maxLength(11),
+          Validators.pattern(/^[0-9]+$/)
+        ];
+      numCtrl?.setValidators(validators);
+      numCtrl?.updateValueAndValidity({ emitEvent: false });
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -194,29 +224,6 @@ export class RepresentanteLegalComponent implements OnInit, OnChanges {
           console.log(key, control.errors);
         }
       })
-    });
-
-    // Tipo documentos
-    this.representantes.controls.forEach((rep: any) => {
-      rep.get('tipo_documento')?.valueChanges.subscribe((tipo: string) => {
-        const numDocumento = rep.get('num_documento');
-        if (tipo === 'Pasaporte') {
-          numDocumento?.setValidators([
-            Validators.required,
-            Validators.minLength(6),
-            Validators.maxLength(12),
-            Validators.pattern(/^[a-zA-Z0-9]+$/)
-          ]);
-        } else {
-          numDocumento?.setValidators([
-            Validators.required,
-            Validators.minLength(6),
-            Validators.maxLength(11),
-            Validators.pattern(/^[0-9]+$/)
-          ]);
-        }
-        numDocumento?.updateValueAndValidity();
-      });
     });
 
     // Crear representante principal
@@ -356,7 +363,7 @@ export class RepresentanteLegalComponent implements OnInit, OnChanges {
   }
 
   // Valida el tipo de documento
-  validarDocumento(event: KeyboardEvent, representante: any) {
+  validarDocumento(event: KeyboardEvent, representante: any): void {
     const tipoDocumento = representante.get('tipo_documento')?.value;
     const inputChar = event.key;
 
