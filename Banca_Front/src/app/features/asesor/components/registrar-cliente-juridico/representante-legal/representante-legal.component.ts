@@ -38,7 +38,10 @@ export class RepresentanteLegalComponent implements OnInit, OnChanges {
   crearRepresentante(): FormGroup {
     const grupo = this.fb.group({
       tipo_documento: ['', Validators.required],
-      num_documento: ['', [
+      num_documento: [{
+        value: '',
+        disabled: true
+      }, [
         Validators.required,
         Validators.minLength(6),
         Validators.maxLength(20),
@@ -158,8 +161,10 @@ export class RepresentanteLegalComponent implements OnInit, OnChanges {
 
     tipoCtrl?.valueChanges.subscribe(tipo => {
       numCtrl?.reset('', { emitEvent: false });
-      if (!tipo) {
+      if (!tipo || tipo === '') {
         numCtrl?.disable({ emitEvent: false });
+        numCtrl?.clearValidators();
+        numCtrl?.updateValueAndValidity({ emitEvent: false });
         return;
       }
       numCtrl?.enable({ emitEvent: false });
@@ -179,6 +184,8 @@ export class RepresentanteLegalComponent implements OnInit, OnChanges {
       numCtrl?.setValidators(validators);
       numCtrl?.updateValueAndValidity({ emitEvent: false });
     });
+    // Ejecuta la lógica al crear el formulario
+    tipoCtrl?.updateValueAndValidity({ emitEvent: true });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
